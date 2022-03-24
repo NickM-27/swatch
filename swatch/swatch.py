@@ -1,12 +1,15 @@
 import requests
 import cv2
 import numpy as np
+import os
+
+from config import SwatchConfig
 
 class SwatchService():
 
     def __init__(self):
         print("SwatchService Starting")
-        # TODO import yaml config
+        self.init_config()
     
     def __check_image__(self, crop):
         lower = np.array([70, 70, 0], dtype="uint8")
@@ -34,3 +37,12 @@ class SwatchService():
             return None
 
         return self.__check_image__(crop)
+    
+    def init_config(self):
+        config_file = "/config/config.yaml"
+
+        if os.path.isfile(config_file):
+            print("Verified")
+
+        user_config = SwatchConfig.parse_file(config_file)
+        self.config = user_config.runtime_config
