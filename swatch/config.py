@@ -1,5 +1,6 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Extra, Field, validator
-from os import listdir
 import yaml
 
 class SwatchBaseModel(BaseModel):
@@ -15,9 +16,14 @@ class SwatchConfig(SwatchBaseModel):
         title="Camera"
     )
 
+    @property
+    def runtime_config(self) -> SwatchConfig:
+        """Merge camera config with globals."""
+        config = self.copy(deep=True)
+        return config
+
     @classmethod
     def parse_file(cls, config_file):
-        print(f"Doing thing {listdir('./')} and config {listdir('config')}")
         with open(config_file) as f:
             raw_config = f.read()
             

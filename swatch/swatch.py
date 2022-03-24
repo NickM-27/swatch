@@ -2,6 +2,7 @@ import requests
 import cv2
 import numpy as np
 import os
+from os import listdir
 
 from config import SwatchConfig
 
@@ -39,7 +40,8 @@ class SwatchService():
         return self.__check_image__(crop)
     
     def init_config(self):
-        config_file = "/config/config.yaml"
+        print("Importing config")
+        config_file = "config/config.yaml"
 
         if os.path.isfile(config_file):
             print("Verified")
