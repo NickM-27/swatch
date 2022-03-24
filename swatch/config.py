@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from typing import Dict, List, Optional, Tuple, Union
 from pydantic import BaseModel, Extra, Field, validator
 import yaml
 
@@ -12,18 +13,16 @@ class ObjectConfig(SwatchBaseModel):
     color_lower: Union[str, List[str]] = Field(
         title="Lower R, G, B color values"
     )
-    color_higher: str = Field(title="Higher R, G, B color values")
+    color_upper: str = Field(title="Higher R, G, B color values")
     min_area: int = Field(title="Min Area", default=0)
-    max_area: int = Field(title="Max Area", default=24000)
+    max_area: int = Field(title="Max Area", default=240000)
 
 
 class ZoneConfig(SwatchBaseModel):
     coordinates: Union[str, List[str]] = Field(
         title="Coordinates polygon for the defined zone."
     )
-    objects: Dict[str, ObjectConfig] = Field(
-        default_factory=dict, title="Included Objects."
-    )
+    objects: List[str] = Field(title="Included Objects.")
 
 
 class CameraConfig(SwatchBaseModel):
