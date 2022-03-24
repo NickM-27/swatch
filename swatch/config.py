@@ -7,14 +7,34 @@ class SwatchBaseModel(BaseModel):
     class Config:
         extra = Extra.forbid
 
+
+class ObjectConfig(SwatchBaseModel):
+    color_lower: Union[str, List[str]] = Field(
+        title="Lower R, G, B color values"
+    )
+    color_higher: str = Field(title="Higher R, G, B color values")
+    min_area: int = Field(title="Min Area", default=0)
+    max_area: int = Field(title="Max Area", default=24000)
+
+
+class ZoneConfig(SwatchBaseModel):
+    coordinates: Union[str, List[str]] = Field(
+        title="Coordinates polygon for the defined zone."
+    )
+    objects: Dict[str, ObjectConfig] = Field(
+        default_factory=dict, title="Included Objects."
+    )
+
+
 class CameraConfig(SwatchBaseModel):
-    test: str = Field(title="")
+    zones: Dict[str, ZoneConfig] = Field(
+        default_factory=dict, title="Zones for this camera."
+    )
+
 
 class SwatchConfig(SwatchBaseModel):
-    camera: CameraConfig = Field(
-        default_factory=CameraConfig,
-        title="Camera"
-    )
+    objects: Dict[str, ObjectConfig] = Field(title="Object configuration.")
+    cameras: Dict[str, CameraConfig] = Field(title="Camera configuration.")
 
     @property
     def runtime_config(self) -> SwatchConfig:
