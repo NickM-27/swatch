@@ -5,6 +5,11 @@ Color detection in images to capture presense of known objects.
 
 There is great object and face detection software out there, but sometimes AI detection is overkill or not suitable different types of objects. Swatch was created to create an easy to use API to detect the presence of objects of known color in expected places.
 
+In this example you can see a cropped section of the street with a trash can. Then, using expected color bounds, the parts of the image that don't match the expected color are masked away. If a significant enough amount of pixels are left that match the color then it can be considered a true positive.
+
+![crop](https://user-images.githubusercontent.com/14866235/160126079-14dd083c-7ca8-4077-882c-3f5eddeaf6a0.jpg)
+![crop-mask](https://user-images.githubusercontent.com/14866235/160126093-82cedb91-c04e-44a2-8f0f-154e084f2f8f.jpg)
+
 ## Features
 
 - REST API to be invoked by other applications
@@ -54,6 +59,22 @@ cameras:
         objects:
           - trash_can
 ```
+
+## API References
+
+### `/api/config`
+
+Returns JSON config
+
+### `/api/<camera_name>/detect`
+
+```json
+{
+    "imageUrl": "http://some_camera_image.jpg"
+}
+```
+
+Take the `camera_name` config and `imageUrl` to run detection and see which objects are detected.
 
 ## Contributing
 
