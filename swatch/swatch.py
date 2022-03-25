@@ -2,7 +2,6 @@ import requests
 import cv2
 import numpy as np
 import os
-from os import listdir
 
 from config import SwatchConfig, SnapshotModeEnum
 from snapshot import save_snapshot

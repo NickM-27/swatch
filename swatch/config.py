@@ -3,7 +3,7 @@ from email.policy import default
 
 from typing import Dict, List, Optional, Tuple, Union
 from enum import Enum
-from pydantic import BaseModel, Extra, Field, validator
+from pydantic import BaseModel, Extra, Field
 import yaml
 
 class SwatchBaseModel(BaseModel):
