@@ -1,6 +1,8 @@
 import base64
 import json
+
 from swatch import SwatchService
+
 from flask import (
     Blueprint,
     Flask,
@@ -10,6 +12,8 @@ from flask import (
     make_response,
     request,
 )
+
+from waitress import serve
 
 app = Flask(__name__)
 swatch = SwatchService()
@@ -54,3 +58,6 @@ def detect_camera_frame(camera_name):
         return make_response(
             jsonify({"success": False, "message": "image url must be set."}), 404
         )
+
+if __name__ == "__main__":
+    serve(app, listen='*:5000')
