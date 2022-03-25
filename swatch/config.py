@@ -13,15 +13,11 @@ class SwatchBaseModel(BaseModel):
 
 class SnapshotModeEnum(str, Enum):
     all = "all"
+    crop = "crop"
     mask = "mask"
-    zone = "zone"
 
 
 class SnapshotConfig(SwatchBaseModel):
-    full_frame: bool = Field(
-            title="Save snapshots of full camera frame.",
-            default=True
-        )
     save_detections: bool = Field(
             title="Save snapshots of detections that are found.", 
             default=True
@@ -50,6 +46,10 @@ class ZoneConfig(SwatchBaseModel):
         title="Coordinates polygon for the defined zone."
     )
     objects: List[str] = Field(title="Included Objects.")
+    snapshot_config: SnapshotConfig = Field(
+            title="Snapshot config for this zone.",
+            default_factory=SnapshotConfig
+        )
 
 
 class CameraConfig(SwatchBaseModel):
