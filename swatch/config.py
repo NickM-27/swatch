@@ -26,6 +26,7 @@ class ZoneConfig(SwatchBaseModel):
 
 
 class CameraConfig(SwatchBaseModel):
+    snapshot_url: str = Field(title="Camera Snapshot Url.", default=None)
     zones: Dict[str, ZoneConfig] = Field(
         default_factory=dict, title="Zones for this camera."
     )
