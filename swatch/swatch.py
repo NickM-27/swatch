@@ -13,8 +13,10 @@ class SwatchService():
         self.init_config()
     
     def __check_image__(self, crop, object):
-        lower = np.array([object.color_lower[0], object.color_lower[1], object.color_lower[2]], dtype="uint8")
-        upper = np.array([object.color_upper[0], object.color_upper[1], object.color_upper[2]], dtype="uint8")
+        color_lower = object.color_lower.split(", ")
+        color_upper = object.color_upper.split(", ")
+        lower = np.array([int(color_lower[0]), int(color_lower[1]), int(color_lower[2])], dtype="uint8")
+        upper = np.array([int(color_upper[0]), int(color_upper[1]), int(color_upper[2])], dtype="uint8")
 
         mask = cv2.inRange(crop, lower, upper)
         output = cv2.bitwise_and(crop, crop, mask=mask)
@@ -44,8 +46,8 @@ class SwatchService():
             if crop.size <= 0:
                 continue
 
-            for object in zone.objects:
-                response[zone_name][object] = self.__check_image__(crop, self.config.objects[object])
+            for object_name in zone.objects:
+                response[zone_name][object_name] = self.__check_image__(crop, self.config.objects[object_name])
         
         return response
     
