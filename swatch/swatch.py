@@ -4,9 +4,9 @@ import numpy as np
 import os
 from os import listdir
 
-from config import SwatchConfig
+from config import SwatchConfig, SnapshotModeEnum
 from snapshot import save_snapshot
-from swatch.config import SnapshotModeEnum
+from const import CONST_CONFIG_FILE
 
 class SwatchService():
 
@@ -44,7 +44,6 @@ class SwatchService():
             img = cv2.imdecode(np.asarray(bytearray(imgBytes), dtype=np.uint8), -1)
             
             coordinates = zone.coordinates.split(", ")
-            print(f"coordinates are {coordinates}")
 
             if img.size > 0:
                 crop = img[int(coordinates[1]):int(coordinates[3]), int(coordinates[0]):int(coordinates[2])]
@@ -72,10 +71,9 @@ class SwatchService():
     
     def init_config(self):
         print("Importing config")
-        config_file = "config/config.yaml"
 
-        if os.path.isfile(config_file):
+        if os.path.isfile(CONST_CONFIG_FILE):
             print("Verified")
 
-        user_config = SwatchConfig.parse_file(config_file)
+        user_config = SwatchConfig.parse_file(CONST_CONFIG_FILE)
         self.config = user_config.runtime_config
