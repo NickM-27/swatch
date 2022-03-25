@@ -13,9 +13,17 @@ from flask import (
 app = Flask(__name__)
 swatch = SwatchService()
 
+### Basic / Frontend Routes
+
 @app.route('/')
 def status():
     return "Swatch is running."
+
+### API Routes
+
+@app.route('/api/config', methods=['GET'])
+def get_config():
+    swatch.config.dict()
 
 @app.route('/api/<camera_name>/detect', methods=['POST'])
 def detect_camera_frame(camera_name):
