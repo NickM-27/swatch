@@ -60,4 +60,4 @@ def detect_camera_frame(camera_name):
         )
 
 if __name__ == "__main__":
-    serve(app, listen='*:5000')
+    serve(app, listen='*:4500')

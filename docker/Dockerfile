@@ -11,6 +11,6 @@ RUN pip install --no-cache-dir --upgrade pip && \
 WORKDIR /opt/swatch/
 ADD swatch .
 
-EXPOSE 5000
+EXPOSE 4500
 
 CMD ["python3", "-u", "-m", "app"]
