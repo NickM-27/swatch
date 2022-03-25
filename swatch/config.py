@@ -1,12 +1,39 @@
 from __future__ import annotations
+from email.policy import default
 
 from typing import Dict, List, Optional, Tuple, Union
+from enum import Enum
 from pydantic import BaseModel, Extra, Field, validator
 import yaml
 
 class SwatchBaseModel(BaseModel):
     class Config:
         extra = Extra.forbid
+
+
+class SnapshotModeEnum(str, Enum):
+    all = "all"
+    mask = "mask"
+    zone = "zone"
+
+
+class SnapshotConfig(SwatchBaseModel):
+    full_frame: bool = Field(
+            title="Save snapshots of full camera frame.",
+            default=True
+        )
+    save_detections: bool = Field(
+            title="Save snapshots of detections that are found.", 
+            default=True
+        )
+    save_misses: bool = Field(
+            title="Save snapshots of missed detections.",
+            default=False
+        )
+    snapshot_mode: SnapshotModeEnum = Field(
+            title="Snapshot mode.",
+            default=SnapshotModeEnum.all
+        )
 
 
 class ObjectConfig(SwatchBaseModel):
