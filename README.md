@@ -25,12 +25,12 @@ objects:
     color_lower: 70, 70, 0
     # REQUIRED: the upper R, G, B values that are considered a potential match for the object.
     color_upper: 110, 100, 50
-    # OPTIONAL: the min number of pixels with R, G, B values within the bounds to be considered 
-    a true positive. This is recommended to be set as a super small amount could be a false positive. 
-    (Default: shown below)
+    # OPTIONAL: the min number of pixels with R, G, B values within the bounds to be
+    # considered a true positive. This is recommended to be set as a super small amount
+    # could be a false positive. (Default: shown below)
     min_area: 1000
-    # OPTIONAL: the max number of pixels with R, G, B values within the bounds to be considered 
-    a true positive (Default: shown below).
+    # OPTIONAL: the max number of pixels with R, G, B values within the bounds to be
+    # considered a true positive (Default: shown below).
     max_area: 100000
 ```
 
@@ -42,15 +42,15 @@ cameras:
   # REQUIRED: Name of the camera
   front_doorbell_cam:
     # REQUIRED: Zones are cropped areas where the object can be expected to be. 
-    This makes searching / matches for efficient and more predictable than searching
-    the entire image.
+    # This makes searching / matches for efficient and more predictable than searching
+    # the entire image.
     zones:
       # REQUIRED: Name of the zone.
       street:
         # REQUIRED: Coordinates to crop the zone by. 
         coordinates: 225, 540, 350, 620
         # REQUIRED: List of objects that may be in this zone. These correspond to
-        the objects list defined previously and are matched by name.
+        # the objects list defined previously and are matched by name.
         objects:
           - trash_can
 ```
