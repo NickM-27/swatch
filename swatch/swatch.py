@@ -1,36 +1,62 @@
 import requests
 import cv2
 import numpy as np
+import os
+from os import listdir
+
+from config import SwatchConfig
 
 class SwatchService():
 
     def __init__(self):
         print("SwatchService Starting")
-        # TODO import yaml config
+        self.init_config()
     
-    def __check_image__(self, crop):
-        lower = np.array([70, 70, 0], dtype="uint8")
-        upper = np.array([110, 100, 50], dtype="uint8")
+    def __check_image__(self, crop, object):
+        color_lower = object.color_lower.split(", ")
+        color_upper = object.color_upper.split(", ")
+        lower = np.array([int(color_lower[0]), int(color_lower[1]), int(color_lower[2])], dtype="uint8")
+        upper = np.array([int(color_upper[0]), int(color_upper[1]), int(color_upper[2])], dtype="uint8")
 
         mask = cv2.inRange(crop, lower, upper)
         output = cv2.bitwise_and(crop, crop, mask=mask)
         matches = np.count_nonzero(output)
 
-        if matches > 1000:
-            return (True, matches)
+        if matches > object.min_area and matches < object.max_area:
+            return {"result": True, "area": matches}
         else:
-            return (False, matches)
+            return {"result": False, "area": matches}
     
     def detect(self, camera_name, image_url):
-        imgBytes = requests.get(image_url).content
-        img = cv2.imdecode(np.asarray(bytearray(imgBytes), dtype=np.uint8), -1)
+        response = {}
+        
+        for zone_name, zone in self.config.cameras[camera_name].zones.items():
+            response[zone_name] = {}
+            imgBytes = requests.get(image_url).content
+            img = cv2.imdecode(np.asarray(bytearray(imgBytes), dtype=np.uint8), -1)
+            
+            coordinates = zone.coordinates.split(", ")
+            print(f"coordinates are {coordinates}")
 
-        if img.size > 0:
-            crop = img[540:620, 225:350]
-        else:
-            crop = []
+            if img.size > 0:
+                crop = img[int(coordinates[1]):int(coordinates[3]), int(coordinates[0]):int(coordinates[2])]
+            else:
+                crop = []
 
-        if crop.size <= 0:
-            return None
+            if crop.size <= 0:
+                continue
 
-        return self.__check_image__(crop)
+            for object_name in zone.objects:
+                response[zone_name][object_name] = self.__check_image__(crop, self.config.objects[object_name])
+        
+        return response
+    
+    def init_config(self):
+        print("Importing config")
+        config_file = "config/config.yaml"
+
+        if os.path.isfile(config_file):
+            print("Verified")
+
+        user_config = SwatchConfig.parse_file(config_file)
+        self.config = user_config.runtime_config
