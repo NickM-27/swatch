@@ -28,13 +28,16 @@ class SwatchService():
     def detect(self, camera_name, image_url):
         response = {}
         
-        for zone in self.config.cameras[camera_name].zones:
-            response[zone.name] = {}
+        for zone_name, zone in self.config.cameras[camera_name].zones.items():
+            response[zone_name] = {}
             imgBytes = requests.get(image_url).content
             img = cv2.imdecode(np.asarray(bytearray(imgBytes), dtype=np.uint8), -1)
             
+            coordinates = zone.coordinates.split(", ")
+            print(f"coordinates are {coordinates}")
+
             if img.size > 0:
-                crop = img[zone.coordinates[1]:zone.coordinates[3], zone.coordinates[0]:zone.coordinates[2]]
+                crop = img[int(coordinates[1]):int(coordinates[3]), int(coordinates[0]):int(coordinates[2])]
             else:
                 crop = []
 
@@ -42,7 +45,7 @@ class SwatchService():
                 continue
 
             for object in zone.objects:
-                response[zone.name][object.name] = self.__check_image__(crop, object)
+                response[zone_name][object] = self.__check_image__(crop, self.config.objects[object])
         
         return response
     
