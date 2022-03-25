@@ -1,4 +1,5 @@
 import base64
+import json
 from swatch import SwatchService
 from flask import (
     Blueprint,
@@ -23,7 +24,7 @@ def status():
 
 @app.route('/api/config', methods=['GET'])
 def get_config():
-    swatch.config.dict()
+    return make_response(jsonify(swatch.config.dict()), 200)
 
 @app.route('/api/<camera_name>/detect', methods=['POST'])
 def detect_camera_frame(camera_name):
