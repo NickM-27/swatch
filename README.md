@@ -54,3 +54,15 @@ cameras:
         objects:
           - trash_can
 ```
+
+## Contributing
+
+### Build Local Image
+
+```
+make
+```
+
+### Donations
+
+If you would like to make a donation to support development, please use [GitHub Sponsors](https://github.com/sponsors/nickm_27).
