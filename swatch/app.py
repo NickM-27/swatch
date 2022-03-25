@@ -24,7 +24,7 @@ def detect_camera_frame(camera_name):
             jsonify({"success": False, "message": "camera_name must be set."}), 404
         )
 
-    if not swatch.config.cameras[camera_name]:
+    if not swatch.config.cameras.get(camera_name):
         return make_response(
             jsonify({"success": False, "message": f"{camera_name} is not a camera in the config."}), 404
         )
