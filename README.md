@@ -60,6 +60,22 @@ cameras:
           - trash_can
 ```
 
+## API References
+
+### `/api/config`
+
+Returns JSON config
+
+### `/api/<camera_name>/detect`
+
+```json
+{
+"imageUrl": http://some_camera_image.jpg
+}
+```
+
+Take the `camera_name` config and `imageUrl` to run detection and see which objects are detected.
+
 ## Contributing
 
 ### Build Local Image
