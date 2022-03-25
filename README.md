@@ -70,7 +70,7 @@ Returns JSON config
 
 ```json
 {
-"imageUrl": http://some_camera_image.jpg
+"imageUrl": "http://some_camera_image.jpg"
 }
 ```
 
