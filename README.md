@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/14866235/160259423-c9f1eb2a-1b53-4bd4-8500-9033ffea6412.jpeg" />
+</p>
+
 # swatch
 Color detection in images to capture presence of known objects.
 
