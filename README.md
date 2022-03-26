@@ -1,5 +1,5 @@
 # swatch
-Color detection in images to capture presense of known objects.
+Color detection in images to capture presence of known objects.
 
 ## Why?
 
