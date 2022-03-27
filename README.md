@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/14866235/160259423-c9f1eb2a-1b53-4bd4-8500-9033ffea6412.jpeg" />
+  <img height="200" width="200" src="https://user-images.githubusercontent.com/14866235/160284968-ef297354-1b79-4c80-9cab-c036c4c23ea8.png" />
 </p>
 
 # swatch
