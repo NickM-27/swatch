@@ -1,5 +1,9 @@
+<p align="center">
+  <img height="200" width="200" src="https://user-images.githubusercontent.com/14866235/160284968-ef297354-1b79-4c80-9cab-c036c4c23ea8.png" />
+</p>
+
 # swatch
-Color detection in images to capture presense of known objects.
+Color detection in images to capture presence of known objects.
 
 ## Why?
 
