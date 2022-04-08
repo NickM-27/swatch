@@ -1,6 +1,15 @@
-<p align="center">
-  <img height="200" width="200" src="https://user-images.githubusercontent.com/14866235/160284968-ef297354-1b79-4c80-9cab-c036c4c23ea8.png" />
-</p>
+<!-- markdownlint-disable first-line-heading -->
+<!-- markdownlint-disable no-inline-html -->
+
+<img src="https://raw.githubusercontent.com/NickM-27/swatch-hass-integration/master/images/swatch.png"
+     alt="Swatch icon"
+     width="16%"
+     align="right"
+     style="float: right; margin: 10px 0px 20px 20px;" />
+
+[![GitHub Release](https://img.shields.io/github/release/NickM-27/swatch.svg?style=flat-square)](https://github.com/NickM-27/swatch-hass-integration/releases)
+[![Build Status](https://img.shields.io/github/workflow/status/NickM-27/swatch/Build?style=flat-square)](https://github.com/NickM-27/swatch-hass-integration/actions/workflows/build.yaml)
+[![License](https://img.shields.io/github/license/NickM-27/swatch.svg?style=flat-square)](LICENSE)
 
 # swatch
 Color detection in images to capture presence of known objects.
