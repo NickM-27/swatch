@@ -21,17 +21,21 @@ swatch = SwatchService()
 
 ### Basic / Frontend Routes
 
-@app.route('/')
+
+@app.route("/")
 def status():
     return "Swatch is running."
 
+
 ### API Routes
 
-@app.route('/api/config', methods=['GET'])
+
+@app.route("/api/config", methods=["GET"])
 def get_config():
     return make_response(jsonify(swatch.config.dict()), 200)
 
-@app.route('/api/<camera_name>/detect', methods=['POST'])
+
+@app.route("/api/<camera_name>/detect", methods=["POST"])
 def detect_camera_frame(camera_name):
     if not camera_name:
         return make_response(
@@ -42,31 +46,45 @@ def detect_camera_frame(camera_name):
 
     if not camera_config:
         return make_response(
-            jsonify({"success": False, "message": f"{camera_name} is not a camera in the config."}), 404
+            jsonify(
+                {
+                    "success": False,
+                    "message": f"{camera_name} is not a camera in the config.",
+                }
+            ),
+            404,
         )
-    
+
     if not request.json and camera_config.snapshot_url:
         image_url = camera_config.snapshot_url
     elif request.json:
         image_url = request.json.get("imageUrl")
     else:
         image_url = None
-    
+
     if image_url:
         result = swatch.detect(camera_name, image_url)
 
         if result:
-            return make_response(
-                jsonify(result), 200
-            )
+            return make_response(jsonify(result), 200)
         else:
             return make_response(
-                jsonify({"success": False, "message": "Unknown error doing detection."}), 500
+                jsonify(
+                    {"success": False, "message": "Unknown error doing detection."}
+                ),
+                500,
             )
     else:
         return make_response(
-            jsonify({"success": False, "message": "image url must be passed or set in the config."}), 404
+            jsonify(
+                {
+                    "success": False,
+                    "message": "image url must be passed or set in the config.",
+                }
+            ),
+            404,
         )
 
+
 if __name__ == "__main__":
-    serve(app, listen='*:4500')
+    serve(app, listen="*:4500")

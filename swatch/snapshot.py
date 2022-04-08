@@ -6,6 +6,7 @@ from datetime import datetime
 from config import SwatchConfig
 from const import CONST_MEDIA_DIR
 
+
 def save_snapshot(name, image):
     time = datetime.now()
 
