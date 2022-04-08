@@ -1,11 +1,12 @@
-Setup#
-# 1. Build the docker container locally with
+# Setup
+
+## 1. Build the docker container locally with
 
 ```bash
 make
 ```
 
-# 2. Create a local config file for testing#
+## 2. Create a local config file for testing#
 Place the file at config/config.yml in the root of the repo.
 
 Here is an example, but modify for your needs:
@@ -27,10 +28,10 @@ cameras:
           - green_object
 ```
 
-# 3. Open the repo with Visual Studio Code
+## 3. Open the repo with Visual Studio Code
 
 Upon opening, you should be prompted to open the project in a remote container. This will build a container on top of the base swatch container with all the development dependencies installed. This ensures everyone uses a consistent development environment without the need to install any dependencies on your host machine.
 
-# 4. Teardown
+## 4. Teardown
 
 After closing VSCode, you may still have containers running. To close everything down, just run docker-compose down -v to cleanup all containers.
