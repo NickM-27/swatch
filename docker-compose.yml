@@ -1,0 +1,18 @@
+version: "3"
+services:
+  dev:
+    container_name: swatch-dev
+    user: vscode
+    privileged: true
+    shm_size: "256mb"
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.dev
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - .:/lab/swatch:cached
+      - ./config/config.yaml:/config/config.yaml:ro
+      - ./debug:/media/swatch
+    ports:
+      - "4500:4500"
+    command: "python3 -u -m app"
