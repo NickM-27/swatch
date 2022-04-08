@@ -82,11 +82,9 @@ Take the `camera_name` config and `imageUrl` to run detection and see which obje
 
 ## Contributing
 
-### Build Local Image
+**Contributions are very much welcome!**
 
-```
-make
-```
+For instructions on how to get started, see the [contributing section](CONTRIBUTING.md)
 
 ### Donations
 
