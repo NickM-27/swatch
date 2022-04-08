@@ -15,5 +15,4 @@ services:
       - ./debug:/media/swatch
     ports:
       - "4500:4500"
-    entrypoint: ["sudo", "/init"]
-    command: /bin/sh -c "while sleep 1000; do :; done"
+    command: "python3 -u -m app"
