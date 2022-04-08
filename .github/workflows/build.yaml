@@ -1,0 +1,29 @@
+---
+name: Build
+
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: '0 0 * * *'
+
+jobs:
+
+  # PreCommit
+  pre-commit:
+    runs-on: "ubuntu-latest"
+    name: Pre-commit
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v2.3.4
+      - name: Set up Python ${{ env.DEFAULT_PYTHON }}
+        uses: actions/setup-python@v2.2.2
+        with:
+          python-version: ${{ env.DEFAULT_PYTHON }}
+      - name: Install requirements
+        run: |
+          pip install pip
+          pip install -r requirements_dev.txt
+      - name: Run pre-commit on all files
+        run: |
+          pre-commit run --all-files --show-diff-on-failure --color=always
