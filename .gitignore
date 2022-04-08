@@ -1,0 +1,6 @@
+cache/
+
+config/config.yaml
+
+*.png
+*.jpg
