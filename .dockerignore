@@ -2,3 +2,13 @@ Dockerfile
 .dockerignore
 .git
 .cache
+README.md
+docs/
+.gitignore
+debug
+config/
+*.pyc
+core
+*.mp4
+*.db
+*.ts
