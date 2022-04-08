@@ -11,7 +11,7 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - .:/lab/swatch:cached
-      - ./config/config.yml:/config/config.yml:ro
+      - ./config/config.yaml:/config/config.yaml:ro
       - ./debug:/media/swatch
     ports:
       - "4500:4500"
