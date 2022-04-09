@@ -11,10 +11,12 @@ from const import CONST_CONFIG_FILE
 
 class SwatchService:
     def __init__(self):
+        """Init SwatchService."""
         print("SwatchService Starting")
         self.init_config()
 
     def __check_image__(self, crop, zone, object, snapshot):
+        """Check specific image for known color values."""
         color_lower = object.color_lower.split(", ")
         color_upper = object.color_upper.split(", ")
         lower = np.array(
@@ -48,6 +50,7 @@ class SwatchService:
             return {"result": False, "area": matches}
 
     def detect(self, camera_name, image_url):
+        """Use the default image or $image_url to detect known objects."""
         response = {}
 
         for zone_name, zone in self.config.cameras[camera_name].zones.items():
@@ -87,13 +90,15 @@ class SwatchService:
 
         return response
 
-    def colorify_test_image(self, test_image) -> tuple[str, set[str]]:
+    def parse_colors_from_image(self, test_image) -> tuple[str, set[str]]:
+        """Convenience fun to get colors from test image."""
         color_thief = ColorThief(test_image)
         main_color = color_thief.get_color(quality=1)
         palette = color_thief.get_palette(color_count=3)
         return (main_color, palette)
 
     def init_config(self):
+        """Init the SwatchService with saved config file."""
         print("Importing config")
 
         if os.path.isfile(CONST_CONFIG_FILE):

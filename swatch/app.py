@@ -1,7 +1,3 @@
-import base64
-import json
-from webbrowser import get
-
 from swatch import SwatchService
 
 from flask import (
@@ -21,6 +17,7 @@ swatch = SwatchService()
 
 @app.route("/")
 def status():
+    """Return Swatch stats."""
     return "Swatch is running."
 
 
@@ -29,11 +26,13 @@ def status():
 
 @app.route("/api/config", methods=["GET"])
 def get_config():
+    """Get current config."""
     return make_response(jsonify(swatch.config.dict()), 200)
 
 
 @app.route("/api/<camera_name>/detect", methods=["POST"])
 def detect_camera_frame(camera_name):
+    """Use camera frame to detect known objects."""
     if not camera_name:
         return make_response(
             jsonify({"success": False, "message": "camera_name must be set."}), 404
@@ -85,24 +84,25 @@ def detect_camera_frame(camera_name):
 
 @app.route("/api/colortest", methods=["POST"])
 def test_colors():
+    """Test and get color values inside of test image."""
     if not request.files or not request.files.get('test_image'):
         return make_response(
             jsonify(
                 {"success": False, "message": "An image needs to be sent as test_image"}
             )
         )
-    else:
-        test_image = request.files.get('test_image')
-        main_color, palette = swatch.parse_colors_from_image(test_image)
 
-        return make_response(
-            jsonify(
-                {
-                    "success": True,
-                    "message": f"The dominant color is {main_color} with a mixed palette as {palette}",
-                }
-            )
+    test_image = request.files.get('test_image')
+    main_color, palette = swatch.parse_colors_from_image(test_image)
+
+    return make_response(
+        jsonify(
+            {
+                "success": True,
+                "message": f"The dominant color is {main_color} with a mixed palette as {palette}",
+            }
         )
+    )
 
 
 if __name__ == "__main__":
