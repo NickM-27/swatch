@@ -85,14 +85,14 @@ def detect_camera_frame(camera_name):
 @app.route("/api/colortest", methods=["POST"])
 def test_colors():
     """Test and get color values inside of test image."""
-    if not request.files or not request.files.get('test_image'):
+    if not request.files or not request.files.get("test_image"):
         return make_response(
             jsonify(
                 {"success": False, "message": "An image needs to be sent as test_image"}
             )
         )
 
-    test_image = request.files.get('test_image')
+    test_image = request.files.get("test_image")
     main_color, palette = swatch.parse_colors_from_image(test_image)
 
     return make_response(
