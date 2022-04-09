@@ -1,4 +1,5 @@
 import requests
+from colorthief import ColorThief
 import cv2
 import numpy as np
 import os
@@ -85,6 +86,12 @@ class SwatchService:
                 response[zone_name][object_name] = result
 
         return response
+
+    def colorify_test_image(self, test_image) -> tuple[str, set[str]]:
+        color_thief = ColorThief(test_image)
+        main_color = color_thief.get_color(quality=1)
+        palette = color_thief.get_palette(color_count=3)
+        return (main_color, palette)
 
     def init_config(self):
         print("Importing config")

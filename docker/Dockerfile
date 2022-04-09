@@ -6,7 +6,7 @@ ENV OPENCV_VERSION="4.5.1"
 
 RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir  matplotlib  pillow numpy opencv-python-headless && \
-    pip install --no-cache-dir Flask requests pydantic PyYAML waitress
+    pip install --no-cache-dir Flask requests pydantic PyYAML waitress colorthief
 
 WORKDIR /opt/swatch/
 ADD swatch .
