@@ -1,6 +1,4 @@
 cache/
 
 config/config.yaml
-
-*.png
-*.jpg
+*/.DS_Store
