@@ -1,0 +1,38 @@
+name: Support Request
+description: Support for Swatch issues
+title: "[Support]: "
+labels: ["support"]
+assignees: []
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Describe the problem you are having
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version
+    validations:
+      required: true
+  - type: textarea
+    id: config
+    attributes:
+      label: Swatch config file
+      description: This will be automatically formatted into code, so no need for backticks.
+      render: yaml
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant log output
+      description: Please copy and paste any relevant log output. This will be automatically formatted into code, so no need for backticks.
+      render: shell
+    validations:
+      required: true
+  - type: textarea
+    id: other
+    attributes:
+      label: Any other information that may be helpful
