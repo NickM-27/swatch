@@ -1,14 +1,14 @@
 <!-- markdownlint-disable first-line-heading -->
 <!-- markdownlint-disable no-inline-html -->
 
-<img src="https://raw.githubusercontent.com/NickM-27/swatch-hass-integration/master/images/swatch.png"
+<img src="https://raw.githubusercontent.com/NickM-27/swatch/master/assets/swatch.png"
      alt="Swatch icon"
      width="16%"
      align="right"
      style="float: right; margin: 10px 0px 20px 20px;" />
 
-[![GitHub Release](https://img.shields.io/github/release/NickM-27/swatch.svg?style=flat-square)](https://github.com/NickM-27/swatch-hass-integration/releases)
-[![Build Status](https://img.shields.io/github/workflow/status/NickM-27/swatch/Build?style=flat-square)](https://github.com/NickM-27/swatch-hass-integration/actions/workflows/build.yaml)
+[![GitHub Release](https://img.shields.io/github/release/NickM-27/swatch.svg?style=flat-square)](https://github.com/NickM-27/swatch/releases)
+[![Build Status](https://img.shields.io/github/workflow/status/NickM-27/swatch/Build?style=flat-square)](https://github.com/NickM-27/swatch/actions/workflows/build.yaml)
 [![License](https://img.shields.io/github/license/NickM-27/swatch.svg?style=flat-square)](LICENSE)
 
 # swatch
