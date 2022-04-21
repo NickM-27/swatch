@@ -6,8 +6,8 @@ import numpy as np
 from config import SnapshotModeEnum
 from snapshot import save_snapshot
 
-class ImageProcessor():
 
+class ImageProcessor:
     def __init__(self):
         """Create Image Processor"""
 
