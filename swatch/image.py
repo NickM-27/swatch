@@ -8,7 +8,6 @@ from snapshot import save_snapshot
 
 
 class ImageProcessor:
-
     def __init__(self, config):
         """Create Image Processor"""
         self.config = config
