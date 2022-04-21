@@ -62,7 +62,7 @@ def detect_camera_frame(camera_name):
         image_url = None
 
     if image_url:
-        result = swatch.detect(camera_name, image_url)
+        result = swatch.image_processor.detect(camera_name, image_url)
 
         if result:
             return make_response(jsonify(result), 200)
@@ -96,7 +96,7 @@ def test_colors():
         )
 
     test_image = request.files.get("test_image")
-    main_color, palette = swatch.parse_colors_from_image(test_image)
+    main_color, palette = swatch.image_processor.parse_colors_from_image(test_image)
 
     return make_response(
         jsonify(
