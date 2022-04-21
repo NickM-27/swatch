@@ -10,7 +10,7 @@ class SwatchService:
         """Init SwatchService."""
         print("SwatchService Starting")
         self.init_config()
-        self.image_processor = ImageProcessor()
+        self.image_processor = ImageProcessor(self.config)
 
     def init_config(self):
         """Init the SwatchService with saved config file."""

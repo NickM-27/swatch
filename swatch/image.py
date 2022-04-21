@@ -8,8 +8,9 @@ from snapshot import save_snapshot
 
 
 class ImageProcessor:
-    def __init__(self):
+    def __init__(self, config):
         """Create Image Processor"""
+        self.config = config
 
     def __check_image__(self, crop, zone, object, snapshot):
         """Check specific image for known color values."""
