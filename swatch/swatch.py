@@ -17,7 +17,7 @@ class SwatchService:
         print("Importing config")
 
         if os.path.isfile(CONST_CONFIG_FILE):
-            print("Verified")
+            print("Verified Config")
 
         user_config = SwatchConfig.parse_file(CONST_CONFIG_FILE)
         self.config = user_config.runtime_config

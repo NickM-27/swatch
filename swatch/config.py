@@ -31,7 +31,7 @@ class SnapshotConfig(SwatchBaseModel):
 
 
 class ObjectConfig(SwatchBaseModel):
-    color_lower: str | list[str] = Field(title="Lower R, G, B color values")
+    color_lower: str = Field(title="Lower R, G, B color values")
     color_upper: str = Field(title="Higher R, G, B color values")
     min_area: int = Field(title="Min Area", default=0)
     max_area: int = Field(title="Max Area", default=240000)
