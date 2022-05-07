@@ -1,0 +1,11 @@
+matplotlib
+pillow
+numpy
+opencv-python-headless
+Flask
+requests
+pydantic
+PyYAML
+waitress
+colorthief
+mypy == 0.942

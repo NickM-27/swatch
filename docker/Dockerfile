@@ -1,12 +1,11 @@
 FROM python:3
 
 WORKDIR /opt/swatch
+COPY requirements.txt /opt/swatch/requirements.txt
 
 ENV OPENCV_VERSION="4.5.1"
 
-RUN pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir  matplotlib  pillow numpy opencv-python-headless && \
-    pip install --no-cache-dir Flask requests pydantic PyYAML waitress colorthief
+RUN pip install -r requirements.txt
 
 WORKDIR /opt/swatch/
 ADD swatch .
