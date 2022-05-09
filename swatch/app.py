@@ -1,6 +1,8 @@
 """"""
 import os
 
+from waitress import serve
+
 from swatch.config import SwatchConfig, SnapshotModeEnum
 from swatch.const import CONST_CONFIG_FILE
 from swatch.http import create_app
@@ -30,7 +32,7 @@ class SwatchApp:
     def start(self):
         """Start SwatchApp."""
         try:
-            self.http.run(host="127.0.0.1", port=4500, debug=False)
+            serve(self.http, listen="*:4500")
         except KeyboardInterrupt:
             pass
 
