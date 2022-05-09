@@ -69,9 +69,7 @@ def detect_camera_frame(camera_name):
             return make_response(jsonify(result), 200)
 
         return make_response(
-            jsonify(
-                {"success": False, "message": "Unknown error doing detection."}
-            ),
+            jsonify({"success": False, "message": "Unknown error doing detection."}),
             500,
         )
     else:
@@ -91,9 +89,7 @@ def get_latest_result(label):
     """Get the latest results for a label"""
     if not label:
         return make_response(
-            jsonify(
-                {"success": False, "message": "Label needs to be provided"}
-            )
+            jsonify({"success": False, "message": "Label needs to be provided"})
         )
 
     return swatch.image_processor.get_latest_result(label)
