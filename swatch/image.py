@@ -15,7 +15,7 @@ class ImageProcessor:
     def __check_image__(self, crop, zone, object, snapshot):
         """Check specific image for known color values."""
 
-        if object.color_lower is "0, 0, 0":
+        if object.color_lower == "0, 0, 0":
             color_lower = "1, 1, 1"
         else:
             color_lower = object.color_lower.split(", ")
