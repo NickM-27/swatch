@@ -8,8 +8,8 @@ on:
 
 jobs:
 
-  # PreCommit
-  pre-commit:
+  # Python Checks
+  python-checks:
     runs-on: "ubuntu-latest"
     name: Pre-commit
     steps:
