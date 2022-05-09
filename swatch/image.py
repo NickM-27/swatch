@@ -3,20 +3,21 @@ import requests
 from colorthief import ColorThief
 import cv2
 import numpy as np
+from typing import Tuple
 
-from swatch.config import SnapshotModeEnum
+from swatch.config import ObjectConfig, SnapshotModeEnum, SwatchConfig
 from swatch.snapshot import save_snapshot
 
 
 class ImageProcessor:
     """Processing images with swatch config data."""
 
-    def __init__(self, config):
+    def __init__(self, config: SwatchConfig):
         """Create Image Processor"""
         self.config = config
         self.latest_results = {}
 
-    def __check_image__(self, crop, detectable, snapshot):
+    def __check_image__(self, crop, detectable: ObjectConfig, snapshot: Tuple[str, str]):
         """Check specific image for known color values."""
 
         if detectable.color_lower == "0, 0, 0":

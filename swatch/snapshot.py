@@ -7,7 +7,7 @@ from swatch.config import SwatchConfig
 from swatch.const import CONST_MEDIA_DIR
 
 
-def save_snapshot(name, image):
+def save_snapshot(name: str, image):
     time = datetime.now()
 
     file_dir = f"{CONST_MEDIA_DIR}/snapshots/{time.strftime('%m-%d')}"
