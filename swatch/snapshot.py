@@ -3,8 +3,8 @@ import os
 
 from datetime import datetime
 
-from config import SwatchConfig
-from const import CONST_MEDIA_DIR
+from swatch.config import SwatchConfig
+from swatch.const import CONST_MEDIA_DIR
 
 
 def save_snapshot(name, image):

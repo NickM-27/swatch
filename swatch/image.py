@@ -4,8 +4,8 @@ from colorthief import ColorThief
 import cv2
 import numpy as np
 
-from config import SnapshotModeEnum
-from snapshot import save_snapshot
+from swatch.config import SnapshotModeEnum
+from swatch.snapshot import save_snapshot
 
 
 class ImageProcessor:
