@@ -1,3 +1,4 @@
+"""ImageProcessor for getting detectable info from images."""
 import requests
 from colorthief import ColorThief
 import cv2
@@ -11,16 +12,17 @@ class ImageProcessor:
     def __init__(self, config):
         """Create Image Processor"""
         self.config = config
+        self.latest_results = {}
 
-    def __check_image__(self, crop, zone, object, snapshot):
+    def __check_image__(self, crop, detectable, snapshot):
         """Check specific image for known color values."""
 
-        if object.color_lower == "0, 0, 0":
+        if detectable.color_lower == "0, 0, 0":
             color_lower = "1, 1, 1"
         else:
-            color_lower = object.color_lower.split(", ")
+            color_lower = detectable.color_lower.split(", ")
 
-        color_upper = object.color_upper.split(", ")
+        color_upper = detectable.color_upper.split(", ")
         lower = np.array(
             [int(color_lower[0]), int(color_lower[1]), int(color_lower[2])],
             dtype="uint8",
@@ -34,7 +36,7 @@ class ImageProcessor:
         output = cv2.bitwise_and(crop, crop, mask=mask)
         matches = np.count_nonzero(output)
 
-        if matches > object.min_area and matches < object.max_area:
+        if matches > detectable.min_area and matches < detectable.max_area:
             if snapshot[1].save_detections and snapshot[1].snapshot_mode in [
                 SnapshotModeEnum.all,
                 SnapshotModeEnum.mask,
@@ -42,14 +44,14 @@ class ImageProcessor:
                 save_snapshot(f"detected_{snapshot[0]}", output)
 
             return {"result": True, "area": matches}
-        else:
-            if snapshot[1].save_misses and snapshot[1].snapshot_mode in [
-                SnapshotModeEnum.all,
-                SnapshotModeEnum.mask,
-            ]:
-                save_snapshot(f"missed_{snapshot[0]}", output)
 
-            return {"result": False, "area": matches}
+        if snapshot[1].save_misses and snapshot[1].snapshot_mode in [
+            SnapshotModeEnum.all,
+            SnapshotModeEnum.mask,
+        ]:
+            save_snapshot(f"missed_{snapshot[0]}", output)
+
+        return {"result": False, "area": matches}
 
     def detect(self, camera_name, image_url):
         """Use the default image or $image_url to detect known objects."""
@@ -77,7 +79,6 @@ class ImageProcessor:
                 snapshot_config = zone.snapshot_config
                 result = self.__check_image__(
                     crop,
-                    zone,
                     self.config.objects[object_name],
                     (f"{zone_name}_{object_name}", snapshot_config),
                 )
@@ -88,6 +89,7 @@ class ImageProcessor:
                 ]:
                     save_snapshot(f"{zone_name}", crop)
 
+                self.latest_results[object_name] = result
                 response[zone_name][object_name] = result
 
         return response
