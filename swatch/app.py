@@ -1,3 +1,4 @@
+"""Main http service that handles starting app modules."""
 from swatch import SwatchService
 
 from flask import (
