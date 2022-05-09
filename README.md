@@ -12,6 +12,7 @@
 [![License](https://img.shields.io/github/license/NickM-27/swatch.svg?style=flat-square)](LICENSE)
 
 # swatch
+
 Color detection in images to capture presence of known objects.
 
 ## Why?
