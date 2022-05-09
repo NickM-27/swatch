@@ -9,8 +9,6 @@ from flask import (
     request,
 )
 
-from waitress import serve
-
 from swatch.image import ImageProcessor
 
 bp = Blueprint("swatch", __name__)

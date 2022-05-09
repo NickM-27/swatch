@@ -72,9 +72,6 @@ class ImageProcessor:
                     int(coordinates[0]) : int(coordinates[2]),
                 ]
             else:
-                crop = []
-
-            if crop.size <= 0:
                 continue
 
             for object_name in zone.objects:
@@ -98,6 +95,9 @@ class ImageProcessor:
 
     def get_latest_result(self, label: str):
         """Return latest results for label."""
+        if label == "all":
+            return self.latest_results
+
         latest_result = self.latest_results.get(label)
 
         if latest_result:
