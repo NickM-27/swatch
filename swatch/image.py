@@ -9,6 +9,8 @@ from snapshot import save_snapshot
 
 
 class ImageProcessor:
+    """Processing images with swatch config data."""
+
     def __init__(self, config):
         """Create Image Processor"""
         self.config = config
@@ -53,7 +55,7 @@ class ImageProcessor:
 
         return {"result": False, "area": matches}
 
-    def detect(self, camera_name, image_url):
+    def detect(self, camera_name: str, image_url: str):
         """Use the default image or $image_url to detect known objects."""
         response = {}
 
@@ -93,6 +95,15 @@ class ImageProcessor:
                 response[zone_name][object_name] = result
 
         return response
+
+    def get_latest_result(self, label: str):
+        """Return latest results for label."""
+        latest_result = self.latest_results.get(label)
+
+        if latest_result:
+            return latest_result
+
+        return {"result": False, "area": -1}
 
     def parse_colors_from_image(self, test_image) -> tuple[str, set[str]]:
         """Convenience fun to get colors from test image."""

@@ -66,13 +66,13 @@ def detect_camera_frame(camera_name):
 
         if result:
             return make_response(jsonify(result), 200)
-        else:
-            return make_response(
-                jsonify(
-                    {"success": False, "message": "Unknown error doing detection."}
-                ),
-                500,
-            )
+
+        return make_response(
+            jsonify(
+                {"success": False, "message": "Unknown error doing detection."}
+            ),
+            500,
+        )
     else:
         return make_response(
             jsonify(
@@ -83,6 +83,19 @@ def detect_camera_frame(camera_name):
             ),
             404,
         )
+
+
+@app.route("/api/<label>/latest", methods=["GET"])
+def get_latest_result(label):
+    """Get the latest results for a label"""
+    if not label:
+        return make_response(
+            jsonify(
+                {"success": False, "message": "Label needs to be provided"}
+            )
+        )
+
+    return swatch.image_processor.get_latest_result(label)
 
 
 @app.route("/api/colortest", methods=["POST"])
