@@ -27,4 +27,4 @@ jobs:
         run: |
           pre-commit run --all-files --show-diff-on-failure --color=always
       - name: Run mypy
-        run: docker run --rm --entrypoint=python3 swatch:latest -u -m mypy --config-file swatch/mypy.ini app
+        run: docker run --rm --entrypoint=python3 swatch:latest -u -m mypy --config-file swatch/mypy.ini swatch

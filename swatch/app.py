@@ -1,4 +1,4 @@
-""""""
+"""Main SwatchApp responsible for running the app."""
 import os
 
 from waitress import serve
