@@ -29,7 +29,7 @@ class ImageProcessor:
             else:
                 color_lower = color_variant.color_lower.split(", ")
 
-            color_upper = detectable.color_upper.split(", ")
+            color_upper = color_variant.color_upper.split(", ")
             lower: np.ndarray = np.array(
                 [int(color_lower[0]), int(color_lower[1]), int(color_lower[2])],
                 dtype="uint8",
