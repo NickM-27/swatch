@@ -3,6 +3,7 @@
 import unittest
 from swatch.config import SwatchConfig
 
+
 class TestConfig(unittest.TestCase):
     def setUp(self) -> None:
         """setup simple"""
