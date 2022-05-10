@@ -1,6 +1,7 @@
 """Tests for SwatchConfig"""
 import sys
-sys.path.append('../')
+
+sys.path.append("../")
 
 import unittest
 
@@ -10,7 +11,6 @@ from swatch.config import (
 
 
 class TestConfig(unittest.TestCase):
-
     def setUp(self) -> None:
         """setup simple"""
         self.minimal = {
