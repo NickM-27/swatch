@@ -8,7 +8,7 @@ ENV OPENCV_VERSION="4.5.1"
 RUN pip install -r requirements.txt
 
 WORKDIR /opt/swatch/
-ADD swatch .
+ADD swatch swatch/
 
 EXPOSE 4500
 
