@@ -2,6 +2,7 @@
 black
 flake8
 pre-commit
-pylint-pytest
-pylint==2.8.3
+
 types-python-dateutil
+types-waitress
+types-PyYAML

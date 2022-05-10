@@ -39,17 +39,14 @@ jobs:
       - uses: actions/setup-node@master
         with:
           node-version: 16.x
-      - name: Setup Python ${{ env.DEFAULT_PYTHON }}
-        uses: "actions/setup-python@v2.2.2"
-        with:
-          python-version: ${{ env.DEFAULT_PYTHON }}
-      - name: Install requirements
-        run: |
-          pip install pip
-          pip install -r requirements_dev.txt
-      - name: Tests suite
-        run: |
-          python3 -m unittest
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Build
+        run: make
+      - name: Run tests
+        run: docker run --rm --entrypoint=python3 swatch:latest -u -m unittest
       #- name: Update mypy
       #  run: mypy --install-types
       #- name: Run mypy
