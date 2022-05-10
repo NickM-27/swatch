@@ -41,8 +41,8 @@ jobs:
         uses: docker/setup-buildx-action@v1
       - name: Build
         run: make
-      - name: Update mypy
-        run: mypy --install-types
+      #- name: Update mypy
+      #  run: mypy --install-types
       #- name: Run mypy
       #  run: docker run swatch:latest --entrypoint=python3 -u -m mypy --config-file swatch/mypy.ini swatch
       - name: Run tests
