@@ -1,9 +1,10 @@
 """ImageProcessor for getting detectable info from images."""
+
 import requests
 from colorthief import ColorThief
 import cv2
 import numpy as np
-from typing import Tuple
+from typing import Any, Dict, Tuple
 
 from swatch.config import ObjectConfig, SnapshotConfig, SnapshotModeEnum, SwatchConfig
 from swatch.snapshot import save_snapshot
@@ -12,12 +13,12 @@ from swatch.snapshot import save_snapshot
 class ImageProcessor:
     """Processing images with swatch config data."""
 
-    def __init__(self, config: SwatchConfig):
+    def __init__(self, config: SwatchConfig) -> None:
         """Create Image Processor"""
-        self.config = config
-        self.latest_results = {}
+        self.config: SwatchConfig = config
+        self.latest_results: Dict[str, Any] = {}
 
-    def __check_image__(self, crop, detectable: ObjectConfig, snapshot: Tuple[str, SnapshotConfig]):
+    def __check_image__(self, crop: Any, detectable: ObjectConfig, snapshot: Tuple[str, SnapshotConfig]) -> Dict[str, Any]:
         """Check specific image for known color values."""
 
         if detectable.color_lower == "0, 0, 0":
@@ -56,9 +57,9 @@ class ImageProcessor:
 
         return {"result": False, "area": matches}
 
-    def detect(self, camera_name: str, image_url: str):
+    def detect(self, camera_name: str, image_url: str) -> Dict[str, Any]:
         """Use the default image or $image_url to detect known objects."""
-        response = {}
+        response: Dict[str, Any] = {}
 
         for zone_name, zone in self.config.cameras[camera_name].zones.items():
             response[zone_name] = {}
@@ -94,7 +95,7 @@ class ImageProcessor:
 
         return response
 
-    def get_latest_result(self, label: str):
+    def get_latest_result(self, label: str) -> Dict[str, Any]:
         """Return latest results for label."""
         if label == "all":
             return self.latest_results
@@ -106,7 +107,7 @@ class ImageProcessor:
 
         return {"result": False, "area": -1}
 
-    def parse_colors_from_image(self, test_image) -> tuple[str, set[str]]:
+    def parse_colors_from_image(self, test_image: Any) -> tuple[str, set[str]]:
         """Convenience fun to get colors from test image."""
         color_thief = ColorThief(test_image)
         main_color = color_thief.get_color(quality=1)

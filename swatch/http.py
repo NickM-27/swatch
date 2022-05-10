@@ -8,26 +8,27 @@ from flask import (
     make_response,
     request,
 )
+from swatch.config import SwatchConfig
 
 from swatch.image import ImageProcessor
 
 bp = Blueprint("swatch", __name__)
 
 def create_app(
-    swatch_config,
+    swatch_config: SwatchConfig,
     image_processor: ImageProcessor,
-):
+) -> Flask:
     app = Flask(__name__)
     app.register_blueprint(bp)
     app.config = swatch_config
-    app.image_processor = image_processor
+    app.image_processor = image_processor # type: ignore[attr-defined]
     return app
 
 ### Basic / Frontend Routes
 
 
 @bp.route("/")
-def status():
+def status() -> str:
     """Return Swatch stats."""
     return "Swatch is running."
 

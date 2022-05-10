@@ -8,7 +8,7 @@ from swatch.config import (
 
 class TestConfig(unittest.TestCase):
 
-    def simple_setup(self):
+    def simple_setup(self) -> None:
         self.minimal = {
             "objects": {
                 "test_obj": {
@@ -31,6 +31,6 @@ class TestConfig(unittest.TestCase):
             },
         }
 
-    def test_config_class(self):
+    def test_config_class(self) -> None:
         swatch_config = SwatchConfig(**self.minimal)
         assert self.minimal == swatch_config.dict(exclude_unset=True)
