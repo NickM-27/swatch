@@ -23,7 +23,7 @@ def create_app(
     """Creates the Flask app to run the webserver."""
     app = Flask(__name__)
     app.register_blueprint(bp)
-    app.config = swatch_config
+    app.swatch_config = swatch_config
     app.image_processor = image_processor  # type: ignore[attr-defined]
     return app
 
@@ -43,7 +43,7 @@ def status() -> str:
 @bp.route("/api/config", methods=["GET"])
 def get_config() -> Any:
     """Get current config."""
-    return make_response(jsonify(current_app.config.dict()), 200)  # type: ignore[attr-defined]
+    return make_response(jsonify(current_app.swatch_config.dict()), 200)  # type: ignore[attr-defined]
 
 
 @bp.route("/api/<camera_name>/detect", methods=["POST"])
@@ -54,7 +54,7 @@ def detect_camera_frame(camera_name: str) -> Any:
             jsonify({"success": False, "message": "camera_name must be set."}), 404
         )
 
-    camera_config: CameraConfig = current_app.config.cameras.get(camera_name)  # type: ignore[attr-defined]
+    camera_config: CameraConfig = current_app.swatch_config.cameras.get(camera_name)  # type: ignore[attr-defined]
 
     if not camera_config:
         return make_response(
