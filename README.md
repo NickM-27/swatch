@@ -27,6 +27,8 @@ In this example you can see a cropped section of the street with a trash can. Th
 ## Features
 
 - REST API to be invoked by other applications
+- [HomeAssistant Integration](https://github.com/NickM-27/swatch-hass-integration)
+- [HomeAssistant Addon](https://github.com/NickM-27/swatch-hass-addon)
 
 ## Configuration
 
