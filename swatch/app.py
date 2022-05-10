@@ -1,5 +1,4 @@
 """Main SwatchApp responsible for running the app."""
-from distutils.command.config import config
 import os
 
 from waitress import serve
@@ -31,7 +30,7 @@ class SwatchApp:
         if os.path.isfile(config_file):
             print("Verified Config")
 
-        user_config = SwatchConfig.parse_file(CONST_CONFIG_FILE)
+        user_config = SwatchConfig.parse_file(config_file)
         self.config = user_config.runtime_config
 
     def start(self) -> None:
