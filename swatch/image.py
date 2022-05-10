@@ -22,9 +22,9 @@ class ImageProcessor:
         self, crop: Any, detectable: ObjectConfig, snapshot: Tuple[str, SnapshotConfig]
     ) -> Dict[str, Any]:
         """Check specific image for known color values."""
+        best_fail = {}
 
         for variant_name, color_variant in detectable.color_variants.items():
-            print(f"Checking {variant_name} with config {color_variant}")
             if color_variant.color_lower == "0, 0, 0":
                 color_lower = "1, 1, 1"
             else:
@@ -44,24 +44,23 @@ class ImageProcessor:
             output = cv2.bitwise_and(crop, crop, mask=mask)
             matches = np.count_nonzero(output)
 
-            print(f"The check has {matches} matches")
-
             if matches > detectable.min_area and matches < detectable.max_area:
                 if snapshot[1].save_detections and snapshot[1].snapshot_mode in [
                     SnapshotModeEnum.all,
                     SnapshotModeEnum.mask,
                 ]:
-                    save_snapshot(f"detected_{snapshot[0]}", output)
+                    save_snapshot(f"detected_{variant_name}_{snapshot[0]}", output)
 
                 return {"result": True, "area": matches, "variant": variant_name}
             else:
-                best_fail = {"result": False, "area": matches, "variant": variant_name}
+                if matches > best_fail.get("area", 0):
+                    best_fail = {"result": False, "area": matches, "variant": variant_name}
 
-        if snapshot[1].save_misses and snapshot[1].snapshot_mode in [
-            SnapshotModeEnum.all,
-            SnapshotModeEnum.mask,
-        ]:
-            save_snapshot(f"missed_{snapshot[0]}", output)
+                if snapshot[1].save_misses and snapshot[1].snapshot_mode in [
+                    SnapshotModeEnum.all,
+                    SnapshotModeEnum.mask,
+                ]:
+                    save_snapshot(f"missed_{variant_name}_{snapshot[0]}", output)
 
         return best_fail
 
