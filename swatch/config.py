@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from typing import Any, Dict, List, Optional, Tuple, Union
 from enum import Enum
 from pydantic import BaseModel, Extra, Field
 import yaml
@@ -29,17 +28,21 @@ class SnapshotConfig(SwatchBaseModel):
     )
 
 
-class ObjectConfig(SwatchBaseModel):
+class ColorConfig(SwatchBaseModel):
     color_lower: str = Field(title="Lower R, G, B color values")
     color_upper: str = Field(title="Higher R, G, B color values")
+
+
+class ObjectConfig(SwatchBaseModel):
+    color_variants: dict[str, ColorConfig] = Field(
+        title="Color variants for this object", default_factory=dict
+    )
     min_area: int = Field(title="Min Area", default=0)
     max_area: int = Field(title="Max Area", default=240000)
 
 
 class ZoneConfig(SwatchBaseModel):
-    coordinates: str | list[str] = Field(
-        title="Coordinates polygon for the defined zone."
-    )
+    coordinates: str = Field(title="Coordinates polygon for the defined zone.")
     objects: list[str] = Field(title="Included Objects.")
     snapshot_config: SnapshotConfig = Field(
         title="Snapshot config for this zone.", default_factory=SnapshotConfig

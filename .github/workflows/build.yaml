@@ -2,6 +2,9 @@
 name: Build
 
 on:
+  push:
+    branches:
+      - master
   pull_request:
   schedule:
     - cron: '0 0 * * *'
@@ -27,8 +30,9 @@ jobs:
         run: |
           pre-commit run --all-files --show-diff-on-failure --color=always
 
-  python_tests:
+  python-tests:
     runs-on: ubuntu-latest
+    name: Python Tests
     steps:
       - name: Check out code
         uses: actions/checkout@v2
@@ -41,9 +45,9 @@ jobs:
         uses: docker/setup-buildx-action@v1
       - name: Build
         run: make
+      - name: Run tests
+        run: docker run --rm --entrypoint=python3 swatch:latest -u -m unittest
       #- name: Update mypy
       #  run: mypy --install-types
       #- name: Run mypy
       #  run: docker run swatch:latest --entrypoint=python3 -u -m mypy --config-file swatch/mypy.ini swatch
-      - name: Run tests
-        run: docker run --rm --entrypoint=python3 swatch:latest -u -m unittest

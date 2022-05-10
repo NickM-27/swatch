@@ -4,5 +4,7 @@ config/config.yaml
 */.DS_Store
 swatch/version.py
 
+swatch/__pycache__
 swatch/__pycache__/*
-swatch/test/__pycache/*
+swatch/tests/__pycache__/
+tests/__pycache__/*

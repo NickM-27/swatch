@@ -1,13 +1,7 @@
 """Tests for SwatchConfig"""
-import sys
-
-sys.path.append("../")
 
 import unittest
-
-from swatch.config import (
-    SwatchConfig,
-)
+from swatch.config import SwatchConfig
 
 
 class TestConfig(unittest.TestCase):
@@ -16,8 +10,12 @@ class TestConfig(unittest.TestCase):
         self.minimal = {
             "objects": {
                 "test_obj": {
-                    "color_lower": "1, 1, 1",
-                    "color_upper": "2, 2, 2",
+                    "color_variants": {
+                        "default": {
+                            "color_lower": "1, 1, 1",
+                            "color_upper": "2, 2, 2",
+                        },
+                    },
                     "min_area": 0,
                     "max_area": 100000,
                 },

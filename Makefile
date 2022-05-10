@@ -5,3 +5,6 @@ local:
 
 push:
 	docker buildx build --push --platform linux/arm64/v8,linux/amd64 --tag crzynik/swatch:latest --file docker/Dockerfile .
+
+push_beta:
+	docker buildx build --push --platform linux/arm64/v8,linux/amd64 --tag crzynik/swatch:beta --file docker/Dockerfile .

@@ -9,6 +9,3 @@ PyYAML
 waitress
 colorthief
 mypy == 0.942
-
-types-waitress
-types-PyYAML
