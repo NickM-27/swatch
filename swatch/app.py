@@ -1,4 +1,5 @@
 """Main SwatchApp responsible for running the app."""
+from distutils.command.config import config
 import os
 
 from waitress import serve
@@ -23,7 +24,9 @@ class SwatchApp:
         """Init the SwatchService with saved config file."""
         print("Importing config")
 
-        if os.path.isfile(CONST_CONFIG_FILE):
+        config_file = os.environ.get("CONFIG_FILE", CONST_CONFIG_FILE)
+
+        if os.path.isfile(config_file):
             print("Verified Config")
 
         user_config = SwatchConfig.parse_file(CONST_CONFIG_FILE)
