@@ -4,7 +4,7 @@ import requests
 from colorthief import ColorThief
 import cv2
 import numpy as np
-from typing import Any, Dict, Tuple
+from typing import Any, Dict, Optional, Tuple
 
 from swatch.config import ObjectConfig, SnapshotConfig, SnapshotModeEnum, SwatchConfig
 from swatch.snapshot import save_snapshot
@@ -27,11 +27,11 @@ class ImageProcessor:
             color_lower = detectable.color_lower.split(", ")
 
         color_upper = detectable.color_upper.split(", ")
-        lower = np.array(
+        lower: np.ndarray = np.array(
             [int(color_lower[0]), int(color_lower[1]), int(color_lower[2])],
             dtype="uint8",
         )
-        upper = np.array(
+        upper: np.ndarray = np.array(
             [int(color_upper[0]), int(color_upper[1]), int(color_upper[2])],
             dtype="uint8",
         )
@@ -100,7 +100,7 @@ class ImageProcessor:
         if label == "all":
             return self.latest_results
 
-        latest_result = self.latest_results.get(label)
+        latest_result: Optional[Dict[str, Any]] = self.latest_results.get(label)
 
         if latest_result:
             return latest_result
