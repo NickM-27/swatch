@@ -1,7 +1,6 @@
 from __future__ import annotations
-from email.policy import default
 
-from typing import Dict, List, Optional, Tuple, Union
+from typing import Any, Dict, List, Optional, Tuple, Union
 from enum import Enum
 from pydantic import BaseModel, Extra, Field
 import yaml
@@ -65,7 +64,7 @@ class SwatchConfig(SwatchBaseModel):
         return config
 
     @classmethod
-    def parse_file(cls, config_file):
+    def parse_file(cls, config_file):  # type: ignore[no-untyped-def]
         with open(config_file) as f:
             raw_config = f.read()
 

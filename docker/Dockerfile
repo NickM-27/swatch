@@ -12,4 +12,4 @@ ADD swatch .
 
 EXPOSE 4500
 
-CMD ["python3", "-u", "-m", "app"]
+CMD ["python3", "-u", "-m", "swatch"]
