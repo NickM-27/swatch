@@ -5,7 +5,6 @@ from datetime import datetime
 
 from numpy import ndarray
 
-from swatch.config import SwatchConfig
 from swatch.const import CONST_MEDIA_DIR
 
 

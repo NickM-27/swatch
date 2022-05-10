@@ -1,11 +1,6 @@
 """Tests for SwatchConfig"""
 
-import sys, os
-myPath = os.path.dirname(os.path.abspath(__file__))
-sys.path.insert(0, myPath + '/../')
-
 import unittest
-
 from swatch.config import SwatchConfig
 
 class TestConfig(unittest.TestCase):
@@ -14,8 +9,12 @@ class TestConfig(unittest.TestCase):
         self.minimal = {
             "objects": {
                 "test_obj": {
-                    "color_lower": "1, 1, 1",
-                    "color_upper": "2, 2, 2",
+                    "color_variants": {
+                        "default": {
+                            "color_lower": "1, 1, 1",
+                            "color_upper": "2, 2, 2",
+                        },
+                    },
                     "min_area": 0,
                     "max_area": 100000,
                 },
@@ -34,6 +33,5 @@ class TestConfig(unittest.TestCase):
         }
 
     def test_config_class(self) -> None:
-        ""
-        #swatch_config = SwatchConfig(**self.minimal)
-        #assert self.minimal == swatch_config.dict(exclude_unset=True)
+        swatch_config = SwatchConfig(**self.minimal)
+        assert self.minimal == swatch_config.dict(exclude_unset=True)

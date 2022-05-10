@@ -43,7 +43,7 @@ class ObjectConfig(SwatchBaseModel):
 
 
 class ZoneConfig(SwatchBaseModel):
-    coordinates: str | list[str] = Field(
+    coordinates: str = Field(
         title="Coordinates polygon for the defined zone."
     )
     objects: list[str] = Field(title="Included Objects.")

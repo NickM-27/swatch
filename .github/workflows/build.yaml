@@ -49,7 +49,7 @@ jobs:
           pip install -r requirements_dev.txt
       - name: Tests suite
         run: |
-          pytest swatch
+          python3 -m unittest
       #- name: Update mypy
       #  run: mypy --install-types
       #- name: Run mypy
