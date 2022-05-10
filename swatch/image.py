@@ -5,7 +5,7 @@ import cv2
 import numpy as np
 from typing import Tuple
 
-from swatch.config import ObjectConfig, SnapshotModeEnum, SwatchConfig
+from swatch.config import ObjectConfig, SnapshotConfig, SnapshotModeEnum, SwatchConfig
 from swatch.snapshot import save_snapshot
 
 
@@ -17,7 +17,7 @@ class ImageProcessor:
         self.config = config
         self.latest_results = {}
 
-    def __check_image__(self, crop, detectable: ObjectConfig, snapshot: Tuple[str, str]):
+    def __check_image__(self, crop, detectable: ObjectConfig, snapshot: Tuple[str, SnapshotConfig]):
         """Check specific image for known color values."""
 
         if detectable.color_lower == "0, 0, 0":

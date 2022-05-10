@@ -26,8 +26,6 @@ jobs:
       - name: Run pre-commit on all files
         run: |
           pre-commit run --all-files --show-diff-on-failure --color=always
-      - name: Run mypy
-        run: docker run --rm --entrypoint=python3 swatch:latest -u -m mypy --config-file swatch/mypy.ini swatch
 
   python_tests:
     runs-on: ubuntu-latest
@@ -44,6 +42,6 @@ jobs:
       - name: Build
         run: make
       - name: Run mypy
-        run: docker run --rm --entrypoint=python3 swatch:latest -u -m mypy --config-file swatch/mypy.ini swatch
+        run: docker run --rm swatch:latest --entrypoint=python3 -u -m mypy --config-file swatch/mypy.ini swatch
       - name: Run tests
         run: docker run --rm --entrypoint=python3 swatch:latest -u -m unittest

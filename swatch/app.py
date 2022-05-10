@@ -10,7 +10,7 @@ from swatch.image import ImageProcessor
 
 class SwatchApp:
 
-    def __init__(self):
+    def __init__(self) -> None:
         print("SwatchApp Starting")
         self.__init_config__()
         self.image_processor = ImageProcessor(self.config)
@@ -19,7 +19,7 @@ class SwatchApp:
             self.image_processor,
         )
 
-    def __init_config__(self):
+    def __init_config__(self) -> None:
         """Init the SwatchService with saved config file."""
         print("Importing config")
 
@@ -29,7 +29,7 @@ class SwatchApp:
         user_config = SwatchConfig.parse_file(CONST_CONFIG_FILE)
         self.config = user_config.runtime_config
 
-    def start(self):
+    def start(self) -> None:
         """Start SwatchApp."""
         try:
             serve(self.http, listen="*:4500")
@@ -38,6 +38,6 @@ class SwatchApp:
 
         self.stop()
 
-    def stop(self):
+    def stop(self) -> None:
         """Stop SwatchApp."""
         print("SwatchApp Stopping")
