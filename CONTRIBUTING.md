@@ -32,6 +32,12 @@ cameras:
 
 Upon opening, you should be prompted to open the project in a remote container. This will build a container on top of the base swatch container with all the development dependencies installed. This ensures everyone uses a consistent development environment without the need to install any dependencies on your host machine.
 
-## 4. Teardown
+## 4. Run the app
+
+```python
+python3 -m swatch
+```
+
+## 5. Teardown
 
 After closing VSCode, you may still have containers running. To close everything down, just run docker-compose down -v to cleanup all containers.
