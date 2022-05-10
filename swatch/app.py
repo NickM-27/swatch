@@ -11,6 +11,8 @@ from swatch.image import ImageProcessor
 
 
 class SwatchApp:
+    """Main swatch process that handles the lifecycle of the app."""
+
     def __init__(self) -> None:
         print("SwatchApp Starting")
         self.__init_config__()
