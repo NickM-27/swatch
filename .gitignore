@@ -1,6 +1,7 @@
 cache/
 
 config/config.yaml
+debug/
 */.DS_Store
 swatch/version.py
 
