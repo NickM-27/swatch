@@ -1,7 +1,6 @@
 -r requirements.txt
 black
 flake8
-mypy==0.910
 pre-commit
 pytest==6.2.5
 pylint-pytest
