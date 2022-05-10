@@ -54,7 +54,11 @@ class ImageProcessor:
                 return {"result": True, "area": matches, "variant": variant_name}
             else:
                 if matches > best_fail.get("area", 0):
-                    best_fail = {"result": False, "area": matches, "variant": variant_name}
+                    best_fail = {
+                        "result": False,
+                        "area": matches,
+                        "variant": variant_name,
+                    }
 
                 if snapshot[1].save_misses and snapshot[1].snapshot_mode in [
                     SnapshotModeEnum.all,
