@@ -1,6 +1,8 @@
+"""Tests for SwatchConfig"""
+import sys
+sys.path.append('../')
+
 import unittest
-import numpy as np
-from pydantic import ValidationError
 
 from swatch.config import (
     SwatchConfig,
@@ -8,7 +10,9 @@ from swatch.config import (
 
 
 class TestConfig(unittest.TestCase):
-    def simple_setup(self) -> None:
+
+    def setUp(self) -> None:
+        """setup simple"""
         self.minimal = {
             "objects": {
                 "test_obj": {
@@ -24,7 +28,7 @@ class TestConfig(unittest.TestCase):
                     "zones": {
                         "test_zone": {
                             "coordinates": "1, 2, 3, 4",
-                            "object": ["test_obj"],
+                            "objects": ["test_obj"],
                         },
                     },
                 },
