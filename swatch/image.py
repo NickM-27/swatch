@@ -23,33 +23,34 @@ class ImageProcessor:
     ) -> Dict[str, Any]:
         """Check specific image for known color values."""
 
-        if detectable.color_lower == "0, 0, 0":
-            color_lower = "1, 1, 1"
-        else:
-            color_lower = detectable.color_lower.split(", ")
+        for variant_name, color_variant in detectable.color_variants.items():
+            if color_variant.color_lower == "0, 0, 0":
+                color_lower = "1, 1, 1"
+            else:
+                color_lower = color_variant.color_lower.split(", ")
 
-        color_upper = detectable.color_upper.split(", ")
-        lower: np.ndarray = np.array(
-            [int(color_lower[0]), int(color_lower[1]), int(color_lower[2])],
-            dtype="uint8",
-        )
-        upper: np.ndarray = np.array(
-            [int(color_upper[0]), int(color_upper[1]), int(color_upper[2])],
-            dtype="uint8",
-        )
+            color_upper = detectable.color_upper.split(", ")
+            lower: np.ndarray = np.array(
+                [int(color_lower[0]), int(color_lower[1]), int(color_lower[2])],
+                dtype="uint8",
+            )
+            upper: np.ndarray = np.array(
+                [int(color_upper[0]), int(color_upper[1]), int(color_upper[2])],
+                dtype="uint8",
+            )
 
-        mask = cv2.inRange(crop, lower, upper)
-        output = cv2.bitwise_and(crop, crop, mask=mask)
-        matches = np.count_nonzero(output)
+            mask = cv2.inRange(crop, lower, upper)
+            output = cv2.bitwise_and(crop, crop, mask=mask)
+            matches = np.count_nonzero(output)
 
-        if matches > detectable.min_area and matches < detectable.max_area:
-            if snapshot[1].save_detections and snapshot[1].snapshot_mode in [
-                SnapshotModeEnum.all,
-                SnapshotModeEnum.mask,
-            ]:
-                save_snapshot(f"detected_{snapshot[0]}", output)
+            if matches > detectable.min_area and matches < detectable.max_area:
+                if snapshot[1].save_detections and snapshot[1].snapshot_mode in [
+                    SnapshotModeEnum.all,
+                    SnapshotModeEnum.mask,
+                ]:
+                    save_snapshot(f"detected_{snapshot[0]}", output)
 
-            return {"result": True, "area": matches}
+                return {"result": True, "area": matches, "variant": variant_name}
 
         if snapshot[1].save_misses and snapshot[1].snapshot_mode in [
             SnapshotModeEnum.all,
