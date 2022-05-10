@@ -5,4 +5,4 @@ config/config.yaml
 swatch/version.py
 
 swatch/__pycache__/*
-swatch/test/__pycache/*
+swatch/test/__pycache__/*
