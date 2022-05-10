@@ -43,9 +43,7 @@ class ObjectConfig(SwatchBaseModel):
 
 
 class ZoneConfig(SwatchBaseModel):
-    coordinates: str = Field(
-        title="Coordinates polygon for the defined zone."
-    )
+    coordinates: str = Field(title="Coordinates polygon for the defined zone.")
     objects: list[str] = Field(title="Included Objects.")
     snapshot_config: SnapshotConfig = Field(
         title="Snapshot config for this zone.", default_factory=SnapshotConfig
