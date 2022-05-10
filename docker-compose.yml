@@ -12,7 +12,7 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - .:/lab/swatch:cached
       - ./config/config.yaml:/config/config.yaml:ro
-      - ./debug:/media/swatch
+      - ./debug:/media/
     ports:
       - "4500:4500"
     command: /bin/sh -c "while sleep 1000; do :; done"

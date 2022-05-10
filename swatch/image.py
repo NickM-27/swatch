@@ -22,6 +22,7 @@ class ImageProcessor:
         self, crop: Any, detectable: ObjectConfig, snapshot: Tuple[str, SnapshotConfig]
     ) -> Dict[str, Any]:
         """Check specific image for known color values."""
+        best_fail = {}
 
         for variant_name, color_variant in detectable.color_variants.items():
             if color_variant.color_lower == "0, 0, 0":
@@ -48,17 +49,24 @@ class ImageProcessor:
                     SnapshotModeEnum.all,
                     SnapshotModeEnum.mask,
                 ]:
-                    save_snapshot(f"detected_{snapshot[0]}", output)
+                    save_snapshot(f"detected_{variant_name}_{snapshot[0]}", output)
 
                 return {"result": True, "area": matches, "variant": variant_name}
+            else:
+                if matches > best_fail.get("area", 0):
+                    best_fail = {
+                        "result": False,
+                        "area": matches,
+                        "variant": variant_name,
+                    }
 
-        if snapshot[1].save_misses and snapshot[1].snapshot_mode in [
-            SnapshotModeEnum.all,
-            SnapshotModeEnum.mask,
-        ]:
-            save_snapshot(f"missed_{snapshot[0]}", output)
+                if snapshot[1].save_misses and snapshot[1].snapshot_mode in [
+                    SnapshotModeEnum.all,
+                    SnapshotModeEnum.mask,
+                ]:
+                    save_snapshot(f"missed_{variant_name}_{snapshot[0]}", output)
 
-        return {"result": False, "area": matches}
+        return best_fail
 
     def detect(self, camera_name: str, image_url: str) -> Dict[str, Any]:
         """Use the default image or $image_url to detect known objects."""
