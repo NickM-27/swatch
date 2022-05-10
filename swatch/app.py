@@ -8,8 +8,8 @@ from swatch.const import CONST_CONFIG_FILE
 from swatch.http import create_app
 from swatch.image import ImageProcessor
 
-class SwatchApp:
 
+class SwatchApp:
     def __init__(self) -> None:
         print("SwatchApp Starting")
         self.__init_config__()

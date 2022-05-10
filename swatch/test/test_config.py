@@ -6,8 +6,8 @@ from swatch.config import (
     SwatchConfig,
 )
 
-class TestConfig(unittest.TestCase):
 
+class TestConfig(unittest.TestCase):
     def simple_setup(self) -> None:
         self.minimal = {
             "objects": {

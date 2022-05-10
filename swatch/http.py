@@ -15,6 +15,7 @@ from swatch.image import ImageProcessor
 
 bp = Blueprint("swatch", __name__)
 
+
 def create_app(
     swatch_config: SwatchConfig,
     image_processor: ImageProcessor,
@@ -23,8 +24,9 @@ def create_app(
     app = Flask(__name__)
     app.register_blueprint(bp)
     app.config = swatch_config
-    app.image_processor = image_processor # type: ignore[attr-defined]
+    app.image_processor = image_processor  # type: ignore[attr-defined]
     return app
+
 
 ### Basic / Frontend Routes
 
@@ -41,7 +43,7 @@ def status() -> str:
 @bp.route("/api/config", methods=["GET"])
 def get_config() -> Any:
     """Get current config."""
-    return make_response(jsonify(current_app.config.dict()), 200) # type: ignore[attr-defined]
+    return make_response(jsonify(current_app.config.dict()), 200)  # type: ignore[attr-defined]
 
 
 @bp.route("/api/<camera_name>/detect", methods=["POST"])
@@ -52,7 +54,7 @@ def detect_camera_frame(camera_name: str) -> Any:
             jsonify({"success": False, "message": "camera_name must be set."}), 404
         )
 
-    camera_config: CameraConfig = current_app.config.cameras.get(camera_name) # type: ignore[attr-defined]
+    camera_config: CameraConfig = current_app.config.cameras.get(camera_name)  # type: ignore[attr-defined]
 
     if not camera_config:
         return make_response(
@@ -76,7 +78,7 @@ def detect_camera_frame(camera_name: str) -> Any:
         image_url = None
 
     if image_url:
-        result: Dict[str, Any] = current_app.image_processor.detect(camera_name, image_url) # type: ignore[attr-defined]
+        result: Dict[str, Any] = current_app.image_processor.detect(camera_name, image_url)  # type: ignore[attr-defined]
 
         if result:
             return make_response(jsonify(result), 200)
@@ -105,7 +107,7 @@ def get_latest_result(label: str) -> Any:
             jsonify({"success": False, "message": "Label needs to be provided"})
         )
 
-    return current_app.image_processor.get_latest_result(label) # type: ignore[attr-defined]
+    return current_app.image_processor.get_latest_result(label)  # type: ignore[attr-defined]
 
 
 @bp.route("/api/colortest", methods=["POST"])
@@ -119,7 +121,7 @@ def test_colors() -> Any:
         )
 
     test_image = request.files.get("test_image")
-    main_color, palette = current_app.image_processor.parse_colors_from_image(test_image) # type: ignore[attr-defined]
+    main_color, palette = current_app.image_processor.parse_colors_from_image(test_image)  # type: ignore[attr-defined]
 
     return make_response(
         jsonify(

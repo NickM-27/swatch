@@ -64,7 +64,7 @@ class SwatchConfig(SwatchBaseModel):
         return config
 
     @classmethod
-    def parse_file(cls, config_file): # type: ignore[no-untyped-def]
+    def parse_file(cls, config_file):  # type: ignore[no-untyped-def]
         with open(config_file) as f:
             raw_config = f.read()
 

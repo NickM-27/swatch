@@ -18,7 +18,9 @@ class ImageProcessor:
         self.config: SwatchConfig = config
         self.latest_results: Dict[str, Any] = {}
 
-    def __check_image__(self, crop: Any, detectable: ObjectConfig, snapshot: Tuple[str, SnapshotConfig]) -> Dict[str, Any]:
+    def __check_image__(
+        self, crop: Any, detectable: ObjectConfig, snapshot: Tuple[str, SnapshotConfig]
+    ) -> Dict[str, Any]:
         """Check specific image for known color values."""
 
         if detectable.color_lower == "0, 0, 0":
