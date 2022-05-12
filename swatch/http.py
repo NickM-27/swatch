@@ -23,8 +23,8 @@ def create_app(
     """Creates the Flask app to run the webserver."""
     app = Flask(__name__)
     app.register_blueprint(bp)
-    app.swatch_config = swatch_config  # type: ignore[attr-defined]
-    app.image_processor = image_processor  # type: ignore[attr-defined]
+    app.swatch_config = swatch_config
+    app.image_processor = image_processor
     return app
 
 
