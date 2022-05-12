@@ -48,4 +48,4 @@ jobs:
       - name: Run tests
         run: docker run --rm --entrypoint=python3 swatch:latest -u -m unittest
       - name: Run mypy
-        run: docker exec -it swatch-dev /bin/bash -c "pip3 install -r requirements_dev.txt; mypy --install-types; mypy --config-file swatch/mypy.ini swatch"
+        run: docker exec -it swatch:latest /bin/bash -c "pip3 install -r requirements_dev.txt; mypy --install-types; mypy --config-file swatch/mypy.ini swatch"
