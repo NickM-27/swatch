@@ -24,7 +24,7 @@ def create_app(
     app = Flask(__name__)
     app.register_blueprint(bp)
     app.swatch_config = swatch_config
-    app.image_processor = image_processor  # type: ignore[attr-defined]
+    app.image_processor = image_processor
     return app
 
 

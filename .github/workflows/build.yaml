@@ -47,7 +47,5 @@ jobs:
         run: make
       - name: Run tests
         run: docker run --rm --entrypoint=python3 swatch:latest -u -m unittest
-      #- name: Update mypy
-      #  run: mypy --install-types
-      #- name: Run mypy
-      #  run: docker run swatch:latest --entrypoint=python3 -u -m mypy --config-file swatch/mypy.ini swatch
+      - name: Run mypy
+        run: docker run --rm --entrypoint=/bin/bash swatch:latest -c "pip3 install -r requirements_dev.txt; mypy --install-types; mypy --config-file swatch/mypy.ini swatch"
