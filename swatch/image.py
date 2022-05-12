@@ -22,7 +22,7 @@ class ImageProcessor:
         self, crop: Any, detectable: ObjectConfig, snapshot: Tuple[str, SnapshotConfig]
     ) -> Dict[str, Any]:
         """Check specific image for known color values."""
-        best_fail = {}
+        best_fail: Dict[str, Any] = {}
 
         for variant_name, color_variant in detectable.color_variants.items():
             if color_variant.color_lower == "0, 0, 0":
