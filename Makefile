@@ -1,7 +1,7 @@
 default_target: local
 
 COMMIT_HASH := $(shell git log -1 --pretty=format:"%h"|tail -1)
-VERSION = 1.3.0
+VERSION = 1.4.0
 
 local:
 	DOCKER_BUILDKIT=1 docker build --no-cache -t swatch -f docker/Dockerfile .
