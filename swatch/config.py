@@ -32,6 +32,9 @@ class SnapshotConfig(SwatchBaseModel):
     snapshot_mode: SnapshotModeEnum = Field(
         title="Snapshot mode.", default=SnapshotModeEnum.ALL
     )
+    retain_days: int = Field(
+        title="Number of days to retain snapshots.", default=7
+    )
 
 
 class ColorConfig(SwatchBaseModel):
