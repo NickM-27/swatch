@@ -44,7 +44,7 @@ class SnapshotCleanup(threading.Thread):
         self.stop_event = stop_event
 
     def cleanup_snapshots(self):
-        "Cleanup expired snapshots."
+        """Cleanup expired snapshots."""
         seven_days_ago = (datetime.datetime.now() - datetime.timedelta(days=7))
         valid_month, _, valid_day = seven_days_ago.strftime("%m-%d").split("-")
 
@@ -56,14 +56,17 @@ class SnapshotCleanup(threading.Thread):
                 file_path = f"{CONST_MEDIA_DIR}/snapshots/{month}-{day}"
                 try:
                     os.remove(file_path)
+                    print(f"Cleaning up {file_path}")
                 except OSError as _e:
                     print(f"Error: {file_path} : {_e.strerror}")
 
     def run(self):
         """Run snapshot cleanup"""
         # try to run once a day
-        while not self.stop_event.wait(86400):
+        while not self.stop_event.wait(60):
             print("Running snapshot cleanup")
 
             if self.config.retain_days > 0:
                 self.cleanup_snapshots()
+
+        print("Exiting snapshot cleanup")

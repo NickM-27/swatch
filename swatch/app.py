@@ -10,6 +10,7 @@ from swatch.const import CONST_CONFIG_FILE
 from swatch.http import create_app
 from swatch.image import ImageProcessor
 from swatch.processing import AutoDetector
+from swatch.snapshot import SnapshotCleanup
 
 
 class SwatchApp:
@@ -51,6 +52,13 @@ class SwatchApp:
                     self.stop_event,
                 )
                 self.camera_processes[name].start()
+
+    def __init_snapshot_cleanup__(self) -> None:
+        """Init the SwatchApp cleanup thread."""
+        self.snapshot_cleanup_process = SnapshotCleanup(
+            self,
+            
+        )
 
     def start(self) -> None:
         """Start SwatchApp."""

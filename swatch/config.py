@@ -23,6 +23,7 @@ class SnapshotModeEnum(str, Enum):
 
 class SnapshotConfig(SwatchBaseModel):
     """Config for saving snapshots."""
+    url: str = Field(title="Camera Snapshot Url.", default=None)
     save_detections: bool = Field(
         title="Save snapshots of detections that are found.", default=True
     )
@@ -56,17 +57,16 @@ class ZoneConfig(SwatchBaseModel):
     """Configuration for cropped parts of camera frame."""
     coordinates: str = Field(title="Coordinates polygon for the defined zone.")
     objects: list[str] = Field(title="Included Objects.")
-    snapshot_config: SnapshotConfig = Field(
-        title="Snapshot config for this zone.", default_factory=SnapshotConfig
-    )
 
 
 class CameraConfig(SwatchBaseModel):
     """Configuration for camera."""
-    name: str | None = Field(title="Camera name.", regex="^[a-zA-Z0-9_-]+$")
-    snapshot_url: str = Field(title="Camera Snapshot Url.", default=None)
     auto_detect: int = Field(
         title="Frequency to automatically run detection.", default=0
+    )
+    name: str | None = Field(title="Camera name.", regex="^[a-zA-Z0-9_-]+$")
+    snapshot_config: SnapshotConfig = Field(
+        title="Snapshot config for this zone.", default_factory=SnapshotConfig
     )
     zones: dict[str, ZoneConfig] = Field(
         default_factory=dict, title="Zones for this camera."
