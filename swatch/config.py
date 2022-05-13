@@ -10,14 +10,15 @@ import yaml
 class SwatchBaseModel(BaseModel):
     """Base config that sets rules."""
     class Config:
+        """Set config parameters"""
         extra = Extra.forbid
 
 
 class SnapshotModeEnum(str, Enum):
     """Types of snapshots to retain."""
-    all = "all"
-    crop = "crop"
-    mask = "mask"
+    ALL = "all"
+    CROP = "crop"
+    MASK = "mask"
 
 
 class SnapshotConfig(SwatchBaseModel):
@@ -29,7 +30,7 @@ class SnapshotConfig(SwatchBaseModel):
         title="Save snapshots of missed detections.", default=False
     )
     snapshot_mode: SnapshotModeEnum = Field(
-        title="Snapshot mode.", default=SnapshotModeEnum.all
+        title="Snapshot mode.", default=SnapshotModeEnum.ALL
     )
 
 
