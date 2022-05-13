@@ -37,12 +37,22 @@ objects:
 cameras:
   # REQUIRED: Name of the camera
   front_doorbell_cam:
-    # OPTIONAL: but highly recommended, setting the default url for a snapshot to be
-    # processed by this camera. This is required for auto detection (Default: none).
-    snapshot_url: "http://ip.ad.dr.ess/jpg"
     # OPTIONAL: Frequency in seconds to run detection on the camera.
     # a value of 0 disables auto detection (Default: shown below).
     auto_detect: 0
+    # OPTIONAL: Configure the url and retention of snapshots. (Default: Shown Below)
+    snapshot_config:
+        # OPTIONAL: but highly recommended, setting the default url for a snapshot to be
+        # processed by this camera. This is required for auto detection (Default: none).
+        snapshot_url: "http://ip.ad.dr.ess/jpg"
+        # OPTIONAL: Whether or not to save the snapshots of confirmed detections (Default: shown below).
+        save_detections: true
+        # OPTIONAL: Whether or not to save the snapshots of missed detections (Default: shown below).
+        save_misses: false
+        # OPTIONAL: Variations of snapshots to keep. Options are all, mask, crop (Default: shown below).
+        save_detections: "all"
+        # OPTIONAL: Number of days of snapshots to keep (Default: shown below).
+        retain_days: 7
     # REQUIRED: Zones are cropped areas where the object can be expected to be.
     # This makes searching / matches for efficient and more predictable than searching
     # the entire image.
