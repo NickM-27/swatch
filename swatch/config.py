@@ -51,6 +51,7 @@ class ZoneConfig(SwatchBaseModel):
 
 class CameraConfig(SwatchBaseModel):
     snapshot_url: str = Field(title="Camera Snapshot Url.", default=None)
+    auto_detect: int = Field(title="Frequency to automatically run detection.", default=0)
     zones: dict[str, ZoneConfig] = Field(
         default_factory=dict, title="Zones for this camera."
     )
