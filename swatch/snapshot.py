@@ -76,9 +76,13 @@ class SnapshotCleanup(threading.Thread):
             month, _, day = str(snap_dir).partition("-")
 
             if month == valid_month and valid_day >= day:
-                self.delete_dir(f"{CONST_MEDIA_DIR}/snapshots/{month}-{day}", self.config.name)
+                self.delete_dir(
+                    f"{CONST_MEDIA_DIR}/snapshots/{month}-{day}", self.config.name
+                )
             elif valid_month > month and (int(day) - int(valid_day)) <= 24:
-                self.delete_dir(f"{CONST_MEDIA_DIR}/snapshots/{month}-{day}", self.config.name)
+                self.delete_dir(
+                    f"{CONST_MEDIA_DIR}/snapshots/{month}-{day}", self.config.name
+                )
 
     def run(self):
         """Run snapshot cleanup"""
