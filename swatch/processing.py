@@ -6,6 +6,7 @@ import multiprocessing
 from swatch.config import CameraConfig
 from swatch.image import ImageProcessor
 
+
 class AutoDetector(threading.Thread):
     """Handles the auto running of detection on cameras."""
 

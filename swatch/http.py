@@ -78,7 +78,9 @@ def detect_camera_frame(camera_name: str) -> Any:
         image_url = None
 
     if image_url:
-        result: Dict[str, Any] = current_app.image_processor.detect(camera_name, image_url)
+        result: Dict[str, Any] = current_app.image_processor.detect(
+            camera_name, image_url
+        )
 
         if result:
             return make_response(jsonify(result), 200)
