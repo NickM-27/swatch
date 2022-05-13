@@ -51,7 +51,7 @@ class ZoneConfig(SwatchBaseModel):
 
 
 class CameraConfig(SwatchBaseModel):
-    name: Optional[str] = Field(title="Camera name.", regex="^[a-zA-Z0-9_-]+$")
+    name: str | None = Field(title="Camera name.", regex="^[a-zA-Z0-9_-]+$")
     snapshot_url: str = Field(title="Camera Snapshot Url.", default=None)
     auto_detect: int = Field(
         title="Frequency to automatically run detection.", default=0
