@@ -8,7 +8,7 @@ import threading
 import cv2
 from numpy import ndarray
 
-from swatch.config import SnapshotConfig
+from swatch.config import CameraConfig
 from swatch.const import CONST_MEDIA_DIR
 
 
@@ -38,13 +38,13 @@ class SnapshotCleanup(threading.Thread):
 
     def __init__(
         self,
-        snapshot_config: SnapshotConfig,
+        camera_config: CameraConfig,
         stop_event: multiprocessing.Event,
     ):
         """Initialize snapshot cleanup."""
         threading.Thread.__init__(self)
         self.name = "snapshot_cleanup"
-        self.config = snapshot_config
+        self.config = camera_config
         self.stop_event = stop_event
 
     def cleanup_snapshots(self):
@@ -57,7 +57,7 @@ class SnapshotCleanup(threading.Thread):
             month, _, day = str(snap_dir).split("-")
 
             if month == valid_month and valid_day > day:
-                file_path = f"{CONST_MEDIA_DIR}/snapshots/{month}-{day}"
+                file_path = f"{CONST_MEDIA_DIR}/snapshots/{month}-{day}/{self.config.name}"
                 try:
                     os.remove(file_path)
                     print(f"Cleaning up {file_path}")
@@ -70,7 +70,7 @@ class SnapshotCleanup(threading.Thread):
         while not self.stop_event.wait(60):
             print("Running snapshot cleanup")
 
-            if self.config.retain_days > 0:
+            if self.config.snapshot_config.retain_days > 0:
                 self.cleanup_snapshots()
 
         print("Exiting snapshot cleanup")
