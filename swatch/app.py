@@ -1,5 +1,6 @@
 """Main SwatchApp responsible for running the app."""
 import os
+import multiprocessing
 
 from waitress import serve
 
@@ -20,15 +21,16 @@ class SwatchApp:
             self.config,
             self.image_processor,
         )
+        self.stop_event = multiprocessing.Event()
 
     def __init_config__(self) -> None:
         """Init the SwatchService with saved config file."""
-        print("Importing config")
+        print("Importing SwatchApp Config")
 
         config_file = os.environ.get("CONFIG_FILE", CONST_CONFIG_FILE)
 
         if os.path.isfile(config_file):
-            print("Verified Config")
+            print("Verified SwatchApp Config")
 
         user_config = SwatchConfig.parse_file(config_file)
         self.config = user_config.runtime_config
@@ -45,3 +47,4 @@ class SwatchApp:
     def stop(self) -> None:
         """Stop SwatchApp."""
         print("SwatchApp Stopping")
+        self.stop_event.set()
