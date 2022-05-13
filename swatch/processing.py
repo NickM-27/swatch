@@ -1,7 +1,6 @@
 """For processing of images."""
 
 import threading
-import multiprocessing
 
 from swatch.config import CameraConfig
 from swatch.image import ImageProcessor
@@ -14,7 +13,7 @@ class AutoDetector(threading.Thread):
         self,
         image_processor: ImageProcessor,
         camera_config: CameraConfig,
-        stop_event: multiprocessing.Event,
+        stop_event,
     ) -> None:
         threading.Thread.__init__(self)
         self.image_processor = image_processor
