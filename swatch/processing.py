@@ -21,7 +21,9 @@ class AutoDetector(threading.Thread):
         self.stop_event = stop_event
 
     def run(self):
-        print(f"Running auto detection for {self.config.name}.")
+        print(f"Starting Auto Detection for {self.config.name}")
 
         while not self.stop_event.wait(self.config.auto_detect):
             self.image_processor(self.config.name, None)
+
+        print(f"Stopping Auto Detection for {self.config.name}")
