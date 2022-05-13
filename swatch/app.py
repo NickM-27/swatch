@@ -4,7 +4,7 @@ import multiprocessing
 
 from waitress import serve
 
-from swatch.config import SwatchConfig, SnapshotModeEnum
+from swatch.config import SwatchConfig
 from swatch.const import CONST_CONFIG_FILE
 from swatch.http import create_app
 from swatch.image import ImageProcessor
