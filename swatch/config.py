@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from enum import Enum
 from pydantic import BaseModel, Extra, Field
+from typing import Optional
 import yaml
 
 
@@ -50,7 +51,11 @@ class ZoneConfig(SwatchBaseModel):
 
 
 class CameraConfig(SwatchBaseModel):
+    name: str | None = Field(title="Camera name.", regex="^[a-zA-Z0-9_-]+$")
     snapshot_url: str = Field(title="Camera Snapshot Url.", default=None)
+    auto_detect: int = Field(
+        title="Frequency to automatically run detection.", default=0
+    )
     zones: dict[str, ZoneConfig] = Field(
         default_factory=dict, title="Zones for this camera."
     )
@@ -64,6 +69,15 @@ class SwatchConfig(SwatchBaseModel):
     def runtime_config(self) -> SwatchConfig:
         """Merge camera config with globals."""
         config = self.copy(deep=True)
+
+        for name, camera in config.cameras.items():
+            camera_dict = camera.dict(exclude_unset=True)
+            camera_config: CameraConfig = CameraConfig.parse_obj(
+                {"name": name, **camera_dict}
+            )
+
+            config.cameras[name] = camera_config
+
         return config
 
     @classmethod
