@@ -81,7 +81,9 @@ class ImageProcessor:
         """Use the default image or $image_url to detect known objects."""
         response: Dict[str, Any] = {}
 
-        for zone_name, zone in self.config.cameras[camera_name].zones.items():
+        camera_config = self.config.cameras[camera_name]
+
+        for zone_name, zone in camera_config.zones.items():
             response[zone_name] = {}
             imgBytes = requests.get(image_url).content
             img = cv2.imdecode(np.asarray(bytearray(imgBytes), dtype=np.uint8), -1)
@@ -97,7 +99,7 @@ class ImageProcessor:
                 continue
 
             for object_name in zone.objects:
-                snapshot_config = zone.snapshot_config
+                snapshot_config = camera_config.snapshot_config
                 result = self.__check_image__(
                     crop,
                     camera_name,
