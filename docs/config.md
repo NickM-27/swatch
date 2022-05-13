@@ -50,7 +50,7 @@ cameras:
         # OPTIONAL: Whether or not to save the snapshots of missed detections (Default: shown below).
         save_misses: false
         # OPTIONAL: Variations of snapshots to keep. Options are all, mask, crop (Default: shown below).
-        save_detections: "all"
+        mode: "all"
         # OPTIONAL: Number of days of snapshots to keep (Default: shown below).
         retain_days: 7
     # REQUIRED: Zones are cropped areas where the object can be expected to be.
