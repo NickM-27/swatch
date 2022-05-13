@@ -49,7 +49,7 @@ class SnapshotCleanup(threading.Thread):
 
     def cleanup_snapshots(self):
         """Cleanup expired snapshots."""
-        seven_days_ago = (datetime.datetime.now() - datetime.timedelta(days=7))
+        seven_days_ago = datetime.datetime.now() - datetime.timedelta(days=7)
         valid_month, _, valid_day = seven_days_ago.strftime("%m-%d").split("-")
 
         for snap_dir in os.walk(f"{CONST_MEDIA_DIR}/snapshots/"):
@@ -57,7 +57,9 @@ class SnapshotCleanup(threading.Thread):
             month, _, day = str(snap_dir).split("-")
 
             if month == valid_month and valid_day > day:
-                file_path = f"{CONST_MEDIA_DIR}/snapshots/{month}-{day}/{self.config.name}"
+                file_path = (
+                    f"{CONST_MEDIA_DIR}/snapshots/{month}-{day}/{self.config.name}"
+                )
                 try:
                     os.remove(file_path)
                     print(f"Cleaning up {file_path}")

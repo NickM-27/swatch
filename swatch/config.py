@@ -9,13 +9,16 @@ import yaml
 
 class SwatchBaseModel(BaseModel):
     """Base config that sets rules."""
+
     class Config:
         """Set config parameters"""
+
         extra = Extra.forbid
 
 
 class SnapshotModeEnum(str, Enum):
     """Types of snapshots to retain."""
+
     ALL = "all"
     CROP = "crop"
     MASK = "mask"
@@ -23,6 +26,7 @@ class SnapshotModeEnum(str, Enum):
 
 class SnapshotConfig(SwatchBaseModel):
     """Config for saving snapshots."""
+
     url: str = Field(title="Camera Snapshot Url.", default=None)
     save_detections: bool = Field(
         title="Save snapshots of detections that are found.", default=True
@@ -33,19 +37,19 @@ class SnapshotConfig(SwatchBaseModel):
     snapshot_mode: SnapshotModeEnum = Field(
         title="Snapshot mode.", default=SnapshotModeEnum.ALL
     )
-    retain_days: int = Field(
-        title="Number of days to retain snapshots.", default=7
-    )
+    retain_days: int = Field(title="Number of days to retain snapshots.", default=7)
 
 
 class ColorConfig(SwatchBaseModel):
     """Configuration of color values."""
+
     color_lower: str = Field(title="Lower R, G, B color values")
     color_upper: str = Field(title="Higher R, G, B color values")
 
 
 class ObjectConfig(SwatchBaseModel):
     """Configuration of the object detection."""
+
     color_variants: dict[str, ColorConfig] = Field(
         title="Color variants for this object", default_factory=dict
     )
@@ -55,12 +59,14 @@ class ObjectConfig(SwatchBaseModel):
 
 class ZoneConfig(SwatchBaseModel):
     """Configuration for cropped parts of camera frame."""
+
     coordinates: str = Field(title="Coordinates polygon for the defined zone.")
     objects: list[str] = Field(title="Included Objects.")
 
 
 class CameraConfig(SwatchBaseModel):
     """Configuration for camera."""
+
     auto_detect: int = Field(
         title="Frequency to automatically run detection.", default=0
     )
@@ -75,6 +81,7 @@ class CameraConfig(SwatchBaseModel):
 
 class SwatchConfig(SwatchBaseModel):
     """Main configuration for SwatchApp."""
+
     objects: dict[str, ObjectConfig] = Field(title="Object configuration.")
     cameras: dict[str, CameraConfig] = Field(title="Camera configuration.")
 

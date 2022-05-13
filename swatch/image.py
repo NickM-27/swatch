@@ -54,7 +54,9 @@ class ImageProcessor:
                     SnapshotModeEnum.ALL,
                     SnapshotModeEnum.MASK,
                 ]:
-                    save_snapshot(camera_name, f"detected_{variant_name}_{file_name}", output)
+                    save_snapshot(
+                        camera_name, f"detected_{variant_name}_{file_name}", output
+                    )
 
                 return {"result": True, "area": matches, "variant": variant_name}
             else:
@@ -69,7 +71,9 @@ class ImageProcessor:
                     SnapshotModeEnum.ALL,
                     SnapshotModeEnum.MASK,
                 ]:
-                    save_snapshot(camera_name, f"missed_{variant_name}_{file_name}", output)
+                    save_snapshot(
+                        camera_name, f"missed_{variant_name}_{file_name}", output
+                    )
 
         return best_fail
 
