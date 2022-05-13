@@ -12,11 +12,15 @@ from swatch.config import SnapshotConfig
 from swatch.const import CONST_MEDIA_DIR
 
 
-def save_snapshot(name: str, image: ndarray) -> bool:
+def save_snapshot(
+    camera_name: str,
+    file_name: str,
+    image: ndarray,
+) -> bool:
     """Saves the snapshot to the correct snapshot dir."""
     time = datetime.datetime.now()
 
-    file_dir = f"{CONST_MEDIA_DIR}/snapshots/{time.strftime('%m-%d')}"
+    file_dir = f"{CONST_MEDIA_DIR}/snapshots/{time.strftime('%m-%d')}/{camera_name}"
 
     if not os.path.exists(file_dir):
         print(f"{file_dir} doesn't exist, creating...")
@@ -24,7 +28,7 @@ def save_snapshot(name: str, image: ndarray) -> bool:
         print(f"after creating {os.listdir('/media/')}")
         return False
 
-    file = f"{file_dir}/{name}_{time.strftime('%f')}.jpg"
+    file = f"{file_dir}/{file_name}_{time.strftime('%f')}.jpg"
     cv2.imwrite(file, image)
     return True
 
