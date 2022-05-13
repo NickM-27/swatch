@@ -37,13 +37,19 @@ objects:
 cameras:
   # REQUIRED: Name of the camera
   front_doorbell_cam:
-    # REQUIRED: Zones are cropped areas where the object can be expected to be. 
+    # OPTIONAL: but highly recommended, setting the default url for a snapshot to be
+    # processed by this camera. This is required for auto detection (Default: none).
+    snapshot_url: "http://ip.ad.dr.ess/jpg"
+    # OPTIONAL: Frequency in seconds to run detection on the camera.
+    # a value of 0 disables auto detection (Default: shown below).
+    auto_detect: 0
+    # REQUIRED: Zones are cropped areas where the object can be expected to be.
     # This makes searching / matches for efficient and more predictable than searching
     # the entire image.
     zones:
       # REQUIRED: Name of the zone.
       street:
-        # REQUIRED: Coordinates to crop the zone by. 
+        # REQUIRED: Coordinates to crop the zone by.
         coordinates: 225, 540, 350, 620
         # REQUIRED: List of objects that may be in this zone. These correspond to
         # the objects list defined previously and are matched by name.
