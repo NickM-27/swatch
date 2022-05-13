@@ -3,6 +3,7 @@
 import datetime
 import multiprocessing
 import os
+import shutil
 import threading
 
 import cv2
@@ -50,29 +51,41 @@ class SnapshotCleanup(threading.Thread):
     def cleanup_snapshots(self):
         """Cleanup expired snapshots."""
         seven_days_ago = datetime.datetime.now() - datetime.timedelta(days=7)
-        valid_month, _, valid_day = seven_days_ago.strftime("%m-%d").split("-")
+        valid_month, _, valid_day = seven_days_ago.strftime("%m-%d").partition("-")
 
-        for snap_dir in os.walk(f"{CONST_MEDIA_DIR}/snapshots/"):
+        for snap_dir in os.listdir(f"{CONST_MEDIA_DIR}/snapshots/"):
+            if not os.path.isdir(
+                os.path.join(f"{CONST_MEDIA_DIR}/snapshots/", snap_dir)
+            ):
+                continue
+
             # delete if older than last valid
-            month, _, day = str(snap_dir).split("-")
+            month, _, day = str(snap_dir).partition("-")
 
-            if month == valid_month and valid_day > day:
+            print(f"{month} == {valid_month} and {valid_day} >= {day}")
+            if month == valid_month and valid_day >= day:
                 file_path = (
                     f"{CONST_MEDIA_DIR}/snapshots/{month}-{day}/{self.config.name}"
                 )
+
                 try:
-                    os.remove(file_path)
                     print(f"Cleaning up {file_path}")
+                    shutil.rmtree(file_path)
+
+                    if (
+                        len(os.listdir(f"{CONST_MEDIA_DIR}/snapshots/{month}-{day}"))
+                        == 0
+                    ):
+                        os.rmdir(f"{CONST_MEDIA_DIR}/snapshots/{month}-{day}")
                 except OSError as _e:
                     print(f"Error: {file_path} : {_e.strerror}")
 
     def run(self):
         """Run snapshot cleanup"""
+        print(f"Starting snapshot cleanup for {self.config.name}")
         # try to run once a day
-        while not self.stop_event.wait(60):
-            print(f"Starting snapshot cleanup for {self.config.name}")
-
+        while not self.stop_event.wait(5):
             if self.config.snapshot_config.retain_days > 0:
                 self.cleanup_snapshots()
 
-        print(f"Stopping snapshot cleanup for {self.config.name}")
+        print(f"Stopping Snapshot Cleanup for {self.config.name}")

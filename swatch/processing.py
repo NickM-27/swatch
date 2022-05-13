@@ -25,6 +25,6 @@ class AutoDetector(threading.Thread):
         print(f"Starting Auto Detection for {self.config.name}")
 
         while not self.stop_event.wait(self.config.auto_detect):
-            self.image_processor(self.config.name, None)
+            self.image_processor(self.config.name, self.config.snapshot_config.url)
 
         print(f"Stopping Auto Detection for {self.config.name}")

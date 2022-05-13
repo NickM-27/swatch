@@ -27,6 +27,7 @@ class SwatchApp:
             self.image_processor,
         )
         self.__init_processing__()
+        self.__init_snapshot_cleanup__()
 
     def __init_config__(self) -> None:
         """Init SwatchApp with saved config file."""
@@ -45,7 +46,7 @@ class SwatchApp:
         self.camera_processes: Dict[str, AutoDetector] = {}
 
         for name, config in self.config.cameras.items():
-            if config.auto_detect > 0 and config.snapshot_url:
+            if config.auto_detect > 0 and config.snapshot_config.url:
                 self.camera_processes[name] = AutoDetector(
                     self.image_processor,
                     config,
