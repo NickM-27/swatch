@@ -48,6 +48,19 @@ class SnapshotCleanup(threading.Thread):
         self.config = camera_config
         self.stop_event = stop_event
 
+    def delete_dir(self, date_dir: str, camera_name: str):
+        """Deletes a date and camera dir"""
+        file_path = f"{date_dir}/{camera_name}"
+
+        try:
+            print(f"Cleaning up {file_path}")
+            shutil.rmtree(file_path)
+
+            if len(os.listdir(date_dir)) == 0:
+                os.rmdir(date_dir)
+        except OSError as _e:
+            print(f"Error: {file_path} : {_e.strerror}")
+
     def cleanup_snapshots(self):
         """Cleanup expired snapshots."""
         seven_days_ago = datetime.datetime.now() - datetime.timedelta(days=7)
@@ -62,23 +75,10 @@ class SnapshotCleanup(threading.Thread):
             # delete if older than last valid
             month, _, day = str(snap_dir).partition("-")
 
-            print(f"{month} == {valid_month} and {valid_day} >= {day}")
             if month == valid_month and valid_day >= day:
-                file_path = (
-                    f"{CONST_MEDIA_DIR}/snapshots/{month}-{day}/{self.config.name}"
-                )
-
-                try:
-                    print(f"Cleaning up {file_path}")
-                    shutil.rmtree(file_path)
-
-                    if (
-                        len(os.listdir(f"{CONST_MEDIA_DIR}/snapshots/{month}-{day}"))
-                        == 0
-                    ):
-                        os.rmdir(f"{CONST_MEDIA_DIR}/snapshots/{month}-{day}")
-                except OSError as _e:
-                    print(f"Error: {file_path} : {_e.strerror}")
+                self.delete_dir(f"{CONST_MEDIA_DIR}/snapshots/{month}-{day}", self.config.name)
+            elif valid_month > month and (int(day) - int(valid_day)) <= 24:
+                self.delete_dir(f"{CONST_MEDIA_DIR}/snapshots/{month}-{day}", self.config.name)
 
     def run(self):
         """Run snapshot cleanup"""
