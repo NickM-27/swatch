@@ -69,9 +69,9 @@ def detect_camera_frame(camera_name: str) -> Any:
 
     if (
         not (request.json and request.json.get("imageUrl"))
-        and camera_config.snapshot_url
+        and camera_config.snapshot_config.url
     ):
-        image_url = camera_config.snapshot_url
+        image_url = camera_config.snapshot_config.url
     elif request.json:
         image_url = request.json.get("imageUrl")
     else:

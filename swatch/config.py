@@ -1,23 +1,33 @@
+"""Configuration for SwatchApp."""
+
 from __future__ import annotations
 
 from enum import Enum
 from pydantic import BaseModel, Extra, Field
-from typing import Optional
 import yaml
 
 
 class SwatchBaseModel(BaseModel):
+    """Base config that sets rules."""
+
     class Config:
+        """Set config parameters"""
+
         extra = Extra.forbid
 
 
 class SnapshotModeEnum(str, Enum):
-    all = "all"
-    crop = "crop"
-    mask = "mask"
+    """Types of snapshots to retain."""
+
+    ALL = "all"
+    CROP = "crop"
+    MASK = "mask"
 
 
 class SnapshotConfig(SwatchBaseModel):
+    """Config for saving snapshots."""
+
+    url: str = Field(title="Camera Snapshot Url.", default=None)
     save_detections: bool = Field(
         title="Save snapshots of detections that are found.", default=True
     )
@@ -25,16 +35,21 @@ class SnapshotConfig(SwatchBaseModel):
         title="Save snapshots of missed detections.", default=False
     )
     snapshot_mode: SnapshotModeEnum = Field(
-        title="Snapshot mode.", default=SnapshotModeEnum.all
+        title="Snapshot mode.", default=SnapshotModeEnum.ALL
     )
+    retain_days: int = Field(title="Number of days to retain snapshots.", default=7)
 
 
 class ColorConfig(SwatchBaseModel):
+    """Configuration of color values."""
+
     color_lower: str = Field(title="Lower R, G, B color values")
     color_upper: str = Field(title="Higher R, G, B color values")
 
 
 class ObjectConfig(SwatchBaseModel):
+    """Configuration of the object detection."""
+
     color_variants: dict[str, ColorConfig] = Field(
         title="Color variants for this object", default_factory=dict
     )
@@ -43,18 +58,21 @@ class ObjectConfig(SwatchBaseModel):
 
 
 class ZoneConfig(SwatchBaseModel):
+    """Configuration for cropped parts of camera frame."""
+
     coordinates: str = Field(title="Coordinates polygon for the defined zone.")
     objects: list[str] = Field(title="Included Objects.")
-    snapshot_config: SnapshotConfig = Field(
-        title="Snapshot config for this zone.", default_factory=SnapshotConfig
-    )
 
 
 class CameraConfig(SwatchBaseModel):
-    name: str | None = Field(title="Camera name.", regex="^[a-zA-Z0-9_-]+$")
-    snapshot_url: str = Field(title="Camera Snapshot Url.", default=None)
+    """Configuration for camera."""
+
     auto_detect: int = Field(
         title="Frequency to automatically run detection.", default=0
+    )
+    name: str | None = Field(title="Camera name.", regex="^[a-zA-Z0-9_-]+$")
+    snapshot_config: SnapshotConfig = Field(
+        title="Snapshot config for this zone.", default_factory=SnapshotConfig
     )
     zones: dict[str, ZoneConfig] = Field(
         default_factory=dict, title="Zones for this camera."
@@ -62,6 +80,8 @@ class CameraConfig(SwatchBaseModel):
 
 
 class SwatchConfig(SwatchBaseModel):
+    """Main configuration for SwatchApp."""
+
     objects: dict[str, ObjectConfig] = Field(title="Object configuration.")
     cameras: dict[str, CameraConfig] = Field(title="Camera configuration.")
 
@@ -81,8 +101,9 @@ class SwatchConfig(SwatchBaseModel):
         return config
 
     @classmethod
-    def parse_file(cls, config_file):  # type: ignore[no-untyped-def]
-        with open(config_file) as f:
+    def parse_file(cls, path):  # type: ignore[no-untyped-def]
+        """Parses and raw file to return config."""
+        with open(path) as f:
             raw_config = f.read()
 
         config = yaml.safe_load(raw_config)

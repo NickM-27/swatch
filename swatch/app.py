@@ -10,6 +10,7 @@ from swatch.const import CONST_CONFIG_FILE
 from swatch.http import create_app
 from swatch.image import ImageProcessor
 from swatch.processing import AutoDetector
+from swatch.snapshot import SnapshotCleanup
 
 
 class SwatchApp:
@@ -26,6 +27,7 @@ class SwatchApp:
             self.image_processor,
         )
         self.__init_processing__()
+        self.__init_snapshot_cleanup__()
 
     def __init_config__(self) -> None:
         """Init SwatchApp with saved config file."""
@@ -44,13 +46,25 @@ class SwatchApp:
         self.camera_processes: Dict[str, AutoDetector] = {}
 
         for name, config in self.config.cameras.items():
-            if config.auto_detect > 0 and config.snapshot_url:
+            if config.auto_detect > 0 and config.snapshot_config.url:
                 self.camera_processes[name] = AutoDetector(
                     self.image_processor,
                     config,
                     self.stop_event,
                 )
                 self.camera_processes[name].start()
+
+    def __init_snapshot_cleanup__(self) -> None:
+        """Init the SwatchApp cleanup thread."""
+        self.cleanup_processes: Dict[str, AutoDetector] = {}
+
+        for name, config in self.config.cameras.items():
+            if config.snapshot_config.retain_days > 0:
+                self.cleanup_processes[name] = SnapshotCleanup(
+                    config,
+                    self.stop_event,
+                )
+                self.cleanup_processes[name].start()
 
     def start(self) -> None:
         """Start SwatchApp."""

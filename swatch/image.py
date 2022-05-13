@@ -4,7 +4,7 @@ import requests
 from colorthief import ColorThief
 import cv2
 import numpy as np
-from typing import Any, Dict, Optional, Tuple
+from typing import Any, Dict, Optional
 
 from swatch.config import ObjectConfig, SnapshotConfig, SnapshotModeEnum, SwatchConfig
 from swatch.snapshot import save_snapshot
@@ -19,7 +19,12 @@ class ImageProcessor:
         self.latest_results: Dict[str, Any] = {}
 
     def __check_image__(
-        self, crop: Any, detectable: ObjectConfig, snapshot: Tuple[str, SnapshotConfig]
+        self,
+        crop: Any,
+        camera_name: str,
+        file_name: str,
+        detectable: ObjectConfig,
+        snapshot: SnapshotConfig,
     ) -> Dict[str, Any]:
         """Check specific image for known color values."""
         best_fail: Dict[str, Any] = {}
@@ -45,11 +50,13 @@ class ImageProcessor:
             matches = np.count_nonzero(output)
 
             if matches > detectable.min_area and matches < detectable.max_area:
-                if snapshot[1].save_detections and snapshot[1].snapshot_mode in [
-                    SnapshotModeEnum.all,
-                    SnapshotModeEnum.mask,
+                if snapshot.save_detections and snapshot.snapshot_mode in [
+                    SnapshotModeEnum.ALL,
+                    SnapshotModeEnum.MASK,
                 ]:
-                    save_snapshot(f"detected_{variant_name}_{snapshot[0]}", output)
+                    save_snapshot(
+                        camera_name, f"detected_{variant_name}_{file_name}", output
+                    )
 
                 return {"result": True, "area": matches, "variant": variant_name}
             else:
@@ -60,11 +67,13 @@ class ImageProcessor:
                         "variant": variant_name,
                     }
 
-                if snapshot[1].save_misses and snapshot[1].snapshot_mode in [
-                    SnapshotModeEnum.all,
-                    SnapshotModeEnum.mask,
+                if snapshot.save_misses and snapshot.snapshot_mode in [
+                    SnapshotModeEnum.ALL,
+                    SnapshotModeEnum.MASK,
                 ]:
-                    save_snapshot(f"missed_{variant_name}_{snapshot[0]}", output)
+                    save_snapshot(
+                        camera_name, f"missed_{variant_name}_{file_name}", output
+                    )
 
         return best_fail
 
@@ -91,15 +100,17 @@ class ImageProcessor:
                 snapshot_config = zone.snapshot_config
                 result = self.__check_image__(
                     crop,
+                    camera_name,
+                    f"{zone_name}_{object_name}",
                     self.config.objects[object_name],
-                    (f"{zone_name}_{object_name}", snapshot_config),
+                    snapshot_config,
                 )
 
                 if snapshot_config.snapshot_mode in [
-                    SnapshotModeEnum.all,
-                    SnapshotModeEnum.crop,
+                    SnapshotModeEnum.ALL,
+                    SnapshotModeEnum.CROP,
                 ]:
-                    save_snapshot(f"{zone_name}", crop)
+                    save_snapshot(camera_name, f"{zone_name}", crop)
 
                 self.latest_results[object_name] = result
                 response[zone_name][object_name] = result
