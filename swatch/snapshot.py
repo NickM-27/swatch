@@ -89,7 +89,7 @@ class SnapshotCleanup(threading.Thread):
         """Run snapshot cleanup"""
         print(f"Starting snapshot cleanup for {self.config.name}")
         # try to run once a day
-        while not self.stop_event.wait(5):
+        while not self.stop_event.wait(86400):
             if self.config.snapshot_config.retain_days > 0:
                 self.cleanup_snapshots()
 
