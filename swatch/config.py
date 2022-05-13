@@ -65,6 +65,14 @@ class SwatchConfig(SwatchBaseModel):
     def runtime_config(self) -> SwatchConfig:
         """Merge camera config with globals."""
         config = self.copy(deep=True)
+
+        for name, camera in config.cameras.items():
+            camera_config: CameraConfig = CameraConfig.parse_obj(
+                {"name": name, **camera}
+            )
+
+            config.cameras[name] = camera_config
+
         return config
 
     @classmethod
