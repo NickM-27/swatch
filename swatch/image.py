@@ -90,7 +90,7 @@ class ImageProcessor:
 
             coordinates = zone.coordinates.split(", ")
 
-            if img.size > 0:
+            if img and img.size > 0:
                 crop = img[
                     int(coordinates[1]) : int(coordinates[3]),
                     int(coordinates[0]) : int(coordinates[2]),
