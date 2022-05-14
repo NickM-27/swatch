@@ -91,7 +91,7 @@ def detect_camera_frame(camera_name: str) -> Any:
                     }
                 ),
                 404,
-        )
+            )
 
         if result:
             return make_response(jsonify(result), 200)
@@ -134,7 +134,9 @@ def test_colors() -> Any:
         )
 
     test_image = request.files.get("test_image")
-    main_color, palette = current_app.image_processor.parse_colors_from_image(test_image)
+    main_color, palette = current_app.image_processor.parse_colors_from_image(
+        test_image
+    )
 
     return make_response(
         jsonify(
