@@ -36,6 +36,10 @@ A `config.yaml` file must be created and mapped to `/config`
 
 Check out [GitHub Docs](docs/config.md) for example and more instructions on creating the config file.
 
+## Adding Objects
+
+Check out the [Color Setup Docs](docs/finding-color-values.md) for how to setup objects and fine the color values to use.
+
 ## API References
 
 Check out [GitHub Docs](docs/api.md) for the API reference.
