@@ -13,6 +13,7 @@ tests/__pycache__/*
 
 web/.*/
 web/build/
+web/dist/
 web/out/
 web//refresh.sh
 web/*.imp
