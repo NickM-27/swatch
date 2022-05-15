@@ -1,4 +1,4 @@
-FROM crzynik/swatch-nginx:latest
+FROM crzynik/swatch-nginx:latest as nginx
 
 FROM python:3
 
