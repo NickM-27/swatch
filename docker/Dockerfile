@@ -12,5 +12,6 @@ WORKDIR /opt/swatch/
 ADD swatch swatch/
 
 EXPOSE 4500
+EXPOSE 4550
 
 CMD ["python3", "-u", "-m", "swatch"]
