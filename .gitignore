@@ -3,6 +3,7 @@ cache/
 config/config.yaml
 debug/
 */.DS_Store
+*.vscode
 swatch/version.py
 
 swatch/__pycache__
