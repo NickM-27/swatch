@@ -13,14 +13,13 @@ RUN pip install -r requirements.txt
 # build swatch frontend
 WORKDIR /opt/swatch/
 
-ADD swatch swatch/
-ADD web/dist/ web/
+COPY swatch swatch/
+COPY web/dist frontend/
 
 COPY docker/rootfs /
 
 # general docker
 
 EXPOSE 4500
-EXPOSE 4550
 
 CMD ["python3", "-u", "-m", "swatch"]

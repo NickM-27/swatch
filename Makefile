@@ -6,7 +6,6 @@ VERSION = 1.4.1
 local:
 	cd web; ./gradlew zip; unzip build/libs/project-1.0.0-SNAPSHOT.zip -d dist/;
 	DOCKER_BUILDKIT=1 docker build --no-cache -t swatch -f docker/Dockerfile .
-	rm -rf web/dist/
 
 push:
 	cd web; ./gradlew zip; unzip build/libs/project-1.0.0-SNAPSHOT.zip -d dist/;
