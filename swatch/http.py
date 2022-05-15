@@ -40,13 +40,13 @@ def status() -> str:
 ### API Routes
 
 
-@bp.route("/api/config", methods=["GET"])
+@bp.route("/config", methods=["GET"])
 def get_config() -> Any:
     """Get current config."""
     return make_response(jsonify(current_app.swatch_config.dict()), 200)
 
 
-@bp.route("/api/<camera_name>/detect", methods=["POST"])
+@bp.route("/<camera_name>/detect", methods=["POST"])
 def detect_camera_frame(camera_name: str) -> Any:
     """Use camera frame to detect known objects."""
     if not camera_name:
@@ -112,7 +112,7 @@ def detect_camera_frame(camera_name: str) -> Any:
         )
 
 
-@bp.route("/api/<label>/latest", methods=["GET"])
+@bp.route("/<label>/latest", methods=["GET"])
 def get_latest_result(label: str) -> Any:
     """Get the latest results for a label"""
     if not label:
@@ -123,7 +123,7 @@ def get_latest_result(label: str) -> Any:
     return current_app.image_processor.get_latest_result(label)
 
 
-@bp.route("/api/colortest", methods=["POST"])
+@bp.route("/colortest", methods=["POST"])
 def test_colors() -> Any:
     """Test and get color values inside of test image."""
     if not request.files or not request.files.get("test_image"):
