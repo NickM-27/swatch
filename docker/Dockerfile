@@ -24,4 +24,4 @@ COPY docker/rootfs /
 
 EXPOSE 4500
 
-CMD ["python3", "-u", "-m", "swatch"]
+CMD ["sh", "-c", "/usr/local/nginx/sbin/nginx -g \"daemon off;\"; python3 -u -m swatch"]
