@@ -9,3 +9,6 @@ swatch/__pycache__
 swatch/__pycache__/*
 swatch/tests/__pycache__/
 tests/__pycache__/*
+
+web/.gradle/*
+web/.idea/*
