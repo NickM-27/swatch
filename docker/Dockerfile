@@ -1,4 +1,4 @@
-FROM nginx
+FROM swatch
 
 FROM python:3
 
