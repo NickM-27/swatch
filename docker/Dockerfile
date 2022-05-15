@@ -24,4 +24,4 @@ COPY docker/rootfs /
 
 EXPOSE 4500
 
-CMD ["sh", "-c", "/usr/local/nginx/sbin/nginx; python3 -u -m swatch"]
+CMD ["sh", "-c", "python3 -u -m swatch; /usr/local/nginx/sbin/nginx;"]
