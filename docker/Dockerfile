@@ -24,4 +24,7 @@ COPY docker/rootfs /
 
 EXPOSE 4500
 
-CMD ["sh", "-c", "python3 -u -m swatch; /usr/local/nginx/sbin/nginx;"]
+COPY startup.sh /
+RUN chmod +x /startup.sh
+
+CMD ["/startup.sh"]
