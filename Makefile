@@ -17,6 +17,5 @@ push:
 
 push_beta:
 	cd web; ./gradlew zip; unzip build/libs/project-1.0.0-SNAPSHOT.zip -d dist/;
-	DOCKER_BUILDKIT=1 docker build --no-cache -t swatch-nginx --platform linux/arm64/v8,linux/amd64 -f docker/Dockerfile.nginx .
 	docker buildx build --push --platform linux/arm64/v8,linux/amd64 --tag crzynik/swatch:beta --file docker/Dockerfile .
 	rm -rf web/dist/
