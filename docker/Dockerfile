@@ -24,6 +24,4 @@ COPY docker/rootfs /
 
 EXPOSE 4500
 
-ENTRYPOINT ["/init"]
-
 CMD ["python3", "-u", "-m", "swatch"]
