@@ -25,6 +25,7 @@ class SwatchApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       initialRoute: DashboardRoute.route,
       onGenerateRoute: (settings) {
+        // Removes the animation from the routing
         if (_routeMap.keys.contains(settings.name)) {
           return PageRouteBuilder(
             pageBuilder: (context, a1, a2) => _routeMap[settings.name]!,
