@@ -30,7 +30,7 @@ def delete_dir(date_dir: str, camera_name: str):
         print(f"Error: {file_path} : {_e.strerror}")
 
 
-class SnapshotProcessor():
+class SnapshotProcessor:
     """Process snapshot requests."""
 
     def __init__(self, config: SwatchConfig) -> None:
@@ -62,7 +62,9 @@ class SnapshotProcessor():
         camera_name: str,
     ) -> Any:
         """Get the latest snapshot for <camera_name> and <zone_name>."""
-        imgBytes = requests.get(self.config.cameras[camera_name].snapshot_config.url).content
+        imgBytes = requests.get(
+            self.config.cameras[camera_name].snapshot_config.url
+        ).content
 
         if not imgBytes:
             return None
@@ -93,22 +95,24 @@ class SnapshotProcessor():
         ret, jpg = cv2.imencode(".jpg", crop, [int(cv2.IMWRITE_JPEG_QUALITY), 70])
         return jpg.tobytes()
 
-    def get_latest_detection(
-        self,
-        camera_name: str
-    ) -> Any:
+    def get_latest_detection(self, camera_name: str) -> Any:
         """Get the latest detection for a <camera_name>."""
         snaps_dir = f"{CONST_MEDIA_DIR}/snapshots"
         print(f"snaps dir is {snaps_dir}")
-        recent_folder = max([os.path.join(snaps_dir, basename) for basename in os.listdir(snaps_dir)])
+        recent_folder = max(
+            [os.path.join(snaps_dir, basename) for basename in os.listdir(snaps_dir)]
+        )
         print(f"")
 
         cam_snaps_dir = f"{recent_folder}/{camera_name}"
-        recent_snap = max([os.path.join(cam_snaps_dir, basename) for basename in os.listdir(cam_snaps_dir)])
+        recent_snap = max(
+            [
+                os.path.join(cam_snaps_dir, basename)
+                for basename in os.listdir(cam_snaps_dir)
+            ]
+        )
 
-        with open(
-            recent_snap
-        ) as image_file:
+        with open(recent_snap) as image_file:
             jpg_bytes = image_file.read()
 
         return jpg_bytes

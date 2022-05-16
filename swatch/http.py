@@ -158,17 +158,23 @@ def get_latest_result(label: str) -> Any:
 def get_latest_camera_snapshot(camera_name: str) -> Any:
     """Get the latest snapshot for <camera_name>."""
     if not camera_name:
-        return jsonify({"success": False, "message": "camera_name must be provided."}, 404)
+        return jsonify(
+            {"success": False, "message": "camera_name must be provided."}, 404
+        )
 
     camera_config = current_app.swatch_config.cameras.get(camera_name)
 
     if not camera_config:
-        return jsonify({"success": False, "message": f"{camera_name} is not a valid camera."}, 404)
+        return jsonify(
+            {"success": False, "message": f"{camera_name} is not a valid camera."}, 404
+        )
 
     jpg_bytes = current_app.snapshot_processor.get_latest_camera_snapshot(camera_name)
 
     if not jpg_bytes:
-        return jsonify({"success": False, "message": "Failed to load image from camera."}, 500)
+        return jsonify(
+            {"success": False, "message": "Failed to load image from camera."}, 500
+        )
 
     response = make_response(jpg_bytes)
     response.headers["Content-Type"] = "image/jpg"
@@ -179,25 +185,41 @@ def get_latest_camera_snapshot(camera_name: str) -> Any:
 def get_latest_zone_snapshot(camera_name: str, zone_name: str) -> Any:
     """Get the latest snapshot for <camera_name>."""
     if not camera_name:
-        return jsonify({"success": False, "message": "camera_name must be provided."}, 404)
+        return jsonify(
+            {"success": False, "message": "camera_name must be provided."}, 404
+        )
 
     camera_config: CameraConfig() = current_app.swatch_config.cameras.get(camera_name)
 
     if not camera_config:
-        return jsonify({"success": False, "message": f"{camera_name} is not a valid camera."}, 404)
+        return jsonify(
+            {"success": False, "message": f"{camera_name} is not a valid camera."}, 404
+        )
 
     if not zone_name:
-        return jsonify({"success": False, "message": "zone_name must be provided."}, 404)
+        return jsonify(
+            {"success": False, "message": "zone_name must be provided."}, 404
+        )
 
     zone_config: ZoneConfig = camera_config.zones.get(zone_name)
 
     if not zone_config:
-        return jsonify({"success": False, "message": f"{zone_name} is not a valid zone for {camera_name}."}, 404)
+        return jsonify(
+            {
+                "success": False,
+                "message": f"{zone_name} is not a valid zone for {camera_name}.",
+            },
+            404,
+        )
 
-    jpg_bytes = current_app.snapshot_processor.get_latest_zone_snapshot(camera_name, zone_name)
+    jpg_bytes = current_app.snapshot_processor.get_latest_zone_snapshot(
+        camera_name, zone_name
+    )
 
     if not jpg_bytes:
-        return jsonify({"success": False, "message": "Failed to load image from camera."}, 500)
+        return jsonify(
+            {"success": False, "message": "Failed to load image from camera."}, 500
+        )
 
     response = make_response(jpg_bytes)
     response.headers["Content-Type"] = "image/jpg"
@@ -208,12 +230,16 @@ def get_latest_zone_snapshot(camera_name: str, zone_name: str) -> Any:
 def get_latest_detection(camera_name: str) -> Any:
     """Get the latest detection for <camera_name>."""
     if not camera_name:
-        return jsonify({"success": False, "message": "camera_name must be provided."}, 404)
+        return jsonify(
+            {"success": False, "message": "camera_name must be provided."}, 404
+        )
 
     camera_config = current_app.swatch_config.cameras.get(camera_name)
 
     if not camera_config:
-        return jsonify({"success": False, "message": f"{camera_name} is not a valid camera."}, 404)
+        return jsonify(
+            {"success": False, "message": f"{camera_name} is not a valid camera."}, 404
+        )
 
     jpg_bytes = current_app.snapshot_processor.get_latest_detection(camera_name)
 

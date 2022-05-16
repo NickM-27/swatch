@@ -59,11 +59,16 @@ class ImageProcessor:
                     SnapshotModeEnum.ALL,
                     SnapshotModeEnum.MASK,
                 ]:
-                     self.snapshot_processor.save_snapshot(
+                    self.snapshot_processor.save_snapshot(
                         camera_name, f"detected_{variant_name}_{file_name}", output
                     )
 
-                return {"result": True, "area": matches, "variant": variant_name, "camera_name": camera_name}
+                return {
+                    "result": True,
+                    "area": matches,
+                    "variant": variant_name,
+                    "camera_name": camera_name,
+                }
             else:
                 if matches > best_fail.get("area", 0):
                     best_fail = {
@@ -121,7 +126,9 @@ class ImageProcessor:
                     SnapshotModeEnum.ALL,
                     SnapshotModeEnum.CROP,
                 ]:
-                    self.snapshot_processor.save_snapshot(camera_name, f"{zone_name}", crop)
+                    self.snapshot_processor.save_snapshot(
+                        camera_name, f"{zone_name}", crop
+                    )
 
                 self.latest_results[object_name] = result
                 response[zone_name][object_name] = result

@@ -66,9 +66,7 @@ class SwatchApp:
     def __init_web_server__(self) -> None:
         """Init the SwatchApp web server."""
         self.http = create_app(
-            self.config,
-            self.image_processor,
-            self.snapshot_processor
+            self.config, self.image_processor, self.snapshot_processor
         )
 
     def start(self) -> None:
