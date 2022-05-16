@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:collapsible_sidebar/collapsible_sidebar.dart';
-import 'package:web/routes/route_dashboard.dart';
-import 'package:web/theme/theme_helper.dart';
+import 'package:swatch/routes/route_dashboard.dart';
+import 'package:swatch/theme/theme_helper.dart';
 
 class NavStructure extends StatefulWidget {
   const NavStructure({Key? key}) : super(key: key);
@@ -34,6 +34,11 @@ class NavStructureState extends State<NavStructure> {
         icon: Icons.colorize_outlined,
         onPressed: () => setState(() => _currentRoute = "Color Playground"),
       ),
+      CollapsibleItem(
+        text: "Settings",
+        icon: Icons.settings_outlined,
+        onPressed: () => setState(() => _currentRoute = "Settings"),
+      ),
     ];
   }
 
@@ -54,7 +59,7 @@ class NavStructureState extends State<NavStructure> {
                 isCollapsed: true,
                 items: _routes,
                 avatarImg: const AssetImage(
-                  'swatch.png',
+                  'favicon.png',
                 ),
                 body: _getCurrentRoute(),
                 backgroundColor: Colors.blueGrey[700]!,
@@ -62,6 +67,7 @@ class NavStructureState extends State<NavStructure> {
                 iconSize: 24,
                 borderRadius: 12,
                 sidebarBoxShadow: const [],
+                title: "Swatch",
                 textStyle: TextStyle(
                   fontSize: 16,
                 ),

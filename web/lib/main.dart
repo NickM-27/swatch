@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:web/components/component_nav.dart';
-import 'package:web/theme/theme_helper.dart';
+import 'package:swatch/components/component_nav.dart';
+import 'package:swatch/theme/theme_helper.dart';
 
 void main() {
   runApp(const MyApp());
