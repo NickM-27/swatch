@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:swatch/components/component_nav.dart';
+import 'package:swatch/routes/route_color_playground.dart';
+import 'package:swatch/routes/route_dashboard.dart';
 import 'package:swatch/theme/theme_helper.dart';
 
 void main() {
@@ -15,7 +17,11 @@ class MyApp extends StatelessWidget {
       title: 'Swatch',
       theme: mainTheme,
       debugShowCheckedModeBanner: false,
-      home: const NavStructure(),
+      initialRoute: DashboardRoute.route,
+      routes: {
+        DashboardRoute.route: (context) => const DashboardRoute(),
+        ColorPlaygroundRoute.route: (context) => const ColorPlaygroundRoute(),
+      },
     );
   }
 }

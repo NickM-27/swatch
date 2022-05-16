@@ -6,21 +6,20 @@ import 'package:swatch/models/config.dart';
 import 'package:flutter/material.dart';
 import 'package:collapsible_sidebar/collapsible_sidebar.dart';
 import 'package:swatch/api/api.dart';
-import 'package:swatch/routes/route_color_playground.dart';
 import 'package:swatch/routes/route_dashboard.dart';
 import 'package:swatch/theme/theme_helper.dart';
 
-class DashboardRoute extends StatefulWidget {
+class ColorPlaygroundRoute extends StatefulWidget {
 
-  static const String route = '/dashboard';
+  static const String route = '/color_playground';
 
-  const DashboardRoute({Key? key}) : super(key: key);
+  const ColorPlaygroundRoute({Key? key}) : super(key: key);
 
   @override
-  DashboardRouteState createState() => DashboardRouteState();
+  ColorPlaygroundRouteState createState() => ColorPlaygroundRouteState();
 }
 
-class DashboardRouteState extends State<DashboardRoute> {
+class ColorPlaygroundRouteState extends State<ColorPlaygroundRoute> {
 
   late List<CollapsibleItem> _routes;
   late String _currentRoute;
@@ -37,13 +36,13 @@ class DashboardRouteState extends State<DashboardRoute> {
       CollapsibleItem(
         text: "Dashboard",
         icon: Icons.dashboard_outlined,
-        isSelected: true,
-        onPressed: () {},
+        onPressed: () => Navigator.of(context).pushNamed(DashboardRoute.route),
       ),
       CollapsibleItem(
         text: "Color Playground",
         icon: Icons.colorize_outlined,
-        onPressed: () => Navigator.of(context).pushNamed(ColorPlaygroundRoute.route),
+        isSelected: true,
+        onPressed: () {},
       ),
       CollapsibleItem(
         text: "Settings",
@@ -72,7 +71,7 @@ class DashboardRouteState extends State<DashboardRoute> {
                 avatarImg: const NetworkImage(
                   "https://raw.githubusercontent.com/NickM-27/swatch/master/assets/swatch.png",
                 ),
-                body: _DashboardView(),
+                body: _ColorPlaygroundView(),
                 backgroundColor: Colors.blueGrey[700]!,
                 selectedTextColor: SwatchColors.getPrimaryColor(),
                 iconSize: 24,
@@ -91,32 +90,17 @@ class DashboardRouteState extends State<DashboardRoute> {
   }
 }
 
-class _DashboardView extends StatelessWidget {
+class _ColorPlaygroundView extends StatelessWidget {
 
   final SwatchApi _api = SwatchApi();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: FutureBuilder(
-        future: _api.getConfig(),
-        builder: (context, AsyncSnapshot<Config> config) {
-          if (config.hasData) {
-            return GridView.extent(
-              maxCrossAxisExtent: 500,
-              children: _getCameras(config.data!),
-            );
-          } else {
-            return Container();
-          }
-        },
+      body: Container(
+        alignment: Alignment.center,
+        child: const Text("Big Booty"),
       ),
     );
-  }
-
-  List<Widget> _getCameras(Config config) {
-    final keys = config.cameras.keys.toList();
-    return List.generate(config.cameras.length,
-        (index) => CameraComponent(config.cameras[keys[index]]!));
   }
 }
