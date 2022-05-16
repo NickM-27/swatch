@@ -21,7 +21,7 @@ class DashboardRouteState extends State<DashboardRoute> {
         centerTitle: false,
         backgroundColor: SwatchColors.getPrimaryColor(),
       ),
-      body: const DashboardRoute(),
+      body: const Text("Selected Dashboard"),
     );
   }
 }

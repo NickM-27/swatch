@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:collapsible_sidebar/collapsible_sidebar.dart';
+import 'package:web/routes/route_dashboard.dart';
 import 'package:web/theme/theme_helper.dart';
 
 class NavStructure extends StatefulWidget {
@@ -42,9 +43,21 @@ class NavStructureState extends State<NavStructure> {
       isCollapsed: true,
       items: _routes,
       avatarImg: const AssetImage("swatch.png"),
-      body: Text("Selected $_currentRoute"),
+      body: _getCurrentRoute(),
       backgroundColor: Colors.blueGrey[700]!,
       selectedTextColor: SwatchColors.getPrimaryColor(),
+      maxWidth: 100,
     );
+  }
+
+  Widget _getCurrentRoute() {
+    switch (_currentRoute) {
+      case "Dashboard":
+        return const DashboardRoute();
+      case "Color Playground":
+        return const DashboardRoute();
+      default:
+        throw "Not a valid route";
+    }
   }
 }
