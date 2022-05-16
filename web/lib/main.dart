@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:web/components/component_nav.dart';
+import 'package:web/theme/theme_helper.dart';
 
 void main() {
   runApp(const MyApp());
@@ -10,11 +12,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.green,
-      ),
-      home: const MyHomePage(),
+      title: 'Swatch',
+      theme: mainTheme,
+      debugShowCheckedModeBanner: false,
+      home: const NavStructure(),
     );
   }
 }
