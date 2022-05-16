@@ -63,6 +63,10 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v2
+      - name: Flutter env
+        uses: subosito/flutter-action@v2
+        with:
+            channel: 'stable'
       - name: Run test
         working-directory: ./web
         run: flutter test

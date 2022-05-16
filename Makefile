@@ -4,7 +4,6 @@ COMMIT_HASH := $(shell git log -1 --pretty=format:"%h"|tail -1)
 VERSION = 1.5.0
 
 local:
-	cd web; flutter build web;
 	DOCKER_BUILDKIT=1 docker build --no-cache -t swatch -f docker/Dockerfile .
 
 push:
