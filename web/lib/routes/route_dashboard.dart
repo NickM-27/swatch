@@ -21,7 +21,6 @@ class DashboardRouteState extends State<DashboardRoute> {
         builder: (context, AsyncSnapshot<Config> config) {
           if (config.hasData) {
             return GridView.extent(
-              childAspectRatio: 1,
               maxCrossAxisExtent: 500,
               children: _getCameras(config.data!),
             );
