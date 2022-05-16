@@ -53,14 +53,18 @@ class NavStructureState extends State<NavStructure> {
               child: CollapsibleSidebar(
                 isCollapsed: true,
                 items: _routes,
-                avatarImg: const NetworkImage(
-                    'https://www.w3schools.com/howto/img_avatar.png'),
+                avatarImg: const AssetImage(
+                  'swatch.png',
+                ),
                 body: _getCurrentRoute(),
                 backgroundColor: Colors.blueGrey[700]!,
                 selectedTextColor: SwatchColors.getPrimaryColor(),
                 iconSize: 24,
                 borderRadius: 12,
                 sidebarBoxShadow: const [],
+                textStyle: TextStyle(
+                  fontSize: 16,
+                ),
               ),
             ),
           ],
