@@ -86,11 +86,15 @@ class ImageProcessor:
         for zone_name, zone in camera_config.zones.items():
             response[zone_name] = {}
             imgBytes = requests.get(image_url).content
+
+            if not imgBytes:
+                continue
+
             img = cv2.imdecode(np.asarray(bytearray(imgBytes), dtype=np.uint8), -1)
 
             coordinates = zone.coordinates.split(", ")
 
-            if img and img.size > 0:
+            if img.size > 0:
                 crop = img[
                     int(coordinates[1]) : int(coordinates[3]),
                     int(coordinates[0]) : int(coordinates[2]),

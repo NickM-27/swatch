@@ -3,9 +3,20 @@ cache/
 config/config.yaml
 debug/
 */.DS_Store
+*.vscode
 swatch/version.py
 
 swatch/__pycache__
 swatch/__pycache__/*
 swatch/tests/__pycache__/
 tests/__pycache__/*
+
+web/.*/
+web/build/
+web/dist/
+web/out/
+web//refresh.sh
+web/*.imp
+web/*.ipr
+web/*.iws
+web/*.idea

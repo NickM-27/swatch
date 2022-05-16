@@ -1,16 +1,30 @@
+FROM crzynik/swatch-nginx:latest as nginx
+
 FROM python:3
 
-WORKDIR /opt/swatch
-COPY requirements.txt /opt/swatch/requirements.txt
-COPY requirements_dev.txt /opt/swatch/requirements_dev.txt
+# install dependencies
+COPY requirements.txt /requirements.txt
+COPY requirements_dev.txt /requirements_dev.txt
 
 ENV OPENCV_VERSION="4.5.1"
 
 RUN pip install -r requirements.txt
 
+COPY --from=nginx /usr/local/nginx/ /usr/local/nginx/
+
+# build swatch frontend
 WORKDIR /opt/swatch/
-ADD swatch swatch/
+
+COPY swatch swatch/
+COPY web/dist frontend/
+
+COPY docker/rootfs /
+
+# general docker
 
 EXPOSE 4500
 
-CMD ["python3", "-u", "-m", "swatch"]
+COPY startup.sh /
+RUN chmod +x /startup.sh
+
+CMD ["/startup.sh"]
