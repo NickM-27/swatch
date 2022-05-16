@@ -5,6 +5,7 @@ import 'package:swatch/routes/route_dashboard.dart';
 import 'package:swatch/theme/theme_helper.dart';
 
 class NavStructure extends StatefulWidget {
+
   const NavStructure({Key? key}) : super(key: key);
 
   @override
@@ -61,7 +62,7 @@ class NavStructureState extends State<NavStructure> {
                 isCollapsed: true,
                 items: _routes,
                 avatarImg: const NetworkImage(
-                  'https://raw.githubusercontent.com/NickM-27/swatch/master/assets/swatch.png',
+                  "https://raw.githubusercontent.com/NickM-27/swatch/master/assets/swatch.png",
                 ),
                 body: _getCurrentRoute(),
                 backgroundColor: Colors.blueGrey[700]!,

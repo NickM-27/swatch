@@ -1,10 +1,9 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:swatch/api/api.dart';
+import 'package:swatch/components/component_camera.dart';
+import 'package:swatch/models/config.dart';
 
 class DashboardRoute extends StatefulWidget {
-
   const DashboardRoute({Key? key}) : super(key: key);
 
   @override
@@ -12,19 +11,28 @@ class DashboardRoute extends StatefulWidget {
 }
 
 class DashboardRouteState extends State<DashboardRoute> {
-
   final SwatchApi _api = SwatchApi();
-
-  @override
-  void initState() {
-    super.initState();
-    _api.getConfig();
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: const Text("Selected Dashboard"),
+      body: FutureBuilder(
+        future: _api.getConfig(),
+        builder: (context, AsyncSnapshot<Config> config) {
+          if (config.hasData) {
+            return GridView.count(
+                crossAxisCount: 2, children: _getCameras(config.data!));
+          } else {
+            return Container();
+          }
+        },
+      ),
     );
+  }
+
+  List<Widget> _getCameras(Config config) {
+    final keys = config.cameras.keys.toList();
+    return List.generate(config.cameras.length,
+        (index) => CameraComponent(config.cameras[keys[index]]!));
   }
 }
