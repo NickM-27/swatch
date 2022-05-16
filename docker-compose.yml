@@ -16,4 +16,4 @@ services:
     ports:
       - "4500:4500"
       - "4501:4501"
-    command: /bin/sh -c "/usr/local/nginx/sbin/nginx"
+    command: /bin/sh -c "while sleep 1000; do :; done"

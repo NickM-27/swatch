@@ -3,8 +3,6 @@ import os
 import multiprocessing
 from typing import Dict
 
-from waitress import serve
-
 from swatch.config import SwatchConfig
 from swatch.const import CONST_CONFIG_FILE
 from swatch.http import create_app
@@ -69,7 +67,7 @@ class SwatchApp:
     def start(self) -> None:
         """Start SwatchApp."""
         try:
-            serve(self.http, listen="127.0.0.1:4501")
+            self.http.run(host="127.0.0.1", port=4501, debug=False)
         except KeyboardInterrupt:
             pass
 

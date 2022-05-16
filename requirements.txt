@@ -6,6 +6,5 @@ Flask
 requests
 pydantic
 PyYAML
-waitress
 colorthief
 mypy == 0.942
