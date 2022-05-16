@@ -1,4 +1,4 @@
-package swatch.project
+package swatch
 
 import io.kvision.Application
 import io.kvision.CoreModule

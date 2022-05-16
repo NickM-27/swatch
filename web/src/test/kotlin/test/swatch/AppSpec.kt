@@ -1,4 +1,4 @@
-package test.swatch.project
+package test.swatch
 
 import io.kvision.test.SimpleSpec
 import kotlin.test.Test
