@@ -66,4 +66,6 @@ jobs:
       - name: Run test
         run: docker run --rm --entrypoint=/bin/bash swatch:latest -c "cd web; ./gradlew test;"
       - name: Run browser test
-        run: docker run --rm --entrypoint=/bin/bash swatch:latest -c "cd web; ./gradlew browserTest;"
+        run: |
+          cd web;
+          ./gradlew browserTest;"
