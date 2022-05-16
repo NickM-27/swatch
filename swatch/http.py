@@ -1,6 +1,8 @@
 """Main http service that handles starting app modules."""
 
+import logging
 from typing import Any, Dict
+
 from flask import (
     Blueprint,
     Flask,
@@ -22,6 +24,7 @@ def create_app(
 ) -> Flask:
     """Creates the Flask app to run the webserver."""
     app = Flask(__name__)
+    disable_logs()
     app.register_blueprint(bp)
     app.swatch_config = swatch_config
     app.image_processor = image_processor
@@ -146,3 +149,8 @@ def test_colors() -> Any:
             }
         )
     )
+
+def disable_logs():
+    """Disable flask logs"""
+    flask_logger = logging.getLogger(("werkzeug"))
+    flask_logger.disabled = True
