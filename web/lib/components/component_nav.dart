@@ -39,14 +39,33 @@ class NavStructureState extends State<NavStructure> {
 
   @override
   Widget build(BuildContext context) {
-    return CollapsibleSidebar(
-      isCollapsed: true,
-      items: _routes,
-      avatarImg: const AssetImage("swatch.png"),
-      body: _getCurrentRoute(),
-      backgroundColor: Colors.blueGrey[700]!,
-      selectedTextColor: SwatchColors.getPrimaryColor(),
-      maxWidth: 100,
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Swatch"),
+        centerTitle: false,
+        backgroundColor: SwatchColors.getPrimaryColor(),
+      ),
+      body: SafeArea(
+        child: Stack(
+          children: [
+            Align(
+              alignment: Alignment.centerLeft,
+              child: CollapsibleSidebar(
+                isCollapsed: true,
+                items: _routes,
+                avatarImg: const NetworkImage(
+                    'https://www.w3schools.com/howto/img_avatar.png'),
+                body: _getCurrentRoute(),
+                backgroundColor: Colors.blueGrey[700]!,
+                selectedTextColor: SwatchColors.getPrimaryColor(),
+                iconSize: 24,
+                borderRadius: 12,
+                sidebarBoxShadow: const [],
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 

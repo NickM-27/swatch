@@ -16,11 +16,6 @@ class DashboardRouteState extends State<DashboardRoute> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Swatch"),
-        centerTitle: false,
-        backgroundColor: SwatchColors.getPrimaryColor(),
-      ),
       body: const Text("Selected Dashboard"),
     );
   }

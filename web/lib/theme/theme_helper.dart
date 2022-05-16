@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 
 final ThemeData mainTheme = ThemeData(
-    primaryColor: SwatchColors.getPrimaryColor(),
-    primaryColorLight: SwatchColors.getPrimaryColor(),
-    primaryColorDark: SwatchColors.getPrimaryColor(),
-    iconTheme: ThemeData.dark().iconTheme,
-    bottomAppBarColor: SwatchColors.getAccentColor(),
-    brightness: Brightness.dark
+  primaryColor: SwatchColors.getPrimaryColor(),
+  primaryColorLight: SwatchColors.getPrimaryColor(),
+  primaryColorDark: SwatchColors.getPrimaryColor(),
+  iconTheme: ThemeData.dark().iconTheme,
+  bottomAppBarColor: SwatchColors.getAccentColor(),
+  brightness: Brightness.dark,
+  backgroundColor: Colors.blueGrey[700]!,
 );
 
 class SwatchColors {
