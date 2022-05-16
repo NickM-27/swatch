@@ -64,10 +64,8 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v2
       - name: Run test
-        run: |
-          cd web
-          ./gradlew test
+        working-directory: ./web
+        run: ./gradlew test
       - name: Run browser test
-        run: |
-          cd web
-          ./gradlew browserTest
+        working-directory: ./web
+        run: ./gradlew browserTest
