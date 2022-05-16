@@ -2,10 +2,11 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:swatch/models/config.dart';
 
 class SwatchApi {
   static final SwatchApi _singleton = SwatchApi._internal();
-  static final _swatch_host = "http://localhost:4501";
+  static const _swatchHost = "192.168.50.106:4500";
 
   factory SwatchApi() {
     return _singleton;
@@ -13,20 +14,16 @@ class SwatchApi {
 
   SwatchApi._internal();
 
-  Future<Map<String, Object>> getConfig() async {
-    const base = "/config";
-    print("Calling ${Uri.http(_swatch_host, base)}");
-    final response = await http.post(Uri.http(_swatch_host, base)).timeout(
+  Future<Config> getConfig() async {
+    const base = "/api/config";
+    final response = await http.get(Uri.http(_swatchHost, base)).timeout(
           const Duration(seconds: 15),
         );
 
     if (response.statusCode == 200) {
-      final data = json.decode(response.body);
-      print("We have the response $data");
-      return data;
+      return Config(json.decode(response.body));
     } else {
-      print("We have the error for config ${response}");
-      return {};
+      return Config.template();
     }
   }
 }
