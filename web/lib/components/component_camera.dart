@@ -33,7 +33,8 @@ class CameraComponent extends StatelessWidget {
             child: Text(
               camera.name.replaceAll('_', ' ').title(),
               style: const TextStyle(
-                fontSize: 24,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
               ),
             ),
           ),
