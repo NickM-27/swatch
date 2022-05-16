@@ -65,9 +65,9 @@ jobs:
         uses: actions/checkout@v2
       - name: Run test
         run: |
-          cd web;
-          ./gradlew test;
+          cd web
+          ./gradlew test
       - name: Run browser test
         run: |
-          cd web;
-          ./gradlew browserTest;"
+          cd web
+          ./gradlew browserTest
