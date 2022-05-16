@@ -1,7 +1,7 @@
 default_target: local
 
 COMMIT_HASH := $(shell git log -1 --pretty=format:"%h"|tail -1)
-VERSION = 1.4.1
+VERSION = 1.5.0
 
 local:
 	cd web; ./gradlew zip; unzip build/libs/project-1.0.0-SNAPSHOT.zip -d dist/;
