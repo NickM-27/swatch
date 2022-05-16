@@ -1,6 +1,7 @@
 
 
 import 'package:flutter/material.dart';
+import 'package:swatch/api/api.dart';
 
 class DashboardRoute extends StatefulWidget {
 
@@ -11,6 +12,14 @@ class DashboardRoute extends StatefulWidget {
 }
 
 class DashboardRouteState extends State<DashboardRoute> {
+
+  final SwatchApi _api = SwatchApi();
+
+  @override
+  void initState() {
+    super.initState();
+    _api.getConfig();
+  }
 
   @override
   Widget build(BuildContext context) {

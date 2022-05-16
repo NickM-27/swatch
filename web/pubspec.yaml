@@ -12,8 +12,12 @@ dependencies:
   flutter:
     sdk: flutter
 
+  # UI
   cupertino_icons: ^1.0.2
   collapsible_sidebar: ^2.0.1+2
+
+  # IO
+  http: ^0.13.4
 
 dev_dependencies:
 

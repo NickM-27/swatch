@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:collapsible_sidebar/collapsible_sidebar.dart';
+import 'package:swatch/api/api.dart';
 import 'package:swatch/routes/route_dashboard.dart';
 import 'package:swatch/theme/theme_helper.dart';
 
@@ -11,6 +12,7 @@ class NavStructure extends StatefulWidget {
 }
 
 class NavStructureState extends State<NavStructure> {
+
   late List<CollapsibleItem> _routes;
   late String _currentRoute;
 
@@ -58,8 +60,8 @@ class NavStructureState extends State<NavStructure> {
               child: CollapsibleSidebar(
                 isCollapsed: true,
                 items: _routes,
-                avatarImg: const AssetImage(
-                  'favicon.png',
+                avatarImg: const NetworkImage(
+                  'https://raw.githubusercontent.com/NickM-27/swatch/master/assets/swatch.png',
                 ),
                 body: _getCurrentRoute(),
                 backgroundColor: Colors.blueGrey[700]!,
