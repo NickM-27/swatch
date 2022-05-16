@@ -18,7 +18,7 @@ import io.kvision.startApplication
 
 class App : Application() {
     override fun start() {
-        root("kvapp") {
+        root("swatch") {
             div("Hello world")
             // TODO
         }
