@@ -69,7 +69,7 @@ class SwatchApp:
     def start(self) -> None:
         """Start SwatchApp."""
         try:
-            serve(self.http, listen="*:4501")
+            serve(self.http, listen="127.0.0.1:4501")
         except KeyboardInterrupt:
             pass
 
