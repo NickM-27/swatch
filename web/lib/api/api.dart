@@ -6,7 +6,7 @@ import 'package:swatch/models/config.dart';
 
 class SwatchApi {
   static final SwatchApi _singleton = SwatchApi._internal();
-  static const _swatchHost = "192.168.50.106:4500";
+  static const _swatchHost = "localhost:4500";
 
   factory SwatchApi() {
     return _singleton;

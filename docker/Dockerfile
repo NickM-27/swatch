@@ -16,7 +16,7 @@ COPY --from=nginx /usr/local/nginx/ /usr/local/nginx/
 WORKDIR /opt/swatch/
 
 COPY swatch swatch/
-COPY web/dist frontend/
+COPY web/build/web frontend/
 
 COPY docker/rootfs /
 
