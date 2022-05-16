@@ -20,7 +20,7 @@ class ImageProcessor:
     ) -> None:
         """Create Image Processor"""
         self.config: SwatchConfig = config
-        self.snapshot_processor: SnapshotProcessor() = snapshot_processor
+        self.snapshot_processor: SnapshotProcessor = snapshot_processor
         self.latest_results: Dict[str, Any] = {}
 
     def __check_image__(
@@ -63,7 +63,7 @@ class ImageProcessor:
                         camera_name, f"detected_{variant_name}_{file_name}", output
                     )
 
-                return {"result": True, "area": matches, "variant": variant_name}
+                return {"result": True, "area": matches, "variant": variant_name, "camera_name": camera_name}
             else:
                 if matches > best_fail.get("area", 0):
                     best_fail = {

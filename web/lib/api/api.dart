@@ -26,4 +26,17 @@ class SwatchApi {
       return Config.template();
     }
   }
+
+  Future<Config> getLatest() async {
+    const base = "/api/config";
+    final response = await http.get(Uri.http(_swatchHost, base)).timeout(
+      const Duration(seconds: 15),
+    );
+
+    if (response.statusCode == 200) {
+      return Config(json.decode(response.body));
+    } else {
+      return Config.template();
+    }
+  }
 }
