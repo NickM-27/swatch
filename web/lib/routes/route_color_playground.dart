@@ -10,7 +10,6 @@ import 'package:swatch/routes/route_dashboard.dart';
 import 'package:swatch/theme/theme_helper.dart';
 
 class ColorPlaygroundRoute extends StatefulWidget {
-
   static const String route = '/color_playground';
 
   const ColorPlaygroundRoute({Key? key}) : super(key: key);
@@ -20,7 +19,6 @@ class ColorPlaygroundRoute extends StatefulWidget {
 }
 
 class ColorPlaygroundRouteState extends State<ColorPlaygroundRoute> {
-
   late List<CollapsibleItem> _routes;
   late String _currentRoute;
 
@@ -36,7 +34,7 @@ class ColorPlaygroundRouteState extends State<ColorPlaygroundRoute> {
       CollapsibleItem(
         text: "Dashboard",
         icon: Icons.dashboard_outlined,
-        onPressed: () => Navigator.of(context).pushNamed(DashboardRoute.route),
+        onPressed: () => Navigator.of(context).pushReplacementNamed(DashboardRoute.route),
       ),
       CollapsibleItem(
         text: "Color Playground",
@@ -91,7 +89,6 @@ class ColorPlaygroundRouteState extends State<ColorPlaygroundRoute> {
 }
 
 class _ColorPlaygroundView extends StatelessWidget {
-
   final SwatchApi _api = SwatchApi();
 
   @override
