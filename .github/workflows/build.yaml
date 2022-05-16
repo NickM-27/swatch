@@ -56,19 +56,6 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v2
-      - uses: actions/setup-node@master
-        with:
-          node-version: 16.x
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v1
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
-      - name: Build
-        run: make
-      - name: Run tests
-        run: docker run --rm --entrypoint=python3 swatch:latest -u -m unittest
-      - name: Run mypy
-        run: docker run --rm --entrypoint=/bin/bash swatch:latest -c "pip3 install -r requirements_dev.txt; mypy --install-types; mypy --config-file swatch/mypy.ini swatch"
 
   web-tests:
     runs-on: ubuntu-latest
@@ -76,16 +63,7 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v2
-      - uses: actions/setup-node@master
-        with:
-          node-version: 16.x
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v1
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
-      - name: Build
-        run: make
-      - name: Run tests
-        run: docker run --rm --entrypoint=python3 swatch:latest -u -m unittest
-      - name: Run mypy
-        run: docker run --rm --entrypoint=/bin/bash swatch:latest -c "pip3 install -r requirements_dev.txt; mypy --install-types; mypy --config-file swatch/mypy.ini swatch"
+      - name: Run test
+        run: docker run --rm --entrypoint=/bin/bash swatch:latest -c "cd web; ./gradlew test;"
+      - name: Run browser test
+        run: docker run --rm --entrypoint=/bin/bash swatch:latest -c "cd web; ./gradlew browserTest;"
