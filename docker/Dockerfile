@@ -7,6 +7,7 @@ COPY requirements.txt /requirements.txt
 COPY requirements_dev.txt /requirements_dev.txt
 
 ENV OPENCV_VERSION="4.5.1"
+ENV FLASK_ENV=development
 
 RUN pip install -r requirements.txt
 
