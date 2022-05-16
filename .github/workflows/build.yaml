@@ -64,7 +64,9 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v2
       - name: Run test
-        run: docker run --rm --entrypoint=/bin/bash swatch:latest -c "cd web; ./gradlew test;"
+        run: |
+          cd web;
+          ./gradlew test;
       - name: Run browser test
         run: |
           cd web;
