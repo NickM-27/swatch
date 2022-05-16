@@ -7,15 +7,20 @@ import numpy as np
 from typing import Any, Dict, Optional
 
 from swatch.config import ObjectConfig, SnapshotConfig, SnapshotModeEnum, SwatchConfig
-from swatch.snapshot import save_snapshot
+from swatch.snapshot import SnapshotProcessor
 
 
 class ImageProcessor:
     """Processing images with swatch config data."""
 
-    def __init__(self, config: SwatchConfig) -> None:
+    def __init__(
+        self,
+        config: SwatchConfig,
+        snapshot_processor: SnapshotProcessor,
+    ) -> None:
         """Create Image Processor"""
         self.config: SwatchConfig = config
+        self.snapshot_processor: SnapshotProcessor() = snapshot_processor
         self.latest_results: Dict[str, Any] = {}
 
     def __check_image__(
@@ -54,7 +59,7 @@ class ImageProcessor:
                     SnapshotModeEnum.ALL,
                     SnapshotModeEnum.MASK,
                 ]:
-                    save_snapshot(
+                     self.snapshot_processor.save_snapshot(
                         camera_name, f"detected_{variant_name}_{file_name}", output
                     )
 
@@ -71,7 +76,7 @@ class ImageProcessor:
                     SnapshotModeEnum.ALL,
                     SnapshotModeEnum.MASK,
                 ]:
-                    save_snapshot(
+                    self.snapshot_processor.save_snapshot(
                         camera_name, f"missed_{variant_name}_{file_name}", output
                     )
 
@@ -116,7 +121,7 @@ class ImageProcessor:
                     SnapshotModeEnum.ALL,
                     SnapshotModeEnum.CROP,
                 ]:
-                    save_snapshot(camera_name, f"{zone_name}", crop)
+                    self.snapshot_processor.save_snapshot(camera_name, f"{zone_name}", crop)
 
                 self.latest_results[object_name] = result
                 response[zone_name][object_name] = result

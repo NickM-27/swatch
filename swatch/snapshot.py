@@ -3,35 +3,17 @@
 import datetime
 import multiprocessing
 import os
+import requests
 import shutil
 import threading
+from typing import Any
 
 import cv2
+import numpy as np
 from numpy import ndarray
 
-from swatch.config import CameraConfig
+from swatch.config import SwatchConfig, CameraConfig
 from swatch.const import CONST_MEDIA_DIR
-
-
-def save_snapshot(
-    camera_name: str,
-    file_name: str,
-    image: ndarray,
-) -> bool:
-    """Saves the snapshot to the correct snapshot dir."""
-    time = datetime.datetime.now()
-
-    file_dir = f"{CONST_MEDIA_DIR}/snapshots/{time.strftime('%m-%d')}/{camera_name}"
-
-    if not os.path.exists(file_dir):
-        print(f"{file_dir} doesn't exist, creating...")
-        os.makedirs(file_dir)
-        print(f"after creating {os.listdir('/media/')}")
-        return False
-
-    file = f"{file_dir}/{file_name}_{time.strftime('%f')}.jpg"
-    cv2.imwrite(file, image)
-    return True
 
 
 def delete_dir(date_dir: str, camera_name: str):
@@ -46,6 +28,68 @@ def delete_dir(date_dir: str, camera_name: str):
             os.rmdir(date_dir)
     except OSError as _e:
         print(f"Error: {file_path} : {_e.strerror}")
+
+
+class SnapshotProcessor():
+    """Process snapshot requests."""
+
+    def __init__(self, config: SwatchConfig) -> None:
+        self.config = config
+
+    def save_snapshot(
+        self,
+        camera_name: str,
+        file_name: str,
+        image: ndarray,
+    ) -> bool:
+        """Saves the snapshot to the correct snapshot dir."""
+        time = datetime.datetime.now()
+
+        file_dir = f"{CONST_MEDIA_DIR}/snapshots/{time.strftime('%m-%d')}/{camera_name}"
+
+        if not os.path.exists(file_dir):
+            print(f"{file_dir} doesn't exist, creating...")
+            os.makedirs(file_dir)
+            print(f"after creating {os.listdir('/media/')}")
+            return False
+
+        file = f"{file_dir}/{file_name}_{time.strftime('%f')}.jpg"
+        cv2.imwrite(file, image)
+        return True
+
+    def get_latest_snapshot(
+        self,
+        camera_name: str,
+    ) -> Any:
+        """Get the latest snapshot for <camera_name>."""
+        imgBytes = requests.get(self.config.cameras[camera_name].snapshot_config.url).content
+
+        if not imgBytes:
+            return None
+
+        img = cv2.imdecode(np.asarray(bytearray(imgBytes), dtype=np.uint8), -1)
+        ret, jpg = cv2.imencode(".jpg", img, [int(cv2.IMWRITE_JPEG_QUALITY), 70])
+        return jpg.tobytes()
+
+    def get_latest_detection(
+        self,
+        camera_name: str
+    ) -> Any:
+        """Get the latest detection for a <camera_name>."""
+        snaps_dir = f"{CONST_MEDIA_DIR}/snapshots"
+        print(f"snaps dir is {snaps_dir}")
+        recent_folder = max([os.path.join(snaps_dir, basename) for basename in os.listdir(snaps_dir)])
+        print(f"")
+
+        cam_snaps_dir = f"{recent_folder}/{camera_name}"
+        recent_snap = max([os.path.join(cam_snaps_dir, basename) for basename in os.listdir(cam_snaps_dir)])
+
+        with open(
+            recent_snap
+        ) as image_file:
+            jpg_bytes = image_file.read()
+
+        return jpg_bytes
 
 
 class SnapshotCleanup(threading.Thread):

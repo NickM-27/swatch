@@ -8,7 +8,7 @@ from swatch.const import CONST_CONFIG_FILE
 from swatch.http import create_app
 from swatch.image import ImageProcessor
 from swatch.processing import AutoDetector
-from swatch.snapshot import SnapshotCleanup
+from swatch.snapshot import SnapshotCleanup, SnapshotProcessor
 
 
 class SwatchApp:
@@ -19,13 +19,9 @@ class SwatchApp:
         print("Starting SwatchApp")
         self.stop_event = multiprocessing.Event()
         self.__init_config__()
-        self.image_processor = ImageProcessor(self.config)
-        self.http = create_app(
-            self.config,
-            self.image_processor,
-        )
         self.__init_processing__()
         self.__init_snapshot_cleanup__()
+        self.__init_web_server__()
 
     def __init_config__(self) -> None:
         """Init SwatchApp with saved config file."""
@@ -41,6 +37,9 @@ class SwatchApp:
 
     def __init_processing__(self) -> None:
         """Init the SwatchApp processing thread."""
+        self.snapshot_processor = SnapshotProcessor(self.config)
+        self.image_processor = ImageProcessor(self.config, self.snapshot_processor)
+
         self.camera_processes: Dict[str, AutoDetector] = {}
 
         for name, config in self.config.cameras.items():
@@ -63,6 +62,14 @@ class SwatchApp:
                     self.stop_event,
                 )
                 self.cleanup_processes[name].start()
+
+    def __init_web_server__(self) -> None:
+        """Init the SwatchApp web server."""
+        self.http = create_app(
+            self.config,
+            self.image_processor,
+            self.snapshot_processor
+        )
 
     def start(self) -> None:
         """Start SwatchApp."""

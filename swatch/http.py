@@ -14,6 +14,7 @@ from flask import (
 
 from swatch.config import CameraConfig, SwatchConfig
 from swatch.image import ImageProcessor
+from swatch.snapshot import SnapshotProcessor
 
 bp = Blueprint("swatch", __name__)
 
@@ -21,6 +22,7 @@ bp = Blueprint("swatch", __name__)
 def create_app(
     swatch_config: SwatchConfig,
     image_processor: ImageProcessor,
+    snapshot_processor: SnapshotProcessor,
 ) -> Flask:
     """Creates the Flask app to run the webserver."""
     app = Flask(__name__)
@@ -28,6 +30,7 @@ def create_app(
     app.register_blueprint(bp)
     app.swatch_config = swatch_config
     app.image_processor = image_processor
+    app.snapshot_processor = snapshot_processor
     return app
 
 
@@ -115,17 +118,6 @@ def detect_camera_frame(camera_name: str) -> Any:
         )
 
 
-@bp.route("/<label>/latest", methods=["GET"])
-def get_latest_result(label: str) -> Any:
-    """Get the latest results for a label"""
-    if not label:
-        return make_response(
-            jsonify({"success": False, "message": "Label needs to be provided"})
-        )
-
-    return current_app.image_processor.get_latest_result(label)
-
-
 @bp.route("/colortest", methods=["POST"])
 def test_colors() -> Any:
     """Test and get color values inside of test image."""
@@ -149,6 +141,54 @@ def test_colors() -> Any:
             }
         )
     )
+
+
+@bp.route("/<label>/latest", methods=["GET"])
+def get_latest_result(label: str) -> Any:
+    """Get the latest results for a label"""
+    if not label:
+        return make_response(
+            jsonify({"success": False, "message": "Label needs to be provided"})
+        )
+
+    return current_app.image_processor.get_latest_result(label)
+
+
+@bp.route("/<camera_name>/snapshot.jpg", methods=["GET"])
+def get_latest_snapshot(camera_name: str) -> Any:
+    """Get the latest snapshot for <camera_name>."""
+    if not camera_name:
+        return jsonify({"success": False, "message": "camera_name must be provided."}, 404)
+
+    camera_config = current_app.swatch_config.cameras.get(camera_name)
+
+    if not camera_config:
+        return jsonify({"success": False, "message": f"{camera_name} is not a valid camera."}, 404)
+
+    jpg_bytes = current_app.snapshot_processor.get_latest_snapshot(camera_name)
+
+    response = make_response(jpg_bytes)
+    response.headers["Content-Type"] = "image/jpg"
+    return response
+
+
+@bp.route("/<camera_name>/detection.jpg", methods=["GET"])
+def get_latest_detection(camera_name: str) -> Any:
+    """Get the latest detection for <camera_name>."""
+    if not camera_name:
+        return jsonify({"success": False, "message": "camera_name must be provided."}, 404)
+
+    camera_config = current_app.swatch_config.cameras.get(camera_name)
+
+    if not camera_config:
+        return jsonify({"success": False, "message": f"{camera_name} is not a valid camera."}, 404)
+
+    jpg_bytes = current_app.snapshot_processor.get_latest_detection(camera_name)
+
+    response = make_response(jpg_bytes)
+    response.headers["Content-Type"] = "image/jpg"
+    return response
+
 
 def disable_logs():
     """Disable flask logs"""
