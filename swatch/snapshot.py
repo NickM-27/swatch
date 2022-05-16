@@ -57,11 +57,11 @@ class SnapshotProcessor():
         cv2.imwrite(file, image)
         return True
 
-    def get_latest_snapshot(
+    def get_latest_camera_snapshot(
         self,
         camera_name: str,
     ) -> Any:
-        """Get the latest snapshot for <camera_name>."""
+        """Get the latest snapshot for <camera_name> and <zone_name>."""
         imgBytes = requests.get(self.config.cameras[camera_name].snapshot_config.url).content
 
         if not imgBytes:
@@ -69,6 +69,28 @@ class SnapshotProcessor():
 
         img = cv2.imdecode(np.asarray(bytearray(imgBytes), dtype=np.uint8), -1)
         ret, jpg = cv2.imencode(".jpg", img, [int(cv2.IMWRITE_JPEG_QUALITY), 70])
+        return jpg.tobytes()
+
+    def get_latest_zone_snapshot(
+        self,
+        camera_name: str,
+        zone_name: str,
+    ) -> Any:
+        """Get the latest snapshot for <camera_name>."""
+        camera_config: CameraConfig = self.config.cameras[camera_name]
+        imgBytes = requests.get(camera_config.snapshot_config.url).content
+
+        if not imgBytes:
+            return None
+
+        img = cv2.imdecode(np.asarray(bytearray(imgBytes), dtype=np.uint8), -1)
+        coordinates = camera_config.zones[zone_name].coordinates.split(", ")
+        crop = img[
+            int(coordinates[1]) : int(coordinates[3]),
+            int(coordinates[0]) : int(coordinates[2]),
+        ]
+
+        ret, jpg = cv2.imencode(".jpg", crop, [int(cv2.IMWRITE_JPEG_QUALITY), 70])
         return jpg.tobytes()
 
     def get_latest_detection(

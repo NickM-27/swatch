@@ -12,7 +12,7 @@ from flask import (
     request,
 )
 
-from swatch.config import CameraConfig, SwatchConfig
+from swatch.config import CameraConfig, SwatchConfig, ZoneConfig
 from swatch.image import ImageProcessor
 from swatch.snapshot import SnapshotProcessor
 
@@ -155,7 +155,7 @@ def get_latest_result(label: str) -> Any:
 
 
 @bp.route("/<camera_name>/snapshot.jpg", methods=["GET"])
-def get_latest_snapshot(camera_name: str) -> Any:
+def get_latest_camera_snapshot(camera_name: str) -> Any:
     """Get the latest snapshot for <camera_name>."""
     if not camera_name:
         return jsonify({"success": False, "message": "camera_name must be provided."}, 404)
@@ -165,7 +165,39 @@ def get_latest_snapshot(camera_name: str) -> Any:
     if not camera_config:
         return jsonify({"success": False, "message": f"{camera_name} is not a valid camera."}, 404)
 
-    jpg_bytes = current_app.snapshot_processor.get_latest_snapshot(camera_name)
+    jpg_bytes = current_app.snapshot_processor.get_latest_camera_snapshot(camera_name)
+
+    if not jpg_bytes:
+        return jsonify({"success": False, "message": "Failed to load image from camera."}, 500)
+
+    response = make_response(jpg_bytes)
+    response.headers["Content-Type"] = "image/jpg"
+    return response
+
+
+@bp.route("/<camera_name>/<zone_name>/snapshot.jpg", methods=["GET"])
+def get_latest_zone_snapshot(camera_name: str, zone_name: str) -> Any:
+    """Get the latest snapshot for <camera_name>."""
+    if not camera_name:
+        return jsonify({"success": False, "message": "camera_name must be provided."}, 404)
+
+    camera_config: CameraConfig() = current_app.swatch_config.cameras.get(camera_name)
+
+    if not camera_config:
+        return jsonify({"success": False, "message": f"{camera_name} is not a valid camera."}, 404)
+
+    if not zone_name:
+        return jsonify({"success": False, "message": "zone_name must be provided."}, 404)
+
+    zone_config: ZoneConfig = camera_config.zones.get(zone_name)
+
+    if not zone_config:
+        return jsonify({"success": False, "message": f"{zone_name} is not a valid zone for {camera_name}."}, 404)
+
+    jpg_bytes = current_app.snapshot_processor.get_latest_zone_snapshot(camera_name, zone_name)
+
+    if not jpg_bytes:
+        return jsonify({"success": False, "message": "Failed to load image from camera."}, 500)
 
     response = make_response(jpg_bytes)
     response.headers["Content-Type"] = "image/jpg"

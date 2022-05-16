@@ -28,7 +28,7 @@ class SwatchApi {
   }
 
   Future<Config> getLatest() async {
-    const base = "/api/config";
+    const base = "/api/all/latest";
     final response = await http.get(Uri.http(_swatchHost, base)).timeout(
       const Duration(seconds: 15),
     );
