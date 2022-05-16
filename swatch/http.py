@@ -250,5 +250,5 @@ def get_latest_detection(camera_name: str) -> Any:
 
 def disable_logs():
     """Disable flask logs"""
-    flask_logger = logging.getLogger(("werkzeug"))
+    flask_logger = logging.getLogger("werkzeug")
     flask_logger.disabled = True

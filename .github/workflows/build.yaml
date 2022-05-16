@@ -43,6 +43,10 @@ jobs:
         uses: docker/setup-qemu-action@v1
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
+      - name: Flutter env
+        uses: subosito/flutter-action@v2
+        with:
+            channel: 'stable'
       - name: Build
         run: make
       - name: Run tests
