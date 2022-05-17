@@ -251,33 +251,69 @@ class _AdjustColorValuesState extends State<_AdjustColorValues> {
                     child: Column(
                       children: [
                         const Text("Min Acceptable Color Values"),
-                        Slider(
-                          value: _lowRed,
-                          min: 0.0,
-                          max: 255.0,
-                          activeColor: Colors.red[700],
-                          inactiveColor: Colors.red[200],
-                          onChanged: (r) =>
-                              setState(() => _lowRed = r.roundToDouble()),
-                          onChangeEnd: (r) => _updateMask(),
+                        Row(
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            SizedBox(
+                              width: 250.0,
+                              child: Slider(
+                                value: _lowRed,
+                                min: 0.0,
+                                max: 255.0,
+                                activeColor: Colors.red[700],
+                                inactiveColor: Colors.red[200],
+                                onChanged: (r) =>
+                                    setState(() => _lowRed = r.roundToDouble()),
+                                onChangeEnd: (r) => _updateMask(),
+                              ),
+                            ),
+                            Text(
+                              "$_lowRed",
+                              style: TextStyle(color: Colors.red[700]),
+                            ),
+                          ],
                         ),
-                        Slider(
-                          value: _lowGreen,
-                          min: 0.0,
-                          max: 255.0,
-                          activeColor: Colors.green[700],
-                          inactiveColor: Colors.green[200],
-                          onChanged: (g) =>
-                              setState(() => _lowGreen = g.roundToDouble()),
-                          onChangeEnd: (g) => _updateMask(),
+                        Row(
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            SizedBox(
+                              width: 250.0,
+                              child: Slider(
+                                value: _lowGreen,
+                                min: 0.0,
+                                max: 255.0,
+                                activeColor: Colors.green[700],
+                                inactiveColor: Colors.green[200],
+                                onChanged: (g) =>
+                                    setState(() => _lowGreen = g.roundToDouble()),
+                                onChangeEnd: (g) => _updateMask(),
+                              ),
+                            ),
+                            Text(
+                              "$_lowGreen",
+                              style: TextStyle(color: Colors.green[700]),
+                            ),
+                          ],
                         ),
-                        Slider(
-                          value: _lowBlue,
-                          min: 0.0,
-                          max: 255.0,
-                          onChanged: (b) =>
-                              setState(() => _lowBlue = b.roundToDouble()),
-                          onChangeEnd: (b) => _updateMask(),
+                        Row(
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            SizedBox(
+                              width: 250.0,
+                              child: Slider(
+                                value: _lowBlue,
+                                min: 0.0,
+                                max: 255.0,
+                                onChanged: (b) =>
+                                    setState(() => _lowBlue = b.roundToDouble()),
+                                onChangeEnd: (b) => _updateMask(),
+                              ),
+                            ),
+                            Text(
+                              "$_lowBlue",
+                              style: TextStyle(color: Colors.blue[700]),
+                            ),
+                          ],
                         ),
                       ],
                     ),
@@ -289,33 +325,66 @@ class _AdjustColorValuesState extends State<_AdjustColorValues> {
                     child: Column(
                       children: [
                         const Text("Max Acceptable Color Values"),
-                        Slider(
-                          value: _upRed,
-                          min: 0.0,
-                          max: 255.0,
-                          activeColor: Colors.red[700],
-                          inactiveColor: Colors.red[200],
-                          onChanged: (r) =>
-                              setState(() => _upRed = r.roundToDouble()),
-                          onChangeEnd: (r) => _updateMask(),
+                        Row(
+                          children: [
+                            SizedBox(
+                              width: 250.0,
+                              child: Slider(
+                                value: _upRed,
+                                min: 0.0,
+                                max: 255.0,
+                                activeColor: Colors.red[700],
+                                inactiveColor: Colors.red[200],
+                                onChanged: (r) =>
+                                    setState(() => _upRed = r.roundToDouble()),
+                                onChangeEnd: (r) => _updateMask(),
+                              ),
+                            ),
+                            Text(
+                              "$_upRed",
+                              style: TextStyle(color: Colors.red[700]),
+                            ),
+                          ],
                         ),
-                        Slider(
-                          value: _upGreen,
-                          min: 0.0,
-                          max: 255.0,
-                          activeColor: Colors.green[700],
-                          inactiveColor: Colors.green[200],
-                          onChanged: (g) =>
-                              setState(() => _upGreen = g.roundToDouble()),
-                          onChangeEnd: (g) => _updateMask(),
+                        Row(
+                          children: [
+                            SizedBox(
+                              width: 250.0,
+                              child: Slider(
+                                value: _upGreen,
+                                min: 0.0,
+                                max: 255.0,
+                                activeColor: Colors.green[700],
+                                inactiveColor: Colors.green[200],
+                                onChanged: (g) =>
+                                    setState(() => _upGreen = g.roundToDouble()),
+                                onChangeEnd: (g) => _updateMask(),
+                              ),
+                            ),
+                            Text(
+                              "$_upGreen",
+                              style: TextStyle(color: Colors.green[700]),
+                            ),
+                          ],
                         ),
-                        Slider(
-                          value: _upBlue,
-                          min: 0.0,
-                          max: 255.0,
-                          onChanged: (b) =>
-                              setState(() => _upBlue = b.roundToDouble()),
-                          onChangeEnd: (b) => _updateMask(),
+                        Row(
+                          children: [
+                            SizedBox(
+                              width: 250.0,
+                              child: Slider(
+                                value: _upBlue,
+                                min: 0.0,
+                                max: 255.0,
+                                onChanged: (b) =>
+                                    setState(() => _upBlue = b.roundToDouble()),
+                                onChangeEnd: (b) => _updateMask(),
+                              ),
+                            ),
+                            Text(
+                              "$_upBlue",
+                              style: TextStyle(color: Colors.blue[700]),
+                            ),
+                          ],
                         ),
                       ],
                     ),
@@ -374,7 +443,8 @@ class _AdjustColorValuesState extends State<_AdjustColorValues> {
   }
 
   void _updateMask() async {
-    final maskBytes = await _api.testImageMask(_cleanImage, "$_lowRed, $_lowGreen, $_lowBlue", "$_upRed, $_upGreen, $_upBlue");
+    final maskBytes = await _api.testImageMask(_cleanImage,
+        "$_lowRed, $_lowGreen, $_lowBlue", "$_upRed, $_upGreen, $_upBlue");
     setState(() => _maskImage = maskBytes);
   }
 }
