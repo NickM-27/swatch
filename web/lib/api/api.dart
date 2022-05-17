@@ -4,6 +4,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
 import 'package:swatch/models/config.dart';
 import 'package:window_location_href/window_location_href.dart';
 
@@ -44,13 +45,42 @@ class SwatchApi {
   Future<Config> getLatest() async {
     const base = "/api/all/latest";
     final response = await http.get(Uri.http(_swatchHost, base)).timeout(
-      const Duration(seconds: 15),
-    );
+          const Duration(seconds: 15),
+        );
 
     if (response.statusCode == 200) {
       return Config(json.decode(response.body));
     } else {
       return Config.template();
+    }
+  }
+
+  Future<Uint8List> testImageMask(
+    Uint8List image,
+    String colorLower,
+    String colorUpper,
+  ) async {
+    const base = "/api/colortest/mask";
+    final request = http.MultipartRequest("POST", Uri.http(_swatchHost, base));
+    request.fields["color_lower"] = colorLower;
+    request.fields["color_upper"] = colorUpper;
+    request.files.add(
+      http.MultipartFile.fromBytes("test_image", image,
+          filename: 'test_image',
+          contentType: MediaType("image", "jpg")),
+    );
+
+    final streamedResponse = await request.send();
+    final response = await http.Response.fromStream(streamedResponse);
+
+    if (response.statusCode == 200) {
+      return response.bodyBytes;
+    } else {
+      if (kDebugMode) {
+        print("testImageMask::${response.toString()}");
+      }
+
+      return image;
     }
   }
 

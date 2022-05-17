@@ -1,5 +1,6 @@
 """Main http service that handles starting app modules."""
 
+import base64
 import logging
 from typing import Any, Dict
 
@@ -43,13 +44,81 @@ def status() -> str:
     return "Swatch is running."
 
 
-### API Routes
+### Config API Routes
 
 
 @bp.route("/config", methods=["GET"])
 def get_config() -> Any:
     """Get current config."""
     return make_response(jsonify(current_app.swatch_config.dict()), 200)
+
+
+@bp.route("/colortest/values", methods=["POST"])
+def test_colors() -> Any:
+    """Test and get color values inside of test image."""
+    if not request.files or not request.files.get("test_image"):
+        return make_response(
+            jsonify(
+                {"success": False, "message": "An image needs to be sent as test_image"}
+            ),
+            404
+        )
+
+    test_image = request.files.get("test_image")
+    main_color, palette = current_app.image_processor.parse_colors_from_image(
+        test_image
+    )
+
+    return make_response(
+        jsonify(
+            {
+                "success": True,
+                "message": f"The dominant color is {main_color} with a mixed palette as {palette}",
+            }
+        ),
+        404
+    )
+
+
+@bp.route("/colortest/mask", methods=["POST"])
+def test_mask() -> Any:
+    """Test and get masked image for given lower and upper color values."""
+    if not request.files or not request.files.get("test_image"):
+        return make_response(
+            jsonify(
+                {"success": False, "message": "An image needs to be sent as test_image"}
+            ),
+            404
+        )
+
+    if not request.form.get("color_lower") or not request.form.get("color_upper"):
+        return make_response(
+            jsonify(
+                {"success": False, "message": "color_lower and color_upper need to be provided"}
+            ),
+            404
+        )
+
+    image_str = request.files.get("test_image").read()
+    color_lower = request.form.get("color_lower")
+    color_upper = request.form.get("color_upper")
+
+    masked_image = current_app.image_processor.mask_test_image(image_str, color_lower, color_upper)
+
+    if not masked_image:
+        return make_response(
+            jsonify(
+                {"success": False, "message": "color_lower and color_upper need to be provided"}
+            ),
+            500
+        )
+
+    response = make_response(masked_image)
+    response.headers["Content-Type"] = "image/jpg"
+    return response
+
+
+### Detection API Routes
 
 
 @bp.route("/<camera_name>/detect", methods=["POST"])
@@ -118,31 +187,6 @@ def detect_camera_frame(camera_name: str) -> Any:
         )
 
 
-@bp.route("/colortest", methods=["POST"])
-def test_colors() -> Any:
-    """Test and get color values inside of test image."""
-    if not request.files or not request.files.get("test_image"):
-        return make_response(
-            jsonify(
-                {"success": False, "message": "An image needs to be sent as test_image"}
-            )
-        )
-
-    test_image = request.files.get("test_image")
-    main_color, palette = current_app.image_processor.parse_colors_from_image(
-        test_image
-    )
-
-    return make_response(
-        jsonify(
-            {
-                "success": True,
-                "message": f"The dominant color is {main_color} with a mixed palette as {palette}",
-            }
-        )
-    )
-
-
 @bp.route("/<label>/latest", methods=["GET"])
 def get_latest_result(label: str) -> Any:
     """Get the latest results for a label"""
@@ -152,6 +196,9 @@ def get_latest_result(label: str) -> Any:
         )
 
     return current_app.image_processor.get_latest_result(label)
+
+
+    ### Snapshot API Routes
 
 
 @bp.route("/<camera_name>/snapshot.jpg", methods=["GET"])
@@ -246,6 +293,9 @@ def get_latest_detection(camera_name: str) -> Any:
     response = make_response(jpg_bytes)
     response.headers["Content-Type"] = "image/jpg"
     return response
+
+
+### Util Funs
 
 
 def disable_logs():

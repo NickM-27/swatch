@@ -212,6 +212,7 @@ class _AdjustColorValues extends StatefulWidget {
 
 class _AdjustColorValuesState extends State<_AdjustColorValues> {
   final SwatchApi _api = SwatchApi();
+  Uint8List _cleanImage = Uint8List(0);
   Uint8List _maskImage = Uint8List(0);
 
   // Lower Color Values
@@ -223,6 +224,12 @@ class _AdjustColorValuesState extends State<_AdjustColorValues> {
   double _upRed = 255;
   double _upGreen = 255;
   double _upBlue = 255;
+
+  @override
+  void initState() {
+    super.initState();
+    _getInitialState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -239,67 +246,98 @@ class _AdjustColorValuesState extends State<_AdjustColorValues> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Card(
-                  child: Column(
-                    children: [
-                      const Text("Min Acceptable Color Values"),
-                      Slider(
-                        value: _lowRed,
-                        min: 0.0,
-                        max: 255.0,
-                        activeColor: Colors.red[700],
-                        inactiveColor: Colors.red[200],
-                        onChanged: (r) => setState(() => _lowRed = r.roundToDouble()),
-                      ),
-                      Slider(
-                        value: _lowGreen,
-                        min: 0.0,
-                        max: 255.0,
-                        activeColor: Colors.green[700],
-                        inactiveColor: Colors.green[200],
-                        onChanged: (g) => setState(() => _lowGreen = g.roundToDouble()),
-                      ),
-                      Slider(
-                        value: _lowBlue,
-                        min: 0.0,
-                        max: 255.0,
-                        onChanged: (b) => setState(() => _lowBlue = b.roundToDouble()),
-                      ),
-                    ],
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      children: [
+                        const Text("Min Acceptable Color Values"),
+                        Slider(
+                          value: _lowRed,
+                          min: 0.0,
+                          max: 255.0,
+                          activeColor: Colors.red[700],
+                          inactiveColor: Colors.red[200],
+                          onChanged: (r) =>
+                              setState(() => _lowRed = r.roundToDouble()),
+                          onChangeEnd: (r) => _updateMask(),
+                        ),
+                        Slider(
+                          value: _lowGreen,
+                          min: 0.0,
+                          max: 255.0,
+                          activeColor: Colors.green[700],
+                          inactiveColor: Colors.green[200],
+                          onChanged: (g) =>
+                              setState(() => _lowGreen = g.roundToDouble()),
+                          onChangeEnd: (g) => _updateMask(),
+                        ),
+                        Slider(
+                          value: _lowBlue,
+                          min: 0.0,
+                          max: 255.0,
+                          onChanged: (b) =>
+                              setState(() => _lowBlue = b.roundToDouble()),
+                          onChangeEnd: (b) => _updateMask(),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 Card(
-                  child: Column(
-                    children: [
-                      const Text("Max Acceptable Color Values"),
-                      Slider(
-                        value: _upRed,
-                        min: 0.0,
-                        max: 255.0,
-                        activeColor: Colors.red[700],
-                        inactiveColor: Colors.red[200],
-                        onChanged: (r) => setState(() => _upRed = r.roundToDouble()),
-                      ),
-                      Slider(
-                        value: _upGreen,
-                        min: 0.0,
-                        max: 255.0,
-                        activeColor: Colors.green[700],
-                        inactiveColor: Colors.green[200],
-                        onChanged: (g) => setState(() => _upGreen = g.roundToDouble()),
-                      ),
-                      Slider(
-                        value: _upBlue,
-                        min: 0.0,
-                        max: 255.0,
-                        onChanged: (b) => setState(() => _upBlue = b.roundToDouble()),
-                      ),
-                    ],
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      children: [
+                        const Text("Max Acceptable Color Values"),
+                        Slider(
+                          value: _upRed,
+                          min: 0.0,
+                          max: 255.0,
+                          activeColor: Colors.red[700],
+                          inactiveColor: Colors.red[200],
+                          onChanged: (r) =>
+                              setState(() => _upRed = r.roundToDouble()),
+                          onChangeEnd: (r) => _updateMask(),
+                        ),
+                        Slider(
+                          value: _upGreen,
+                          min: 0.0,
+                          max: 255.0,
+                          activeColor: Colors.green[700],
+                          inactiveColor: Colors.green[200],
+                          onChanged: (g) =>
+                              setState(() => _upGreen = g.roundToDouble()),
+                          onChangeEnd: (g) => _updateMask(),
+                        ),
+                        Slider(
+                          value: _upBlue,
+                          min: 0.0,
+                          max: 255.0,
+                          onChanged: (b) =>
+                              setState(() => _upBlue = b.roundToDouble()),
+                          onChangeEnd: (b) => _updateMask(),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-                SelectableText(
-                  "color_lower: $_lowRed, $_lowGreen, $_lowBlue\ncolor_upper: $_upRed, $_upGreen, $_upBlue",
-                  textAlign: TextAlign.start,
-
+                Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      children: [
+                        const Text(
+                          "Copy this to the config.yaml and name the variant.\n\n",
+                          textAlign: TextAlign.center,
+                        ),
+                        SelectableText(
+                          "color_variants:\n  name_of_variant:\n    color_lower: $_lowRed, $_lowGreen, $_lowBlue\n    color_upper: $_upRed, $_upGreen, $_upBlue",
+                          textAlign: TextAlign.start,
+                          style: const TextStyle(fontSize: 16.0),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -325,5 +363,18 @@ class _AdjustColorValuesState extends State<_AdjustColorValues> {
         ],
       ),
     );
+  }
+
+  void _getInitialState() async {
+    final bytes = await _api.getImageBytes(widget._imageSource);
+    setState(() {
+      _cleanImage = bytes;
+      _maskImage = bytes;
+    });
+  }
+
+  void _updateMask() async {
+    final maskBytes = await _api.testImageMask(_cleanImage, "$_lowRed, $_lowGreen, $_lowBlue", "$_upRed, $_upGreen, $_upBlue");
+    setState(() => _maskImage = maskBytes);
   }
 }
