@@ -61,7 +61,7 @@ def test_colors() -> Any:
             jsonify(
                 {"success": False, "message": "An image needs to be sent as test_image"}
             ),
-            404
+            404,
         )
 
     test_image = request.files.get("test_image")
@@ -76,7 +76,7 @@ def test_colors() -> Any:
                 "message": f"The dominant color is {main_color} with a mixed palette as {palette}",
             }
         ),
-        404
+        404,
     )
 
 
@@ -88,29 +88,37 @@ def test_mask() -> Any:
             jsonify(
                 {"success": False, "message": "An image needs to be sent as test_image"}
             ),
-            404
+            404,
         )
 
     if not request.form.get("color_lower") or not request.form.get("color_upper"):
         return make_response(
             jsonify(
-                {"success": False, "message": "color_lower and color_upper need to be provided"}
+                {
+                    "success": False,
+                    "message": "color_lower and color_upper need to be provided",
+                }
             ),
-            404
+            404,
         )
 
     image_str = request.files.get("test_image").read()
     color_lower = request.form.get("color_lower")
     color_upper = request.form.get("color_upper")
 
-    masked_image = current_app.image_processor.mask_test_image(image_str, color_lower, color_upper)
+    masked_image = current_app.image_processor.mask_test_image(
+        image_str, color_lower, color_upper
+    )
 
     if not masked_image:
         return make_response(
             jsonify(
-                {"success": False, "message": "color_lower and color_upper need to be provided"}
+                {
+                    "success": False,
+                    "message": "color_lower and color_upper need to be provided",
+                }
             ),
-            500
+            500,
         )
 
     response = make_response(masked_image)
@@ -196,7 +204,6 @@ def get_latest_result(label: str) -> Any:
         )
 
     return current_app.image_processor.get_latest_result(label)
-
 
     ### Snapshot API Routes
 

@@ -159,7 +159,7 @@ class ImageProcessor:
         img = cv2.imdecode(np.fromstring(img_str, np.uint8), -1)
 
         if color_lower == "0, 0, 0":
-            color_lower = ['1', '1', '1']
+            color_lower = ["1", "1", "1"]
         else:
             color_lower = color_lower.split(", ")
 
