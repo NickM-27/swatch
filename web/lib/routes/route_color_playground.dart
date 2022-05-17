@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:swatch/api/api.dart';
-import 'package:swatch/components/component_camera.dart';
-import 'package:swatch/models/config.dart';
 
-import 'package:flutter/material.dart';
 import 'package:collapsible_sidebar/collapsible_sidebar.dart';
-import 'package:swatch/api/api.dart';
 import 'package:swatch/routes/route_dashboard.dart';
+import 'package:swatch/routes/route_settings.dart';
 import 'package:swatch/theme/theme_helper.dart';
 
 class ColorPlaygroundRoute extends StatefulWidget {
@@ -20,13 +17,11 @@ class ColorPlaygroundRoute extends StatefulWidget {
 
 class ColorPlaygroundRouteState extends State<ColorPlaygroundRoute> {
   late List<CollapsibleItem> _routes;
-  late String _currentRoute;
 
   @override
   void initState() {
     super.initState();
     _routes = _generateRoutes;
-    _currentRoute = _routes.firstWhere((route) => route.isSelected).text;
   }
 
   List<CollapsibleItem> get _generateRoutes {
@@ -34,7 +29,8 @@ class ColorPlaygroundRouteState extends State<ColorPlaygroundRoute> {
       CollapsibleItem(
         text: "Dashboard",
         icon: Icons.dashboard_outlined,
-        onPressed: () => Navigator.of(context).pushReplacementNamed(DashboardRoute.route),
+        onPressed: () =>
+            Navigator.of(context).pushReplacementNamed(DashboardRoute.route),
       ),
       CollapsibleItem(
         text: "Color Playground",
@@ -45,7 +41,8 @@ class ColorPlaygroundRouteState extends State<ColorPlaygroundRoute> {
       CollapsibleItem(
         text: "Settings",
         icon: Icons.settings_outlined,
-        onPressed: () => setState(() => _currentRoute = "Settings"),
+        onPressed: () =>
+            Navigator.of(context).pushReplacementNamed(SettingsRoute.route),
       ),
     ];
   }

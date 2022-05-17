@@ -15,7 +15,7 @@ class SwatchApi {
       _swatchHost = "localhost:4500";
     } else {
       final location = (getHref() ?? "").replaceAll("http://", "");
-      _swatchHost = location.substring(0, location.indexOf("/", 8));
+      _swatchHost = location.substring(0, location.indexOf("/"));
     }
 
     return _singleton;
