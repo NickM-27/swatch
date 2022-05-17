@@ -7,15 +7,20 @@ import numpy as np
 from typing import Any, Dict, Optional
 
 from swatch.config import ObjectConfig, SnapshotConfig, SnapshotModeEnum, SwatchConfig
-from swatch.snapshot import save_snapshot
+from swatch.snapshot import SnapshotProcessor
 
 
 class ImageProcessor:
     """Processing images with swatch config data."""
 
-    def __init__(self, config: SwatchConfig) -> None:
+    def __init__(
+        self,
+        config: SwatchConfig,
+        snapshot_processor: SnapshotProcessor,
+    ) -> None:
         """Create Image Processor"""
         self.config: SwatchConfig = config
+        self.snapshot_processor: SnapshotProcessor = snapshot_processor
         self.latest_results: Dict[str, Any] = {}
 
     def __check_image__(
@@ -54,11 +59,16 @@ class ImageProcessor:
                     SnapshotModeEnum.ALL,
                     SnapshotModeEnum.MASK,
                 ]:
-                    save_snapshot(
+                    self.snapshot_processor.save_snapshot(
                         camera_name, f"detected_{variant_name}_{file_name}", output
                     )
 
-                return {"result": True, "area": matches, "variant": variant_name}
+                return {
+                    "result": True,
+                    "area": matches,
+                    "variant": variant_name,
+                    "camera_name": camera_name,
+                }
             else:
                 if matches > best_fail.get("area", 0):
                     best_fail = {
@@ -71,7 +81,7 @@ class ImageProcessor:
                     SnapshotModeEnum.ALL,
                     SnapshotModeEnum.MASK,
                 ]:
-                    save_snapshot(
+                    self.snapshot_processor.save_snapshot(
                         camera_name, f"missed_{variant_name}_{file_name}", output
                     )
 
@@ -116,7 +126,9 @@ class ImageProcessor:
                     SnapshotModeEnum.ALL,
                     SnapshotModeEnum.CROP,
                 ]:
-                    save_snapshot(camera_name, f"{zone_name}", crop)
+                    self.snapshot_processor.save_snapshot(
+                        camera_name, f"{zone_name}", crop
+                    )
 
                 self.latest_results[object_name] = result
                 response[zone_name][object_name] = result
@@ -141,3 +153,27 @@ class ImageProcessor:
         main_color = color_thief.get_color(quality=1)
         palette = color_thief.get_palette(color_count=3)
         return (main_color, palette)
+
+    def mask_test_image(self, img_str: str, color_lower: str, color_upper: str) -> Any:
+        """Mask a test image with provided color range."""
+        img = cv2.imdecode(np.fromstring(img_str, np.uint8), -1)
+
+        if color_lower == "0, 0, 0":
+            color_lower = ["1", "1", "1"]
+        else:
+            color_lower = color_lower.split(", ")
+
+        color_upper = color_upper.split(", ")
+        lower: np.ndarray = np.array(
+            [int(color_lower[0]), int(color_lower[1]), int(color_lower[2])],
+            dtype="uint8",
+        )
+        upper: np.ndarray = np.array(
+            [int(color_upper[0]), int(color_upper[1]), int(color_upper[2])],
+            dtype="uint8",
+        )
+
+        mask = cv2.inRange(img, lower, upper)
+        output = cv2.bitwise_and(img, img, mask=mask)
+        ret, jpg = cv2.imencode(".jpg", output, [int(cv2.IMWRITE_JPEG_QUALITY), 70])
+        return jpg.tobytes()

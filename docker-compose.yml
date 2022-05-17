@@ -15,4 +15,5 @@ services:
       - ./debug:/media/
     ports:
       - "4500:4500"
-    command: /bin/sh -c "while sleep 1000; do :; done"
+      - "4501:4501"
+    command: /bin/bash -c "sudo /usr/local/nginx/sbin/nginx & while sleep 1000; do :; done"

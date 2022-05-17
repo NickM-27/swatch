@@ -43,6 +43,10 @@ jobs:
         uses: docker/setup-qemu-action@v1
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
+      - name: Flutter env
+        uses: subosito/flutter-action@v2
+        with:
+            channel: 'stable'
       - name: Build
         run: make
       - name: Run tests
@@ -56,6 +60,10 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v2
+      - name: Flutter env
+        uses: subosito/flutter-action@v2
+        with:
+            channel: 'stable'
 
   web-tests:
     runs-on: ubuntu-latest
@@ -63,9 +71,10 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v2
+      - name: Flutter env
+        uses: subosito/flutter-action@v2
+        with:
+            channel: 'stable'
       - name: Run test
         working-directory: ./web
-        run: ./gradlew test
-      - name: Run browser test
-        working-directory: ./web
-        run: ./gradlew browserTest
+        run: flutter test

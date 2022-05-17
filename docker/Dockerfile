@@ -7,6 +7,7 @@ COPY requirements.txt /requirements.txt
 COPY requirements_dev.txt /requirements_dev.txt
 
 ENV OPENCV_VERSION="4.5.1"
+ENV FLASK_ENV=development
 
 RUN pip install -r requirements.txt
 
@@ -16,7 +17,7 @@ COPY --from=nginx /usr/local/nginx/ /usr/local/nginx/
 WORKDIR /opt/swatch/
 
 COPY swatch swatch/
-COPY web/dist frontend/
+COPY web/build/web frontend/
 
 COPY docker/rootfs /
 

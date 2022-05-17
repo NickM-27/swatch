@@ -27,8 +27,16 @@ In this example you can see a cropped section of the street with a trash can. Th
 ## Features
 
 - REST API to be invoked by other applications
+- Intuitive frontend UI to manage swatch and use the **Color Playground** to fine tune colors for the config.
 - [HomeAssistant Integration](https://github.com/NickM-27/swatch-hass-integration)
 - [HomeAssistant Addon](https://github.com/NickM-27/swatch-hass-addon)
+
+## Web UI
+
+### Color Playground
+
+<img src="https://raw.githubusercontent.com/NickM-27/swatch/master/assets/color-playground.png"
+     alt="Swatch Color Playground" />
 
 ## Configuration
 

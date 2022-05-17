@@ -2,8 +2,8 @@ cache/
 
 config/config.yaml
 debug/
-*/.DS_Store
-*.vscode
+.DS_Store
+.vscode
 swatch/version.py
 
 swatch/__pycache__
@@ -11,6 +11,15 @@ swatch/__pycache__/*
 swatch/tests/__pycache__/
 tests/__pycache__/*
 
+web/**/doc/api/
+web/**/ios/Flutter/.last_build_id
+web/.dart_tool/
+web/.flutter-plugins
+web/.flutter-plugins-dependencies
+web/.packages
+web/.pub-cache/
+web/.pub/
+web/build/
 web/.*/
 web/build/
 web/dist/

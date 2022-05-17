@@ -4,6 +4,5 @@ flake8
 pre-commit
 
 types-python-dateutil
-types-waitress
 types-PyYAML
 types-requests
