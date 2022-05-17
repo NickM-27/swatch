@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:swatch/api/api.dart';
 import 'package:swatch/components/component_zone.dart';
 import 'package:swatch/ext/extension_string.dart';
 import 'package:swatch/models/camera.dart';
 
 class CameraComponent extends StatelessWidget {
+
+  final SwatchApi _api = SwatchApi();
   final Camera camera;
 
-  const CameraComponent(
+  CameraComponent(
     this.camera, {
     Key? key,
   }) : super(key: key);
@@ -27,7 +30,7 @@ class CameraComponent extends StatelessWidget {
           AspectRatio(
             aspectRatio: 2.1,
             child: Image.network(
-              "http://localhost:4500/api/${camera.name}/snapshot.jpg",
+              "${_api.getHost()}/api/${camera.name}/snapshot.jpg",
               fit: BoxFit.fitWidth,
             ),
           ),

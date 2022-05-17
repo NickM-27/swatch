@@ -1,18 +1,29 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:swatch/models/config.dart';
+import 'package:window_location_href/window_location_href.dart';
 
 class SwatchApi {
   static final SwatchApi _singleton = SwatchApi._internal();
-  static const _swatchHost = "localhost:4500";
+  static String _swatchHost = "";
 
   factory SwatchApi() {
+    if (kDebugMode) {
+      _swatchHost = "localhost:4500";
+    } else {
+      final location = (getHref() ?? "").replaceAll("http://", "");
+      _swatchHost = location.substring(0, location.indexOf("/", 8));
+    }
+
     return _singleton;
   }
 
   SwatchApi._internal();
+
+  String getHost() => Uri.http(_swatchHost, "").toString();
 
   Future<Config> getConfig() async {
     const base = "/api/config";

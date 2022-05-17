@@ -3,11 +3,8 @@ import 'package:swatch/api/api.dart';
 import 'package:swatch/components/component_camera.dart';
 import 'package:swatch/models/config.dart';
 
-import 'package:flutter/material.dart';
 import 'package:collapsible_sidebar/collapsible_sidebar.dart';
-import 'package:swatch/api/api.dart';
 import 'package:swatch/routes/route_color_playground.dart';
-import 'package:swatch/routes/route_dashboard.dart';
 import 'package:swatch/theme/theme_helper.dart';
 
 class DashboardRoute extends StatefulWidget {
@@ -23,13 +20,11 @@ class DashboardRoute extends StatefulWidget {
 class DashboardRouteState extends State<DashboardRoute> {
 
   late List<CollapsibleItem> _routes;
-  late String _currentRoute;
 
   @override
   void initState() {
     super.initState();
     _routes = _generateRoutes;
-    _currentRoute = _routes.firstWhere((route) => route.isSelected).text;
   }
 
   List<CollapsibleItem> get _generateRoutes {
@@ -48,7 +43,7 @@ class DashboardRouteState extends State<DashboardRoute> {
       CollapsibleItem(
         text: "Settings",
         icon: Icons.settings_outlined,
-        onPressed: () => setState(() => _currentRoute = "Settings"),
+        onPressed: () {},
       ),
     ];
   }
