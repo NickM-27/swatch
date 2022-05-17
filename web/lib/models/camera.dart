@@ -7,8 +7,8 @@ class Camera {
   Map<String, Zone> zones = {};
 
   Camera(final Map<String, dynamic> json) {
-    name = json["name"];
-    autoDetect = json["auto_detect"];
+    name = json["name"] ?? "";
+    autoDetect = json["auto_detect"] ?? 0;
 
     json["zones"].forEach((name, json) {
       Zone zone = Zone(json);
