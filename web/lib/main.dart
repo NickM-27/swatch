@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:swatch/ext/extension_navigator.dart';
 import 'package:swatch/routes/route_color_playground.dart';
 import 'package:swatch/routes/route_dashboard.dart';
+import 'package:swatch/routes/route_settings.dart';
 import 'package:swatch/theme/theme_helper.dart';
 
 void main() {
@@ -13,6 +14,7 @@ class SwatchApp extends StatelessWidget {
   static final Map<String, Widget> _routeMap = {
     DashboardRoute.route: const DashboardRoute(),
     ColorPlaygroundRoute.route: const ColorPlaygroundRoute(),
+    SettingsRoute.route: const SettingsRoute(),
   };
 
   const SwatchApp({Key? key}) : super(key: key);

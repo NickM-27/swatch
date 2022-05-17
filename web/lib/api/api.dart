@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
@@ -25,6 +26,8 @@ class SwatchApi {
 
   String getHost() => Uri.http(_swatchHost, "").toString();
 
+  /// Swatch API Funs
+
   Future<Config> getConfig() async {
     const base = "/api/config";
     final response = await http.get(Uri.http(_swatchHost, base)).timeout(
@@ -48,6 +51,19 @@ class SwatchApi {
       return Config(json.decode(response.body));
     } else {
       return Config.template();
+    }
+  }
+
+  /// General Utility Funs
+
+  Future<Uint8List> getImageBytes(final String imageSource) async {
+    try {
+      final http.Response r = await http.get(
+        Uri.parse(imageSource),
+      );
+      return r.bodyBytes;
+    } catch (e) {
+      return Uint8List(0);
     }
   }
 }

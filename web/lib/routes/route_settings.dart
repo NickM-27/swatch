@@ -35,13 +35,13 @@ class SettingsRouteState extends State<SettingsRoute> {
       CollapsibleItem(
         text: "Color Playground",
         icon: Icons.colorize_outlined,
-        isSelected: true,
         onPressed: () => Navigator.of(context)
             .pushReplacementNamed(ColorPlaygroundRoute.route),
       ),
       CollapsibleItem(
         text: "Settings",
         icon: Icons.settings_outlined,
+        isSelected: true,
         onPressed: () {},
       ),
     ];
