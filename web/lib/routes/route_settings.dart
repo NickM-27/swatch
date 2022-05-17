@@ -93,7 +93,7 @@ class _SettingsView extends StatelessWidget {
     return Scaffold(
       body: Container(
         alignment: Alignment.center,
-        child: const Text("Big Booty"),
+        child: const Text("Settings will be added later"),
       ),
     );
   }

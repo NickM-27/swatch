@@ -41,11 +41,11 @@ class DashboardRouteState extends State<DashboardRoute> {
         icon: Icons.colorize_outlined,
         onPressed: () => Navigator.of(context).pushReplacementNamed(ColorPlaygroundRoute.route),
       ),
-      CollapsibleItem(
+      /*CollapsibleItem(
         text: "Settings",
         icon: Icons.settings_outlined,
         onPressed: () => Navigator.of(context).pushReplacementNamed(SettingsRoute.route),
-      ),
+      ),*/
     ];
   }
 

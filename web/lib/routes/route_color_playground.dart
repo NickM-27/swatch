@@ -40,12 +40,12 @@ class ColorPlaygroundRouteState extends State<ColorPlaygroundRoute> {
         isSelected: true,
         onPressed: () {},
       ),
-      CollapsibleItem(
+      /*CollapsibleItem(
         text: "Settings",
         icon: Icons.settings_outlined,
         onPressed: () =>
             Navigator.of(context).pushReplacementNamed(SettingsRoute.route),
-      ),
+      ),*/
     ];
   }
 
