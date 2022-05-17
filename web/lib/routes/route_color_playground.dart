@@ -229,34 +229,98 @@ class _AdjustColorValuesState extends State<_AdjustColorValues> {
     return Container(
       alignment: Alignment.center,
       child: Row(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Column(
-            children: [
-              Card(
-                child: Column(children: [
-                  const Text("Min Acceptable Color Values"),
-                  Slider(value: _lowRed, onChanged: (r) => _lowRed = r),
-                  Slider(value: _lowGreen, onChanged: (g) => _lowGreen = g),
-                  Slider(value: _lowBlue, onChanged: (b) => _lowBlue = b),
-                ],),
-              ),
-              Card(
-                child: Column(
-                  children: [
-                    const Text("Max Acceptable Color Values"),
-                    Slider(value: _upRed, onChanged: (r) => _upRed = r),
-                    Slider(value: _upGreen, onChanged: (g) => _upGreen = g),
-                    Slider(value: _upBlue, onChanged: (b) => _upBlue = b),
-                  ],
+          SizedBox(
+            width: 300.0,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Card(
+                  child: Column(
+                    children: [
+                      const Text("Min Acceptable Color Values"),
+                      Slider(
+                        value: _lowRed,
+                        min: 0.0,
+                        max: 255.0,
+                        activeColor: Colors.red[700],
+                        inactiveColor: Colors.red[200],
+                        onChanged: (r) => setState(() => _lowRed = r.roundToDouble()),
+                      ),
+                      Slider(
+                        value: _lowGreen,
+                        min: 0.0,
+                        max: 255.0,
+                        activeColor: Colors.green[700],
+                        inactiveColor: Colors.green[200],
+                        onChanged: (g) => setState(() => _lowGreen = g.roundToDouble()),
+                      ),
+                      Slider(
+                        value: _lowBlue,
+                        min: 0.0,
+                        max: 255.0,
+                        onChanged: (b) => setState(() => _lowBlue = b.roundToDouble()),
+                      ),
+                    ],
+                  ),
                 ),
-              )
-            ],
+                Card(
+                  child: Column(
+                    children: [
+                      const Text("Max Acceptable Color Values"),
+                      Slider(
+                        value: _upRed,
+                        min: 0.0,
+                        max: 255.0,
+                        activeColor: Colors.red[700],
+                        inactiveColor: Colors.red[200],
+                        onChanged: (r) => setState(() => _upRed = r.roundToDouble()),
+                      ),
+                      Slider(
+                        value: _upGreen,
+                        min: 0.0,
+                        max: 255.0,
+                        activeColor: Colors.green[700],
+                        inactiveColor: Colors.green[200],
+                        onChanged: (g) => setState(() => _upGreen = g.roundToDouble()),
+                      ),
+                      Slider(
+                        value: _upBlue,
+                        min: 0.0,
+                        max: 255.0,
+                        onChanged: (b) => setState(() => _upBlue = b.roundToDouble()),
+                      ),
+                    ],
+                  ),
+                ),
+                SelectableText(
+                  "color_lower: $_lowRed, $_lowGreen, $_lowBlue\ncolor_upper: $_upRed, $_upGreen, $_upBlue",
+                  textAlign: TextAlign.start,
+
+                ),
+              ],
+            ),
           ),
-          Column(
-            children: [
-              Image.network(widget._imageSource),
-              Image.memory(_maskImage)
-            ],
+          SizedBox(
+            width: 300.0,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.network(
+                  widget._imageSource,
+                  height: 200.0,
+                  fit: BoxFit.fitWidth,
+                ),
+                Image.memory(
+                  _maskImage,
+                  height: 200.0,
+                  fit: BoxFit.fitWidth,
+                )
+              ],
+            ),
           ),
         ],
       ),
