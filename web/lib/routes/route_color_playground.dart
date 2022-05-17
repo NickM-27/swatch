@@ -105,15 +105,12 @@ class _ColorPlaygroundViewState extends State<_ColorPlaygroundView> {
       return _SetPicSource(
           (imageSource) => setState(() => _source = imageSource));
     } else if (_imageBytes.isEmpty) {
-      return _SaveOrCropImage(
-        _source,
-        (text) async {
-          final bytes = await _api.getImageBytes(_source);
-          setState(() => _imageBytes = bytes);
-        }
-      );
-    } else {
-      return Text("WIll do");
+      return _SaveOrCropImage(_source, (text) async {
+        final bytes = await _api.getImageBytes(_source);
+        setState(() => _imageBytes = bytes);
+      });
+    } else if (_source.isNotEmpty && _imageBytes.isNotEmpty) {
+      return _AdjustColorValues(_source);
     }
 
     return const SizedBox();
@@ -199,6 +196,69 @@ class _SaveOrCropImage extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _AdjustColorValues extends StatefulWidget {
+  final String _imageSource;
+
+  const _AdjustColorValues(this._imageSource, {Key? key}) : super(key: key);
+
+  @override
+  _AdjustColorValuesState createState() => _AdjustColorValuesState();
+}
+
+class _AdjustColorValuesState extends State<_AdjustColorValues> {
+  final SwatchApi _api = SwatchApi();
+  Uint8List _maskImage = Uint8List(0);
+
+  // Lower Color Values
+  double _lowRed = 0;
+  double _lowGreen = 0;
+  double _lowBlue = 0;
+
+  // Upper Color Values
+  double _upRed = 255;
+  double _upGreen = 255;
+  double _upBlue = 255;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      alignment: Alignment.center,
+      child: Row(
+        children: [
+          Column(
+            children: [
+              Card(
+                child: Column(children: [
+                  const Text("Min Acceptable Color Values"),
+                  Slider(value: _lowRed, onChanged: (r) => _lowRed = r),
+                  Slider(value: _lowGreen, onChanged: (g) => _lowGreen = g),
+                  Slider(value: _lowBlue, onChanged: (b) => _lowBlue = b),
+                ],),
+              ),
+              Card(
+                child: Column(
+                  children: [
+                    const Text("Max Acceptable Color Values"),
+                    Slider(value: _upRed, onChanged: (r) => _upRed = r),
+                    Slider(value: _upGreen, onChanged: (g) => _upGreen = g),
+                    Slider(value: _upBlue, onChanged: (b) => _upBlue = b),
+                  ],
+                ),
+              )
+            ],
+          ),
+          Column(
+            children: [
+              Image.network(widget._imageSource),
+              Image.memory(_maskImage)
+            ],
+          ),
+        ],
       ),
     );
   }
