@@ -1,0 +1,1 @@
+export 'extension_url_strategy_noop.dart' if (dart.library.html) 'extension_url_strategy_web.dart';

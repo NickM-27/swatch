@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_web_plugins/flutter_web_plugins.dart';
+import 'package:swatch/ext/url_strategy/extension_url_strategy.dart';
 import 'package:swatch/routes/route_color_playground.dart';
 import 'package:swatch/routes/route_dashboard.dart';
 import 'package:swatch/routes/route_settings.dart';
 import 'package:swatch/theme/theme_helper.dart';
 
 void main() {
-  setUrlStrategy(PathUrlStrategy());
+  usePathUrlStrategy();
   runApp(const SwatchApp());
 }
 

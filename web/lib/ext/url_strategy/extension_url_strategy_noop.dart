@@ -1,0 +1,3 @@
+void usePathUrlStrategy() {
+  // noop
+}
