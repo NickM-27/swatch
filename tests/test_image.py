@@ -8,6 +8,7 @@ from swatch.config import SwatchConfig
 
 class TestConfig(unittest.TestCase):
     """Testing the configuration is parsed correctly."""
+
     def setUp(self) -> None:
         """setup simple"""
         self.config = {
