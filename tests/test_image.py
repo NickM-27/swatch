@@ -52,10 +52,16 @@ class TestConfig(unittest.TestCase):
         swatch_config = SwatchConfig(**self.config)
         now_time = "12:00"
         color_variant = swatch_config.objects["test_obj"].color_variants["default"]
-        now_time < color_variant.time_range.after or now_time > color_variant.time_range.before
+        assert (
+            now_time < color_variant.time_range.after
+            or now_time > color_variant.time_range.before
+        )
 
     def test_invalid_time_range(self) -> None:
         swatch_config = SwatchConfig(**self.config)
         now_time = "04:00"
         color_variant = swatch_config.objects["test_obj"].color_variants["default"]
-        now_time < color_variant.time_range.after or now_time > color_variant.time_range.before
+        assert not (
+            now_time < color_variant.time_range.after
+            or now_time > color_variant.time_range.before
+        )
