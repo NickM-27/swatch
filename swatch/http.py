@@ -15,6 +15,7 @@ from flask import (
 
 from swatch.config import CameraConfig, SwatchConfig, ZoneConfig
 from swatch.image import ImageProcessor
+from swatch.models import Detection
 from swatch.snapshot import SnapshotProcessor
 
 bp = Blueprint("swatch", __name__)
@@ -127,6 +128,57 @@ def test_mask() -> Any:
 
 
 ### Detection API Routes
+
+
+@bp.route("/detections", methods=["GET"])
+def get_detections() -> Any:
+    """Get detections from the db."""
+    limit = request.args.get("limit", 100)
+    camera = request.args.get("camera", "all")
+    label = request.args.get("label", "all")
+    zone = request.args.get("zone", "all")
+    after = request.args.get("after", type=float)
+    before = request.args.get("before", type=float)
+
+    clauses = []
+    excluded_fields = []
+
+    selected_columns = [
+        Detection.id,
+        Detection.camera,
+        Detection.label,
+        Detection.zone,
+        Detection.top_area,
+        Detection.color_variant,
+        Detection.start_time,
+    ]
+
+    if camera != "all":
+        clauses.append((Event.camera == camera))
+
+    if label != "all":
+        clauses.append((Event.label == label))
+
+    if zone != "all":
+        clauses.append((Event.zones.cast("text") % f'*"{zone}"*'))
+
+    if after:
+        clauses.append((Event.start_time > after))
+
+    if before:
+        clauses.append((Event.start_time < before))
+
+    if len(clauses) == 0:
+        clauses.append((True))
+
+    events = (
+        Detection.select(*selected_columns)
+        .where(reduce(operator.and_, clauses))
+        .order_by(Detection.start_time.desc())
+        .limit(limit)
+    )
+
+    return jsonify([model_to_dict(d, exclude=excluded_fields) for d in detections])
 
 
 @bp.route("/<camera_name>/detect", methods=["POST"])
