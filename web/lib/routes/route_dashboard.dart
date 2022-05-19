@@ -5,7 +5,6 @@ import 'package:swatch/models/config.dart';
 
 import 'package:collapsible_sidebar/collapsible_sidebar.dart';
 import 'package:swatch/routes/route_color_playground.dart';
-import 'package:swatch/routes/route_settings.dart';
 import 'package:swatch/theme/theme_helper.dart';
 
 class DashboardRoute extends StatefulWidget {

@@ -19,6 +19,7 @@ class ZoneComponent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      color: Colors.grey[700],
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(
           Radius.circular(8.0),
