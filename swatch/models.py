@@ -7,8 +7,10 @@ from peewee import (
     IntegerField,
 )
 
+
 class Detection(Model):  # type: ignore[misc]
     """Detections that are tracked."""
+
     id = CharField(null=False, primary_key=True, max_length=30)
     label = CharField(index=True, max_length=20)
     camera = CharField(index=True, max_length=20)

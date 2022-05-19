@@ -31,22 +31,18 @@ class AutoDetector(threading.Thread):
         """Handle the db transactions for detection."""
         if db_type == "new":
             Detection.insert(
-                id = self.obj_data[obj_id]["id"],
-                label = self.obj_data[obj_id]["object_name"],
-                camera = self.config.name,
-                zone = self.obj_data[obj_id]["zone_name"],
-                color_variant = self.obj_data[obj_id]["variant"],
-                start_time = datetime.datetime().timestamp(),
-                top_area = self.obj_data[obj_id]["top_area"],
+                id=self.obj_data[obj_id]["id"],
+                label=self.obj_data[obj_id]["object_name"],
+                camera=self.config.name,
+                zone=self.obj_data[obj_id]["zone_name"],
+                color_variant=self.obj_data[obj_id]["variant"],
+                start_time=datetime.datetime().timestamp(),
+                top_area=self.obj_data[obj_id]["top_area"],
             )
         elif db_type == "update":
-            Detection.update(
-
-            ).where(Detection.id == self.obj_data[obj_id]["id"])
+            Detection.update().where(Detection.id == self.obj_data[obj_id]["id"])
         elif db_type == "end":
-            Detection.update(
-
-            ).where(Detection.id == self.obj_data[obj_id]["id"])
+            Detection.update().where(Detection.id == self.obj_data[obj_id]["id"])
 
     def __handle_detections__(self, detection_result: Dict[str, Any]) -> None:
         """Run through map of detections for camera and add to the db."""
@@ -63,7 +59,9 @@ class AutoDetector(threading.Thread):
                 self.obj_data[non_unique_id]["zone_name"] = zone_name
                 self.obj_data[non_unique_id]["variant"] = object_result["variant"]
 
-                if object_result["area"] > self.obj_data[non_unique_id].get("top_area", 0):
+                if object_result["area"] > self.obj_data[non_unique_id].get(
+                    "top_area", 0
+                ):
                     self.obj_data[non_unique_id]["top_area"] = object_result["area"]
 
                 if not self.obj_data[non_unique_id]:
@@ -76,7 +74,6 @@ class AutoDetector(threading.Thread):
                     else:
                         self.__handle_db__("end", non_unique_id)
                         del self.obj_data[non_unique_id]
-
 
     def run(self) -> None:
         print(f"Starting Auto Detection for {self.config.name}")
