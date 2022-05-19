@@ -75,6 +75,7 @@ class ImageProcessor:
                         "result": False,
                         "area": matches,
                         "variant": variant_name,
+                        "camera_name": camera_name,
                     }
 
                 if snapshot.save_misses and snapshot.snapshot_mode in [
