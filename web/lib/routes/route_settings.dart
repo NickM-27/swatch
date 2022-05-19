@@ -1,3 +1,5 @@
+import 'dart:html' as html;
+
 import 'package:flutter/material.dart';
 import 'package:swatch/api/api.dart';
 
@@ -5,6 +7,7 @@ import 'package:collapsible_sidebar/collapsible_sidebar.dart';
 import 'package:swatch/routes/route_color_playground.dart';
 import 'package:swatch/routes/route_dashboard.dart';
 import 'package:swatch/theme/theme_helper.dart';
+import 'package:swatch/const.dart';
 
 class SettingsRoute extends StatefulWidget {
   static const String route = '/settings';
@@ -43,6 +46,18 @@ class SettingsRouteState extends State<SettingsRoute> {
         icon: Icons.settings_outlined,
         isSelected: true,
         onPressed: () {},
+      ),
+      CollapsibleItem(
+        text: "GitHub",
+        icon: Icons.code,
+        isSelected: false,
+        onPressed: () => html.window.open(urlGitHubReadme, "swatch-readme"),
+      ),
+      CollapsibleItem(
+        text: "Docs",
+        icon: Icons.mark_chat_read_outlined,
+        isSelected: false,
+        onPressed: () => html.window.open(urlGitHubDocs, "swatch-docs"),
       ),
     ];
   }
