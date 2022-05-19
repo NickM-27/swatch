@@ -39,10 +39,18 @@ class SnapshotConfig(SwatchBaseModel):
     )
     retain_days: int = Field(title="Number of days to retain snapshots.", default=7)
 
+
 class TimeRangeConfig(SwatchBaseModel):
     """Configuration of time range for color variants."""
-    after: str = Field(title="Color variant is valid if current time is > this 24H time.", default="00:00")
-    before: str = Field(title="Color variant is valid if current time is < this 24H time.", default="24:00")
+
+    after: str = Field(
+        title="Color variant is valid if current time is > this 24H time.",
+        default="00:00",
+    )
+    before: str = Field(
+        title="Color variant is valid if current time is < this 24H time.",
+        default="24:00",
+    )
 
 
 class ColorVariantConfig(SwatchBaseModel):
@@ -50,7 +58,9 @@ class ColorVariantConfig(SwatchBaseModel):
 
     color_lower: str = Field(title="Lower R, G, B color values")
     color_upper: str = Field(title="Higher R, G, B color values")
-    time_range: TimeRangeConfig = Field(title="Valid time range for this config.", default_factory=TimeRangeConfig)
+    time_range: TimeRangeConfig = Field(
+        title="Valid time range for this config.", default_factory=TimeRangeConfig
+    )
 
 
 class ObjectConfig(SwatchBaseModel):

@@ -37,7 +37,10 @@ class ImageProcessor:
         for variant_name, color_variant in detectable.color_variants.items():
             now_time = datetime.datetime.now().strftime("%H:%M")
 
-            if now_time < color_variant.time_range.after or now_time > color_variant.time_range.before:
+            if (
+                now_time < color_variant.time_range.after
+                or now_time > color_variant.time_range.before
+            ):
                 continue
 
             if color_variant.color_lower == "0, 0, 0":
