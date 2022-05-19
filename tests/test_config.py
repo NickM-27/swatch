@@ -5,6 +5,7 @@ from swatch.config import SwatchConfig
 
 
 class TestConfig(unittest.TestCase):
+    """Testing the configuration is parsed correctly."""
     def setUp(self) -> None:
         """setup simple"""
         self.minimal = {
@@ -41,6 +42,10 @@ class TestConfig(unittest.TestCase):
                         "default": {
                             "color_lower": "1, 1, 1",
                             "color_upper": "2, 2, 2",
+                            "time_range": {
+                                "after": "08:00",
+                                "before": "18:00",
+                            },
                         },
                     },
                     "min_area": 0,
