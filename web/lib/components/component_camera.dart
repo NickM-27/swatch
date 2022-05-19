@@ -29,9 +29,12 @@ class CameraComponent extends StatelessWidget {
         children: [
           AspectRatio(
             aspectRatio: 2.1,
-            child: Image.network(
-              "${_api.getHost()}/api/${camera.name}/snapshot.jpg",
-              fit: BoxFit.fitWidth,
+            child: ClipRRect(
+              borderRadius: const BorderRadius.all(Radius.circular(8.0)),
+              child: Image.network(
+                "${_api.getHost()}/api/${camera.name}/snapshot.jpg",
+                fit: BoxFit.fitWidth,
+              ),
             ),
           ),
           Padding(

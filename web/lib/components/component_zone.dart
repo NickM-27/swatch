@@ -19,18 +19,24 @@ class ZoneComponent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      color: Colors.grey[700],
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(
           Radius.circular(8.0),
         ),
       ),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Image.network(
-            "${_api.getHost()}/api/${camera.name}/${zone.name}/snapshot.jpg",
-            height: 100,
+          ClipRRect(
+            borderRadius: const BorderRadius.all(Radius.circular(8.0)),
+            child: Image.network(
+              "${_api.getHost()}/api/${camera.name}/${zone.name}/snapshot.jpg",
+              height: 100,
+              fit: BoxFit.fill,
+            ),
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),

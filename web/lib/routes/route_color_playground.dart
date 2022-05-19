@@ -1,3 +1,4 @@
+import 'dart:html' as html;
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
@@ -5,8 +6,9 @@ import 'package:swatch/api/api.dart';
 
 import 'package:collapsible_sidebar/collapsible_sidebar.dart';
 import 'package:swatch/routes/route_dashboard.dart';
-import 'package:swatch/routes/route_settings.dart';
 import 'package:swatch/theme/theme_helper.dart';
+
+import 'package:swatch/const.dart';
 
 class ColorPlaygroundRoute extends StatefulWidget {
   static const String route = '/color_playground';
@@ -39,6 +41,18 @@ class ColorPlaygroundRouteState extends State<ColorPlaygroundRoute> {
         icon: Icons.colorize_outlined,
         isSelected: true,
         onPressed: () {},
+      ),
+      CollapsibleItem(
+        text: "GitHub",
+        icon: Icons.code,
+        isSelected: false,
+        onPressed: () => html.window.open(urlGitHubReadme, "swatch-readme"),
+      ),
+      CollapsibleItem(
+        text: "Docs",
+        icon: Icons.mark_chat_read_outlined,
+        isSelected: false,
+        onPressed: () => html.window.open(urlGitHubDocs, "swatch-docs"),
       ),
       /*CollapsibleItem(
         text: "Settings",
@@ -161,9 +175,9 @@ class _SetPicSource extends StatelessWidget {
 
 class _SaveOrCropImage extends StatelessWidget {
   final Function(String) _submit;
-  String _imageSource;
+  final String _imageSource;
 
-  _SaveOrCropImage(this._imageSource, this._submit, {Key? key})
+  const _SaveOrCropImage(this._imageSource, this._submit, {Key? key})
       : super(key: key);
 
   @override
