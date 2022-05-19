@@ -21,6 +21,13 @@ objects:
         # REQUIRED: the upper R, G, B values that are considered a potential match for the
         # color variant of the object.
         color_upper: 110, 100, 50
+        # OPTIONAL: the time range for when this color variant is allowed
+        # NOTE: make sure that /etc/localtime is passed to the container so it has valid time
+        time_range:
+          # OPTIONAL: Color variant is valid if current time is > this 24H time (Default: shown below).
+          after: "00:00"
+          # OPTIONAL: Color variant is valid if current time is < this 24H time (Default: shown below).
+          before: "24:00"
     # OPTIONAL: the min number of pixels with R, G, B values within the bounds to be
     # considered a true positive. This is recommended to be set as a super small amount
     # could be a false positive. (Default: shown below)

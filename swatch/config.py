@@ -25,7 +25,7 @@ class SnapshotModeEnum(str, Enum):
 
 
 class SnapshotConfig(SwatchBaseModel):
-    """Config for saving snapshots."""
+    """Configuration for saving snapshots."""
 
     url: str = Field(title="Camera Snapshot Url.", default=None)
     save_detections: bool = Field(
@@ -40,17 +40,33 @@ class SnapshotConfig(SwatchBaseModel):
     retain_days: int = Field(title="Number of days to retain snapshots.", default=7)
 
 
-class ColorConfig(SwatchBaseModel):
+class TimeRangeConfig(SwatchBaseModel):
+    """Configuration of time range for color variants."""
+
+    after: str = Field(
+        title="Color variant is valid if current time is > this 24H time.",
+        default="00:00",
+    )
+    before: str = Field(
+        title="Color variant is valid if current time is < this 24H time.",
+        default="24:00",
+    )
+
+
+class ColorVariantConfig(SwatchBaseModel):
     """Configuration of color values."""
 
     color_lower: str = Field(title="Lower R, G, B color values")
     color_upper: str = Field(title="Higher R, G, B color values")
+    time_range: TimeRangeConfig = Field(
+        title="Valid time range for this config.", default_factory=TimeRangeConfig
+    )
 
 
 class ObjectConfig(SwatchBaseModel):
     """Configuration of the object detection."""
 
-    color_variants: dict[str, ColorConfig] = Field(
+    color_variants: dict[str, ColorVariantConfig] = Field(
         title="Color variants for this object", default_factory=dict
     )
     min_area: int = Field(title="Min Area", default=0)
