@@ -4,7 +4,7 @@ from peewee import (
     Model,
     CharField,
     DateTimeField,
-    FloatField,
+    IntegerField,
 )
 
 class Detection(Model):  # type: ignore[misc]
@@ -16,4 +16,4 @@ class Detection(Model):  # type: ignore[misc]
     color_variant = CharField(index=True, max_length=20)
     start_time = DateTimeField()
     end_time = DateTimeField()
-    top_area = FloatField()
+    top_area = IntegerField()
