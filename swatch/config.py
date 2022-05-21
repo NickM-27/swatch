@@ -28,14 +28,12 @@ class SnapshotConfig(SwatchBaseModel):
     """Configuration for saving snapshots."""
 
     url: str = Field(title="Camera Snapshot Url.", default=None)
+    mode: SnapshotModeEnum = Field(title="Snapshot mode.", default=SnapshotModeEnum.ALL)
     save_detections: bool = Field(
         title="Save snapshots of detections that are found.", default=True
     )
     save_misses: bool = Field(
         title="Save snapshots of missed detections.", default=False
-    )
-    snapshot_mode: SnapshotModeEnum = Field(
-        title="Snapshot mode.", default=SnapshotModeEnum.ALL
     )
     retain_days: int = Field(title="Number of days to retain snapshots.", default=7)
 
