@@ -1,14 +1,44 @@
 """ImageProcessor for getting detectable info from images."""
 
 import datetime
-import requests
+from typing import Any, Dict, Optional, Tuple
 from colorthief import ColorThief
 import cv2
 import numpy as np
-from typing import Any, Dict, Optional
 
-from swatch.config import ObjectConfig, SnapshotConfig, SnapshotModeEnum, SwatchConfig
+import requests
+
+from swatch.config import (
+    ColorVariantConfig,
+    ObjectConfig,
+    SnapshotConfig,
+    SnapshotModeEnum,
+    SwatchConfig,
+)
 from swatch.snapshot import SnapshotProcessor
+
+
+def __mask_image__(
+    crop: Any,
+    color_variant: ColorVariantConfig
+) -> Tuple[Any, int]:
+    """Mask an image with color values"""
+    color_lower = "1, 1, 1" if color_variant.color_lower == "0, 0, 0" else color_variant.color_lower.split(", ")
+    color_upper = color_variant.color_upper.split(", ")
+
+    lower: np.ndarray = np.array(
+        [int(color_lower[0]), int(color_lower[1]), int(color_lower[2])],
+        dtype="uint8",
+    )
+    upper: np.ndarray = np.array(
+        [int(color_upper[0]), int(color_upper[1]), int(color_upper[2])],
+        dtype="uint8",
+    )
+
+    mask = cv2.inRange(crop, lower, upper)
+    output = cv2.bitwise_and(crop, crop, mask=mask)
+    matches = np.count_nonzero(output)
+    return (output, matches)
 
 
 class ImageProcessor:
@@ -44,27 +74,10 @@ class ImageProcessor:
             ):
                 continue
 
-            if color_variant.color_lower == "0, 0, 0":
-                color_lower = "1, 1, 1"
-            else:
-                color_lower = color_variant.color_lower.split(", ")
-
-            color_upper = color_variant.color_upper.split(", ")
-            lower: np.ndarray = np.array(
-                [int(color_lower[0]), int(color_lower[1]), int(color_lower[2])],
-                dtype="uint8",
-            )
-            upper: np.ndarray = np.array(
-                [int(color_upper[0]), int(color_upper[1]), int(color_upper[2])],
-                dtype="uint8",
-            )
-
-            mask = cv2.inRange(crop, lower, upper)
-            output = cv2.bitwise_and(crop, crop, mask=mask)
-            matches = np.count_nonzero(output)
+            output, matches = __mask_image__(crop, color_variant)
 
             if matches > detectable.min_area and matches < detectable.max_area:
-                if snapshot.save_detections and snapshot.snapshot_mode in [
+                if snapshot.save_detections and snapshot.mode in [
                     SnapshotModeEnum.ALL,
                     SnapshotModeEnum.MASK,
                 ]:
@@ -86,7 +99,7 @@ class ImageProcessor:
                         "variant": variant_name,
                     }
 
-                if snapshot.save_misses and snapshot.snapshot_mode in [
+                if snapshot.save_misses and snapshot.mode in [
                     SnapshotModeEnum.ALL,
                     SnapshotModeEnum.MASK,
                 ]:
@@ -131,7 +144,7 @@ class ImageProcessor:
                     snapshot_config,
                 )
 
-                if snapshot_config.snapshot_mode in [
+                if snapshot_config.mode in [
                     SnapshotModeEnum.ALL,
                     SnapshotModeEnum.CROP,
                 ]:
