@@ -1,7 +1,7 @@
 default_target: local
 
 COMMIT_HASH := $(shell git log -1 --pretty=format:"%h"|tail -1)
-VERSION = 2.1.1
+VERSION = 2.1.2
 
 local:
 	cd web; flutter build web;
