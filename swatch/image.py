@@ -18,12 +18,13 @@ from swatch.config import (
 from swatch.snapshot import SnapshotProcessor
 
 
-def __mask_image__(
-    crop: Any,
-    color_variant: ColorVariantConfig
-) -> Tuple[Any, int]:
+def __mask_image__(crop: Any, color_variant: ColorVariantConfig) -> Tuple[Any, int]:
     """Mask an image with color values"""
-    color_lower = "1, 1, 1" if color_variant.color_lower == "0, 0, 0" else color_variant.color_lower.split(", ")
+    color_lower = (
+        "1, 1, 1"
+        if color_variant.color_lower == "0, 0, 0"
+        else color_variant.color_lower.split(", ")
+    )
     color_upper = color_variant.color_upper.split(", ")
 
     lower: np.ndarray = np.array(
