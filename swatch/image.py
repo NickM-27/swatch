@@ -1,5 +1,6 @@
 """ImageProcessor for getting detectable info from images."""
 
+import datetime
 import requests
 from colorthief import ColorThief
 import cv2
