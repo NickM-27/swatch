@@ -1,6 +1,5 @@
 """Main http service that handles starting app modules."""
 
-import base64
 import logging
 from typing import Any, Dict
 
@@ -183,16 +182,16 @@ def detect_camera_frame(camera_name: str) -> Any:
             jsonify({"success": False, "message": "Unknown error doing detection."}),
             500,
         )
-    else:
-        return make_response(
-            jsonify(
-                {
-                    "success": False,
-                    "message": "image url must be passed or set in the config.",
-                }
-            ),
-            404,
-        )
+
+    return make_response(
+        jsonify(
+            {
+                "success": False,
+                "message": "image url must be passed or set in the config.",
+            }
+        ),
+        404,
+    )
 
 
 @bp.route("/<label>/latest", methods=["GET"])
