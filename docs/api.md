@@ -33,7 +33,7 @@ the program sees them.
 ```json
 {
     "imageUrl": "http://some_camera_image.jpg"
-}
+} // json
 ```
 
 Take the `camera_name` config and `imageUrl` to run detection and see which objects are detected.
@@ -50,7 +50,7 @@ Returns the latest results for the given label. `all` can be passed to get a res
         "result":true,
         "variant":"overcast"
     }
-}
+} // json
 ```
 
 ## `/api/<camera_name>/snapshot.jpg`
