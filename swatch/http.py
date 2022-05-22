@@ -165,12 +165,12 @@ def detect_camera_frame(camera_name: str) -> Any:
             result: Dict[str, Any] = current_app.image_processor.detect(
                 camera_name, image_url
             )
-        except Exception as e:
+        except Exception as _e:
             return make_response(
                 jsonify(
                     {
                         "success": False,
-                        "message": f"{image_url} is invalid or does not contain a valid image: {e}.",
+                        "message": f"{image_url} is invalid or does not contain a valid image: {_e}.",
                     }
                 ),
                 404,
