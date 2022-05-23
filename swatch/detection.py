@@ -94,11 +94,7 @@ class AutoDetector(threading.Thread):
 class DetectionCleanup(threading.Thread):
     """Handles the auto cleanup of detections."""
 
-    def __init__(
-        self,
-        camera_config: CameraConfig,
-        stop_event: multiprocessing.Event
-    ):
+    def __init__(self, camera_config: CameraConfig, stop_event: multiprocessing.Event):
         threading.Thread.__init__(self)
         self.config = camera_config
         self.stop_event = stop_event
