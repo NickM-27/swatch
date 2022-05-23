@@ -112,9 +112,9 @@ class DetectionCleanup(threading.Thread):
         )
 
     def run(self) -> None:
-        print(f"Starting Auto Detection for {self.config.name}")
+        print(f"Starting Detection Cleanup for {self.config.name}")
 
         while not self.stop_event.wait(3600):
             self.__cleanup_db__()
 
-        print(f"Stopping Auto Detection for {self.config.name}")
+        print(f"Stopping Detection Cleanup for {self.config.name}")
