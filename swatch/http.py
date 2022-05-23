@@ -1,5 +1,6 @@
 """Main http service that handles starting app modules."""
 
+from functools import reduce
 import logging
 from typing import Any, Dict
 
@@ -12,8 +13,12 @@ from flask import (
     request,
 )
 
+from peewee import DoesNotExist, operator
+from playhouse.shortcuts import model_to_dict
+
 from swatch.config import CameraConfig, SwatchConfig, ZoneConfig
 from swatch.image import ImageProcessor
+from swatch.models import Detection
 from swatch.snapshot import SnapshotProcessor
 
 bp = Blueprint("swatch", __name__)
@@ -126,6 +131,68 @@ def test_mask() -> Any:
 
 
 ### Detection API Routes
+
+
+@bp.route("/detections", methods=["GET"])
+def get_detections() -> Any:
+    """Get detections from the db."""
+    limit = request.args.get("limit", 100)
+    camera = request.args.get("camera", "all")
+    label = request.args.get("label", "all")
+    zone = request.args.get("zone", "all")
+    after = request.args.get("after", type=float)
+    before = request.args.get("before", type=float)
+
+    clauses = []
+    excluded_fields = []
+
+    selected_columns = [
+        Detection.id,
+        Detection.camera,
+        Detection.label,
+        Detection.zone,
+        Detection.top_area,
+        Detection.color_variant,
+        Detection.start_time,
+    ]
+
+    if camera != "all":
+        clauses.append(Detection.camera == camera)
+
+    if label != "all":
+        clauses.append(Detection.label == label)
+
+    if zone != "all":
+        clauses.append(Detection.zone.cast("text") % f'*"{zone}"*')
+
+    if after:
+        clauses.append(Detection.start_time > after)
+
+    if before:
+        clauses.append(Detection.start_time < before)
+
+    if len(clauses) == 0:
+        clauses.append(True)
+
+    detections = (
+        Detection.select(*selected_columns)
+        .where(reduce(operator.and_, clauses))
+        .order_by(Detection.start_time.desc())
+        .limit(limit)
+    )
+
+    return jsonify([model_to_dict(d, exclude=excluded_fields) for d in detections])
+
+
+@bp.route("/detections/<detection_id>", methods=["GET"])
+def get_detection(id: str):
+    """Get specific detection."""
+    try:
+        return model_to_dict(Detection.get(Detection.id == id))
+    except DoesNotExist:
+        return jsonify(
+            {"success": False, "message": f"Detection with id {id} not found."}, 404
+        )
 
 
 @bp.route("/<camera_name>/detect", methods=["POST"])
