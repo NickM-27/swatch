@@ -7,7 +7,7 @@ from swatch.config import SwatchConfig
 from swatch.const import CONST_CONFIG_FILE
 from swatch.http import create_app
 from swatch.image import ImageProcessor
-from swatch.processing import AutoDetector
+from swatch.detection import AutoDetector
 from swatch.snapshot import SnapshotCleanup, SnapshotProcessor
 
 
