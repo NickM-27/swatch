@@ -13,7 +13,7 @@ from flask import (
     request,
 )
 
-from peewee import operator
+from peewee import DoesNotExist, operator
 from playhouse.shortcuts import model_to_dict
 
 from swatch.config import CameraConfig, SwatchConfig, ZoneConfig
@@ -182,6 +182,17 @@ def get_detections() -> Any:
     )
 
     return jsonify([model_to_dict(d, exclude=excluded_fields) for d in detections])
+
+
+@bp.route("/detections/<detection_id>", methods=["GET"])
+def get_detection(id: str):
+    """Get specific detection."""
+    try:
+        return model_to_dict(Detection.get(Detection.id == id))
+    except DoesNotExist:
+        return jsonify(
+            {"success": False, "message": f"Detection with id {id} not found."}, 404
+        )
 
 
 @bp.route("/<camera_name>/detect", methods=["POST"])
