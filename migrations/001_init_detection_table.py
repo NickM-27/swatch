@@ -36,9 +36,7 @@ def migrate(migrator, database, fake=False, **kwargs):
     migrator.sql(
         'CREATE INDEX IF NOT EXISTS "detection_label" ON "detection" ("label")'
     )
-    migrator.sql(
-        'CREATE INDEX IF NOT EXISTS "event_camera" ON "detection" ("camera")'
-    )
+    migrator.sql('CREATE INDEX IF NOT EXISTS "event_camera" ON "detection" ("camera")')
 
 
 def rollback(migrator, database, fake=False, **kwargs):
