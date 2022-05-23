@@ -18,6 +18,7 @@ WORKDIR /opt/swatch/
 
 COPY swatch swatch/
 COPY web/build/web frontend/
+COPY migrations migrations/
 
 COPY docker/rootfs /
 
