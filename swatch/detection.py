@@ -84,4 +84,41 @@ class AutoDetector(threading.Thread):
             )
             self.__handle_detections__(result)
 
+        # ensure db doesn't contain bad data after shutdown
+        Detection.update(end_time=datetime.datetime.now().timestamp()).where(
+            Detection.end_time == None
+        ).execute()
+        print(f"Stopping Auto Detection for {self.config.name}")
+
+
+class DetectionCleanup(threading.Thread):
+    """Handles the auto cleanup of detections."""
+
+    def __init__(
+        self,
+        camera_config: CameraConfig,
+        stop_event: multiprocessing.Event
+    ):
+        threading.Thread.__init__(self)
+        self.config = camera_config
+        self.stop_event = stop_event
+
+    def __cleanup_db__(self):
+        """Cleanup the old events in the db."""
+        expire_days = self.config.snapshot_config.retain_days
+        expire_after = (
+            datetime.datetime.now() - datetime.timedelta(days=expire_days)
+        ).timestamp()
+
+        Detection.delete().where(
+            Detection.camera == self.config.name,
+            Detection.start_time < expire_after,
+        )
+
+    def run(self) -> None:
+        print(f"Starting Auto Detection for {self.config.name}")
+
+        while not self.stop_event.wait(3600):
+            self.__cleanup_db__()
+
         print(f"Stopping Auto Detection for {self.config.name}")

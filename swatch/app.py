@@ -7,7 +7,7 @@ from swatch.config import SwatchConfig
 from swatch.const import CONST_CONFIG_FILE
 from swatch.http import create_app
 from swatch.image import ImageProcessor
-from swatch.detection import AutoDetector
+from swatch.detection import AutoDetector, DetectionCleanup
 from swatch.snapshot import SnapshotCleanup, SnapshotProcessor
 
 
@@ -21,6 +21,7 @@ class SwatchApp:
         self.__init_config__()
         self.__init_processing__()
         self.__init_snapshot_cleanup__()
+        self.__init_detection_cleanup__()
         self.__init_web_server__()
 
     def __init_config__(self) -> None:
@@ -52,16 +53,28 @@ class SwatchApp:
                 self.camera_processes[name].start()
 
     def __init_snapshot_cleanup__(self) -> None:
-        """Init the SwatchApp cleanup thread."""
-        self.cleanup_processes: Dict[str, AutoDetector] = {}
+        """Init the SwatchApp snapshots cleanup thread."""
+        self.snapshot_cleanup: Dict[str, SnapshotCleanup] = {}
 
         for name, config in self.config.cameras.items():
             if config.snapshot_config.retain_days > 0:
-                self.cleanup_processes[name] = SnapshotCleanup(
+                self.snapshot_cleanup[name] = SnapshotCleanup(
                     config,
                     self.stop_event,
                 )
-                self.cleanup_processes[name].start()
+                self.snapshot_cleanup[name].start()
+
+    def __init_detection_cleanup__(self) -> None:
+        """Init the SwatchAp detections cleanup thread."""
+        self.detection_cleanup: Dict[str, DetectionCleanup] = {}
+
+        for name, config in self.config.cameras.items():
+            if config.snapshot_config.retain_days > 0:
+                self.detection_cleanup[name] = DetectionCleanup(
+                    config,
+                    self.stop_event,
+                )
+                self.detection_cleanup[name].start()
 
     def __init_web_server__(self) -> None:
         """Init the SwatchApp web server."""
