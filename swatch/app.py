@@ -3,11 +3,19 @@ import os
 import multiprocessing
 from typing import Dict
 
+import traceback
+import yaml
+from peewee_migrate import Router
+from playhouse.sqlite_ext import SqliteExtDatabase
+from playhouse.sqliteq import SqliteQueueDatabase
+from pydantic import ValidationError
+
 from swatch.config import SwatchConfig
-from swatch.const import CONST_CONFIG_FILE
+from swatch.const import CONST_CONFIG_FILE, CONST_DB_FILE
 from swatch.http import create_app
 from swatch.image import ImageProcessor
 from swatch.detection import AutoDetector, DetectionCleanup
+from swatch.models import Detection
 from swatch.snapshot import SnapshotCleanup, SnapshotProcessor
 
 
@@ -19,6 +27,7 @@ class SwatchApp:
         print("Starting SwatchApp")
         self.stop_event = multiprocessing.Event()
         self.__init_config__()
+        self.__init_db__()
         self.__init_processing__()
         self.__init_snapshot_cleanup__()
         self.__init_detection_cleanup__()
@@ -35,6 +44,19 @@ class SwatchApp:
 
         user_config = SwatchConfig.parse_file(config_file)
         self.config = user_config.runtime_config
+
+    def __init_db__(self):
+        """Init the Swatch database."""
+        swatch_db = SqliteExtDatabase(CONST_DB_FILE)
+
+        router = Router(swatch_db)
+        router.run()
+
+        swatch_db.close()
+
+        self.db = SqliteQueueDatabase(CONST_DB_FILE)
+        models = [Detection]
+        self.db.bind(models)
 
     def __init_processing__(self) -> None:
         """Init the SwatchApp processing thread."""
