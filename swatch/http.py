@@ -1,5 +1,6 @@
 """Main http service that handles starting app modules."""
 
+from functools import reduce
 import logging
 from typing import Any, Dict
 
@@ -11,6 +12,9 @@ from flask import (
     make_response,
     request,
 )
+
+from peewee import operator
+from playhouse.shortcuts import model_to_dict
 
 from swatch.config import CameraConfig, SwatchConfig, ZoneConfig
 from swatch.image import ImageProcessor
@@ -153,24 +157,24 @@ def get_detections() -> Any:
     ]
 
     if camera != "all":
-        clauses.append((Event.camera == camera))
+        clauses.append(Detection.camera == camera)
 
     if label != "all":
-        clauses.append((Event.label == label))
+        clauses.append(Detection.label == label)
 
     if zone != "all":
-        clauses.append((Event.zones.cast("text") % f'*"{zone}"*'))
+        clauses.append(Detection.zone.cast("text") % f'*"{zone}"*')
 
     if after:
-        clauses.append((Event.start_time > after))
+        clauses.append(Detection.start_time > after)
 
     if before:
-        clauses.append((Event.start_time < before))
+        clauses.append(Detection.start_time < before)
 
     if len(clauses) == 0:
-        clauses.append((True))
+        clauses.append(True)
 
-    events = (
+    detections = (
         Detection.select(*selected_columns)
         .where(reduce(operator.and_, clauses))
         .order_by(Detection.start_time.desc())
