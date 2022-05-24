@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:swatch/models/config.dart';
+import 'package:swatch/models/detection_event.dart';
 import 'package:window_location_href/window_location_href.dart';
 
 class SwatchApi {
@@ -49,6 +50,22 @@ class SwatchApi {
     }
   }
 
+  Future<List<DetectionEvent>> getDetections() async {
+    const base = "/api/detections";
+    final response = await http.get(Uri.http(_swatchHost, base)).timeout(
+          const Duration(seconds: 15),
+        );
+
+    if (response.statusCode == 200) {
+      final parsed = json.decode(response.body);
+      return List<DetectionEvent>.from(
+        parsed.map((model) => DetectionEvent(model)),
+      );
+    } else {
+      return [];
+    }
+  }
+
   Future<Config> getLatest() async {
     const base = "/api/all/latest";
     final response = await http.get(Uri.http(_swatchHost, base)).timeout(
@@ -73,8 +90,7 @@ class SwatchApi {
     request.fields["color_upper"] = colorUpper;
     request.files.add(
       http.MultipartFile.fromBytes("test_image", image,
-          filename: 'test_image',
-          contentType: MediaType("image", "jpg")),
+          filename: 'test_image', contentType: MediaType("image", "jpg")),
     );
 
     final streamedResponse = await request.send();
@@ -88,6 +104,21 @@ class SwatchApi {
       }
 
       return image;
+    }
+  }
+
+  // Detection Specific Funs
+
+  Future<bool> deleteDetection(final String detectionId) async {
+    final base = "/api/detections/$detectionId";
+    final response = await http.delete(Uri.http(_swatchHost, base)).timeout(
+      const Duration(seconds: 15),
+    );
+
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
     }
   }
 
