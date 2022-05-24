@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:swatch/models/config.dart';
+import 'package:swatch/models/detection_event.dart';
 import 'package:window_location_href/window_location_href.dart';
 
 class SwatchApi {
@@ -39,21 +40,35 @@ class SwatchApi {
   Future<Config> getConfig() async {
     const base = "/api/config";
     final response = await http.get(Uri.http(_swatchHost, base)).timeout(
-          const Duration(seconds: 15),
-        );
+      const Duration(seconds: 15),
+    );
 
     if (response.statusCode == 200) {
       return Config(json.decode(response.body));
     } else {
       return Config.template();
+    }
+  }
+
+  Future<List<DetectionEvent>> getDetections() async {
+    const base = "/api/detections";
+    final response = await http.get(Uri.http(_swatchHost, base)).timeout(
+      const Duration(seconds: 15),
+    );
+
+    if (response.statusCode == 200) {
+      final parsed = json.decode(response.body).cast<Map<String, dynamic>>();
+      return parsed.map<DetectionEvent>((json) => DetectionEvent(json)).toList();
+    } else {
+      return [];
     }
   }
 
   Future<Config> getLatest() async {
     const base = "/api/all/latest";
     final response = await http.get(Uri.http(_swatchHost, base)).timeout(
-          const Duration(seconds: 15),
-        );
+      const Duration(seconds: 15),
+    );
 
     if (response.statusCode == 200) {
       return Config(json.decode(response.body));
@@ -62,11 +77,9 @@ class SwatchApi {
     }
   }
 
-  Future<Uint8List> testImageMask(
-    Uint8List image,
-    String colorLower,
-    String colorUpper,
-  ) async {
+  Future<Uint8List> testImageMask(Uint8List image,
+      String colorLower,
+      String colorUpper,) async {
     const base = "/api/colortest/mask";
     final request = http.MultipartRequest("POST", Uri.http(_swatchHost, base));
     request.fields["color_lower"] = colorLower;
