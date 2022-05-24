@@ -30,29 +30,30 @@ class DetectionComponent extends StatelessWidget {
                   ),
                 ),
                 Text(event.getTime()),
-                Wrap(
-                  crossAxisAlignment: WrapCrossAlignment.center,
+                Row(
                   children: [
-                    const Icon(Icons.video_camera_back_outlined),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      child: Text(
-                        event.getCamera(),
-                        textAlign: TextAlign.center,
-                      ),
-                    )
-                  ],
-                ),
-                Wrap(
-                  crossAxisAlignment: WrapCrossAlignment.center,
-                  children: [
-                    const Icon(Icons.location_on_outlined),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      child: Text(
-                        event.getZone(),
-                        textAlign: TextAlign.center,
-                      ),
+                    Wrap(
+                      crossAxisAlignment: WrapCrossAlignment.center,
+                      children: [
+                        const Icon(Icons.video_camera_back_outlined),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                          child: Text(
+                            event.getCamera(),
+                            textAlign: TextAlign.center,
+                          ),
+                        )
+                      ],
+                    ),
+                    Wrap(
+                      crossAxisAlignment: WrapCrossAlignment.center,
+                      children: [
+                        const Icon(Icons.location_on_outlined),
+                        Text(
+                          event.getZone(),
+                          textAlign: TextAlign.center,
+                        )
+                      ],
                     )
                   ],
                 ),
