@@ -34,7 +34,7 @@ class DashboardRouteState extends State<DashboardRoute> {
               alignment: Alignment.centerLeft,
               child: CollapsibleSidebar(
                 isCollapsed: true,
-                items: getSidebarRoutes(context),
+                items: getSidebarRoutes(context, DashboardRoute.route),
                 avatarImg: const NetworkImage(
                   "https://raw.githubusercontent.com/NickM-27/swatch/master/assets/swatch.png",
                 ),
