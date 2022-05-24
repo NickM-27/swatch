@@ -108,3 +108,5 @@ class SwatchApp:
 
         for cam in self.config.cameras.keys():
             self.camera_processes[cam].join()
+
+        self.db.stop()
