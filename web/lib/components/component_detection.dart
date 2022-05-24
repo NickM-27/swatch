@@ -21,6 +21,7 @@ class DetectionComponent extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Image.network("${_api.getHost()}/api/detections/${event.id}/snapshot.jpg"),
                 Text(
                   "${event.getLabel()} (${event.topArea} px)",
                   textAlign: TextAlign.start,

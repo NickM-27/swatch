@@ -80,23 +80,24 @@ class SnapshotProcessor:
                     int(coordinates[1]) : int(coordinates[3]),
                     int(coordinates[0]) : int(coordinates[2]),
                 ]
+
             cv2.imwrite(file, crop)
 
         return True
 
     def get_detection_snapshot(self, detection: Detection) -> Any:
         """Get file snapshot for a specific detection."""
-        file_dir = f"{CONST_MEDIA_DIR}/snapshots/{detection.start_time.strftime('%m-%d')}/{detection.camera}"
+        file_dir = f"{CONST_MEDIA_DIR}/snapshots/{datetime.datetime.fromtimestamp(detection.start_time).strftime('%m-%d')}/{detection.camera}"
 
         if not os.path.exists(file_dir):
-            file_dir = f"{CONST_MEDIA_DIR}/snapshots/{detection.end_time.strftime('%m-%d')}/{detection.camera}"
+            file_dir = f"{CONST_MEDIA_DIR}/snapshots/{datetime.datetime.fromtimestamp(detection.end_time).strftime('%m-%d')}/{detection.camera}"
 
         if not os.path.exists(file_dir):
             return None
 
         file = f"{file_dir}/{detection.id}.jpg"
 
-        with open(file) as image_file:
+        with open(file, "rb") as image_file:
             jpg_bytes = image_file.read()
 
         return jpg_bytes
