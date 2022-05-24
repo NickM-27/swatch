@@ -1,3 +1,6 @@
+import 'package:intl/intl.dart';
+import 'package:swatch/ext/extension_string.dart';
+
 class DetectionEvent {
 
   String id = "";
@@ -18,5 +21,22 @@ class DetectionEvent {
     topArea = json["top_area"] ?? 0;
     startTime = json["start_time"] ?? 0;
     endTime = json["end_time"] ?? -1;
+  }
+
+  String getLabel() => label.replaceAll("_", " ").title();
+
+  String getCamera() => camera.replaceAll("_", " ").title();
+
+  String getZone() => zone.replaceAll("_", " ").title();
+
+  String getTime() {
+    if (endTime == -1) {
+      return "In Progress";
+    } else {
+      final start = DateTime.fromMillisecondsSinceEpoch((startTime * 1000).toInt());
+      final end = DateTime.fromMillisecondsSinceEpoch((endTime * 1000).toInt());
+      final format = DateFormat("MM/dd/yyyy hh:mm");
+      return "${format.format(start)} -> ${format.format(end)}";
+    }
   }
 }

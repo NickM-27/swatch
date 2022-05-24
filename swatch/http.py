@@ -154,6 +154,7 @@ def get_detections() -> Any:
         Detection.top_area,
         Detection.color_variant,
         Detection.start_time,
+        Detection.end_time,
     ]
 
     if camera != "all":
@@ -185,13 +186,13 @@ def get_detections() -> Any:
 
 
 @bp.route("/detections/<detection_id>", methods=["GET"])
-def get_detection(id: str):
+def get_detection(detection_id: str):
     """Get specific detection."""
     try:
-        return model_to_dict(Detection.get(Detection.id == id))
+        return model_to_dict(Detection.get(Detection.id == detection_id))
     except DoesNotExist:
         return jsonify(
-            {"success": False, "message": f"Detection with id {id} not found."}, 404
+            {"success": False, "message": f"Detection with id {detection_id} not found."}, 404
         )
 
 

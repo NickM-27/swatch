@@ -23,6 +23,9 @@ dependencies:
   http: ^0.13.4
   window_location_href: ^1.0.0
 
+  # Util
+  intl: ^0.17.0
+
 dev_dependencies:
 
   flutter_test:

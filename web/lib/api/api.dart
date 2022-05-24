@@ -55,7 +55,7 @@ class SwatchApi {
     final response = await http.get(Uri.http(_swatchHost, base)).timeout(
           const Duration(seconds: 15),
         );
-    
+
     if (response.statusCode == 200) {
       final parsed = json.decode(response.body);
       return List<DetectionEvent>.from(

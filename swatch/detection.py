@@ -100,7 +100,7 @@ class AutoDetector(threading.Thread):
 
         # ensure db doesn't contain bad data after shutdown
         Detection.update(end_time=datetime.datetime.now().timestamp()).where(
-            Detection.end_time == None
+            Detection.end_time is None
         ).execute()
         print(f"Stopping Auto Detection for {self.config.name}")
 
