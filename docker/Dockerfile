@@ -26,7 +26,4 @@ COPY docker/rootfs /
 
 EXPOSE 4500
 
-COPY startup.sh /
-RUN chmod +x /startup.sh
-
 CMD ["python3", "-u", "-m", "swatch"]
