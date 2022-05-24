@@ -1,7 +1,10 @@
 """Main SwatchApp responsible for running the app."""
 import os
 import multiprocessing
-from typing import Dict
+import signal
+import sys
+from typing import Dict, Optional
+from types import FrameType
 
 from peewee_migrate import Router
 from playhouse.sqlite_ext import SqliteExtDatabase
@@ -90,6 +93,13 @@ class SwatchApp:
 
     def start(self) -> None:
         """Start SwatchApp."""
+
+        def receiveSignal(signalNumber: int, frame: Optional[FrameType]) -> None:
+            self.stop()
+            sys.exit()
+
+        signal.signal(signal.SIGTERM, receiveSignal)
+
         try:
             self.http.run(host="127.0.0.1", port=4501, debug=False)
         except KeyboardInterrupt:
