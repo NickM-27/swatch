@@ -18,47 +18,57 @@ class DetectionComponent extends StatelessWidget {
         padding: const EdgeInsets.all(8.0),
         child: Row(
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Image.network("${_api.getHost()}/api/detections/${event.id}/snapshot.jpg"),
-                Text(
-                  "${event.getLabel()} (${event.topArea} px)",
-                  textAlign: TextAlign.start,
-                  style: const TextStyle(
-                    fontSize: 18.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Text(event.getTime()),
-                Row(
-                  children: [
-                    Wrap(
-                      crossAxisAlignment: WrapCrossAlignment.center,
-                      children: [
-                        const Icon(Icons.video_camera_back_outlined),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                          child: Text(
-                            event.getCamera(),
-                            textAlign: TextAlign.center,
-                          ),
-                        )
-                      ],
+            ClipRRect(
+              borderRadius: const BorderRadius.all(Radius.circular(8.0)),
+              child: Image.network(
+                "${_api.getHost()}/api/detections/${event.id}/snapshot.jpg",
+                height: 120.0,
+                fit: BoxFit.fill,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "${event.getLabel()} (${event.topArea} px)",
+                    textAlign: TextAlign.start,
+                    style: const TextStyle(
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.bold,
                     ),
-                    Wrap(
-                      crossAxisAlignment: WrapCrossAlignment.center,
-                      children: [
-                        const Icon(Icons.location_on_outlined),
-                        Text(
-                          event.getZone(),
-                          textAlign: TextAlign.center,
-                        )
-                      ],
-                    )
-                  ],
-                ),
-              ],
+                  ),
+                  Text(event.getTime()),
+                  Row(
+                    children: [
+                      Wrap(
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        children: [
+                          const Icon(Icons.video_camera_back_outlined),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                            child: Text(
+                              event.getCamera(),
+                              textAlign: TextAlign.center,
+                            ),
+                          )
+                        ],
+                      ),
+                      Wrap(
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        children: [
+                          const Icon(Icons.location_on_outlined),
+                          Text(
+                            event.getZone(),
+                            textAlign: TextAlign.center,
+                          )
+                        ],
+                      )
+                    ],
+                  ),
+                ],
+              ),
             ),
             const Spacer(),
             Column(
