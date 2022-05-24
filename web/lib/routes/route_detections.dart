@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:swatch/api/api.dart';
+import 'package:swatch/components/component_detection.dart';
 import 'package:swatch/const.dart';
 
 import 'package:collapsible_sidebar/collapsible_sidebar.dart';
@@ -63,12 +64,21 @@ class _DetectionsView extends StatelessWidget {
       body: FutureBuilder(
         future: _api.getDetections(),
         builder: (context, AsyncSnapshot<List<DetectionEvent>> detections) {
-          if (detections.hasData) {
+          if (detections.hasData && detections.data!.isNotEmpty) {
             return ListView(
               children: _getDetections(detections.data!),
             );
           } else {
-            return Container();
+            return Container(
+              alignment: Alignment.center,
+              child: const SizedBox(width: 400.0,
+                child: Text(
+                  "No detections found. Once an object is detected it will appear here.",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 24.0),
+                ),
+              ),
+            );
           }
         },
       ),
@@ -76,6 +86,6 @@ class _DetectionsView extends StatelessWidget {
   }
 
   List<Widget> _getDetections(List<DetectionEvent> detections) {
-    return detections.map((e) => Text(e.camera)).toList();
+    return detections.map((e) => DetectionComponent(e)).toList();
   }
 }

@@ -6,8 +6,8 @@ class DetectionEvent {
   String zone = "";
   String colorVariant = "";
   int topArea = 0;
-  int startTime = 0;
-  int endTime = -1;
+  double startTime = 0;
+  double endTime = -1;
 
   DetectionEvent(final Map<String, dynamic> json) {
     id = json["id"] ?? "";

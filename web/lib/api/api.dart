@@ -40,8 +40,8 @@ class SwatchApi {
   Future<Config> getConfig() async {
     const base = "/api/config";
     final response = await http.get(Uri.http(_swatchHost, base)).timeout(
-      const Duration(seconds: 15),
-    );
+          const Duration(seconds: 15),
+        );
 
     if (response.statusCode == 200) {
       return Config(json.decode(response.body));
@@ -53,12 +53,14 @@ class SwatchApi {
   Future<List<DetectionEvent>> getDetections() async {
     const base = "/api/detections";
     final response = await http.get(Uri.http(_swatchHost, base)).timeout(
-      const Duration(seconds: 15),
-    );
-
+          const Duration(seconds: 15),
+        );
+    
     if (response.statusCode == 200) {
-      final parsed = json.decode(response.body).cast<Map<String, dynamic>>();
-      return parsed.map<DetectionEvent>((json) => DetectionEvent(json)).toList();
+      final parsed = json.decode(response.body);
+      return List<DetectionEvent>.from(
+        parsed.map((model) => DetectionEvent(model)),
+      );
     } else {
       return [];
     }
@@ -67,8 +69,8 @@ class SwatchApi {
   Future<Config> getLatest() async {
     const base = "/api/all/latest";
     final response = await http.get(Uri.http(_swatchHost, base)).timeout(
-      const Duration(seconds: 15),
-    );
+          const Duration(seconds: 15),
+        );
 
     if (response.statusCode == 200) {
       return Config(json.decode(response.body));
@@ -77,17 +79,18 @@ class SwatchApi {
     }
   }
 
-  Future<Uint8List> testImageMask(Uint8List image,
-      String colorLower,
-      String colorUpper,) async {
+  Future<Uint8List> testImageMask(
+    Uint8List image,
+    String colorLower,
+    String colorUpper,
+  ) async {
     const base = "/api/colortest/mask";
     final request = http.MultipartRequest("POST", Uri.http(_swatchHost, base));
     request.fields["color_lower"] = colorLower;
     request.fields["color_upper"] = colorUpper;
     request.files.add(
       http.MultipartFile.fromBytes("test_image", image,
-          filename: 'test_image',
-          contentType: MediaType("image", "jpg")),
+          filename: 'test_image', contentType: MediaType("image", "jpg")),
     );
 
     final streamedResponse = await request.send();
