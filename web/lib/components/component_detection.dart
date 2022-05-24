@@ -63,9 +63,25 @@ class DetectionComponent extends StatelessWidget {
                         crossAxisAlignment: WrapCrossAlignment.center,
                         children: [
                           const Icon(Icons.location_on_outlined),
-                          Text(
-                            event.getZone(),
-                            textAlign: TextAlign.center,
+                          Padding(
+                            padding: const EdgeInsets.only(right: 4.0),
+                            child: Text(
+                              event.getZone(),
+                              textAlign: TextAlign.center,
+                            ),
+                          )
+                        ],
+                      ),
+                      Wrap(
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        children: [
+                          const Icon(Icons.color_lens_outlined),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                            child: Text(
+                              event.getColorVariant(),
+                              textAlign: TextAlign.center,
+                            ),
                           )
                         ],
                       )

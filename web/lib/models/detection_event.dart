@@ -29,6 +29,8 @@ class DetectionEvent {
 
   String getZone() => zone.replaceAll("_", " ").title();
 
+  String getColorVariant() => colorVariant.replaceAll("_", " ").title();
+
   String getTime() {
     if (endTime == -1) {
       return "In Progress";
