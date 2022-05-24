@@ -22,7 +22,7 @@ class DetectionComponent extends StatelessWidget {
               borderRadius: const BorderRadius.all(Radius.circular(8.0)),
               child: Image.network(
                 "${_api.getHost()}/api/detections/${event.id}/snapshot.jpg",
-                height: 120.0,
+                height: 100.0,
                 fit: BoxFit.fill,
               ),
             ),
