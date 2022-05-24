@@ -1,11 +1,9 @@
-import 'dart:html' as html;
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:swatch/api/api.dart';
 
 import 'package:collapsible_sidebar/collapsible_sidebar.dart';
-import 'package:swatch/routes/route_dashboard.dart';
 import 'package:swatch/theme/theme_helper.dart';
 
 import 'package:swatch/const.dart';
@@ -20,48 +18,6 @@ class ColorPlaygroundRoute extends StatefulWidget {
 }
 
 class ColorPlaygroundRouteState extends State<ColorPlaygroundRoute> {
-  late List<CollapsibleItem> _routes;
-
-  @override
-  void initState() {
-    super.initState();
-    _routes = _generateRoutes;
-  }
-
-  List<CollapsibleItem> get _generateRoutes {
-    return [
-      CollapsibleItem(
-        text: "Dashboard",
-        icon: Icons.dashboard_outlined,
-        onPressed: () =>
-            Navigator.of(context).pushReplacementNamed(DashboardRoute.route),
-      ),
-      CollapsibleItem(
-        text: "Color Playground",
-        icon: Icons.colorize_outlined,
-        isSelected: true,
-        onPressed: () {},
-      ),
-      CollapsibleItem(
-        text: "GitHub",
-        icon: Icons.code,
-        isSelected: false,
-        onPressed: () => html.window.open(urlGitHubReadme, "swatch-readme"),
-      ),
-      CollapsibleItem(
-        text: "Docs",
-        icon: Icons.mark_chat_read_outlined,
-        isSelected: false,
-        onPressed: () => html.window.open(urlGitHubDocs, "swatch-docs"),
-      ),
-      /*CollapsibleItem(
-        text: "Settings",
-        icon: Icons.settings_outlined,
-        onPressed: () =>
-            Navigator.of(context).pushReplacementNamed(SettingsRoute.route),
-      ),*/
-    ];
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +34,7 @@ class ColorPlaygroundRouteState extends State<ColorPlaygroundRoute> {
               alignment: Alignment.centerLeft,
               child: CollapsibleSidebar(
                 isCollapsed: true,
-                items: _routes,
+                items: getSidebarRoutes(context),
                 avatarImg: const NetworkImage(
                   "https://raw.githubusercontent.com/NickM-27/swatch/master/assets/swatch.png",
                 ),
@@ -131,11 +87,17 @@ class _ColorPlaygroundViewState extends State<_ColorPlaygroundView> {
   }
 }
 
-class _SetPicSource extends StatelessWidget {
+class _SetPicSource extends StatefulWidget {
   final Function(String) _submit;
-  String _source = "";
 
-  _SetPicSource(this._submit, {Key? key}) : super(key: key);
+  const _SetPicSource(this._submit, {Key? key}) : super(key: key);
+
+  @override
+  State<_SetPicSource> createState() => _SetPicSourceState();
+}
+
+class _SetPicSourceState extends State<_SetPicSource> {
+  String _source = "";
 
   @override
   Widget build(BuildContext context) {
@@ -154,7 +116,7 @@ class _SetPicSource extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextField(
-                onSubmitted: (text) => _submit(_source),
+                onSubmitted: (text) => widget._submit(_source),
                 onChanged: (text) => _source = text,
               ),
             ),
@@ -163,7 +125,7 @@ class _SetPicSource extends StatelessWidget {
               child: MaterialButton(
                 color: SwatchColors.getPrimaryColor(),
                 child: const Text("Set Source"),
-                onPressed: () => _submit(_source),
+                onPressed: () => widget._submit(_source),
               ),
             ),
           ],
