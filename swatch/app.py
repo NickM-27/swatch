@@ -74,19 +74,13 @@ class SwatchApp:
 
     def __init_snapshot_cleanup__(self) -> None:
         """Init the SwatchApp snapshots cleanup thread."""
-        self.snapshot_cleanup: Dict[str, SnapshotCleanup] = {}
-
-        for name, config in self.config.cameras.items():
-            if config.snapshot_config.retain_days > 0:
-                self.snapshot_cleanup[name] = SnapshotCleanup(
-                    config,
-                    self.stop_event,
-                )
-                self.snapshot_cleanup[name].start()
+        self.snapshot_cleanup = SnapshotCleanup(self.config, self.stop_event)
+        self.snapshot_cleanup.start()
 
     def __init_detection_cleanup__(self) -> None:
         """Init the SwatchAp detections cleanup thread."""
         self.detection_cleanup = DetectionCleanup(self.config, self.stop_event)
+        self.detection_cleanup.start()
 
     def __init_web_server__(self) -> None:
         """Init the SwatchApp web server."""
@@ -105,12 +99,12 @@ class SwatchApp:
 
     def stop(self) -> None:
         """Stop SwatchApp."""
-        print("SwatchApp Stopping")
+        print("Stopping SwatchApp")
         self.stop_event.set()
 
         # join other processes
         self.detection_cleanup.join()
+        self.snapshot_cleanup.join()
 
         for cam in self.config.cameras.keys():
             self.camera_processes[cam].join()
-            self.snapshot_cleanup[cam].join()

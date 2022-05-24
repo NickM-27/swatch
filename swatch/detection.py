@@ -144,9 +144,9 @@ class DetectionCleanup(threading.Thread):
             )
 
     def run(self) -> None:
-        print(f"Starting Detection Cleanup for {self.config.name}")
+        print("Starting Detection Cleanup")
 
         while not self.stop_event.wait(3600):
             self.__cleanup_db__()
 
-        print(f"Stopping Detection Cleanup for {self.config.name}")
+        print("Stopping Detection Cleanup")

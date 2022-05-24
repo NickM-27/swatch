@@ -166,19 +166,19 @@ class SnapshotCleanup(threading.Thread):
 
     def __init__(
         self,
-        camera_config: CameraConfig,
+        config: SwatchConfig,
         stop_event: multiprocessing.Event,
     ):
         """Initialize snapshot cleanup."""
         threading.Thread.__init__(self)
         self.name = "snapshot_cleanup"
-        self.config = camera_config
+        self.config = config
         self.stop_event = stop_event
 
-    def cleanup_snapshots(self):
+    def cleanup_snapshots(self, camera_config: CameraConfig):
         """Cleanup expired snapshots."""
-        seven_days_ago = datetime.datetime.now() - datetime.timedelta(days=7)
-        valid_month, _, valid_day = seven_days_ago.strftime("%m-%d").partition("-")
+        retain_days_ago = datetime.datetime.now() - datetime.timedelta(days=camera_config.snapshot_config.retain_days)
+        valid_month, _, valid_day = retain_days_ago.strftime("%m-%d").partition("-")
 
         for snap_dir in os.listdir(f"{CONST_MEDIA_DIR}/snapshots/"):
             if not os.path.isdir(
@@ -191,19 +191,22 @@ class SnapshotCleanup(threading.Thread):
 
             if month == valid_month and valid_day >= day:
                 delete_dir(
-                    f"{CONST_MEDIA_DIR}/snapshots/{month}-{day}", self.config.name
+                    f"{CONST_MEDIA_DIR}/snapshots/{month}-{day}", camera_config.name
                 )
             elif valid_month > month and (int(day) - int(valid_day)) <= 24:
                 delete_dir(
-                    f"{CONST_MEDIA_DIR}/snapshots/{month}-{day}", self.config.name
+                    f"{CONST_MEDIA_DIR}/snapshots/{month}-{day}", camera_config.name
                 )
 
     def run(self):
         """Run snapshot cleanup"""
-        print(f"Starting snapshot cleanup for {self.config.name}")
+        print("Starting snapshot cleanup")
+
         # try to run once a day
         while not self.stop_event.wait(86400):
-            if self.config.snapshot_config.retain_days > 0:
-                self.cleanup_snapshots()
 
-        print(f"Stopping Snapshot Cleanup for {self.config.name}")
+            for _, cam_config in self.config.cameras.items():
+                if cam_config.snapshot_config.retain_days > 0:
+                    self.cleanup_snapshots(cam_config)
+
+        print("Stopping Snapshot Cleanup")
