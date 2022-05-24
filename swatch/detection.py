@@ -52,9 +52,10 @@ class AutoDetector(threading.Thread):
             for object_name, object_result in objects.items():
                 non_unique_id = f"{cam_name}.{zone_name}.{object_name}"
 
-                if not self.obj_data[non_unique_id] and not object_result["result"]:
+                if not self.obj_data.get(non_unique_id) and not object_result.get("result"):
                     continue
 
+                self.obj_data[non_unique_id] = {}
                 self.obj_data[non_unique_id]["object_name"] = object_name
                 self.obj_data[non_unique_id]["zone_name"] = zone_name
                 self.obj_data[non_unique_id]["variant"] = object_result["variant"]
@@ -64,7 +65,7 @@ class AutoDetector(threading.Thread):
                 ):
                     self.obj_data[non_unique_id]["top_area"] = object_result["area"]
 
-                if not self.obj_data[non_unique_id]:
+                if not self.obj_data[non_unique_id].get("id"):
                     unique_id = f"{non_unique_id}.{''.join(random.choices(string.ascii_lowercase + string.digits, k=6))}"
                     self.obj_data[non_unique_id]["id"] = unique_id
                     self.__handle_db__("new", non_unique_id)
