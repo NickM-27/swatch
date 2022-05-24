@@ -69,6 +69,7 @@ class SwatchApp:
             if config.auto_detect > 0 and config.snapshot_config.url:
                 self.camera_processes[name] = AutoDetector(
                     self.image_processor,
+                    self.snapshot_processor,
                     config,
                     self.stop_event,
                 )

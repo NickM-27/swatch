@@ -77,13 +77,16 @@ class ImageProcessor:
 
             output, matches = __mask_image__(crop, color_variant)
 
-            if matches > detectable.min_area and matches < detectable.max_area:
+            if detectable.min_area < matches < detectable.max_area:
                 if snapshot.save_detections and snapshot.mode in [
                     SnapshotModeEnum.ALL,
                     SnapshotModeEnum.MASK,
                 ]:
                     self.snapshot_processor.save_snapshot(
-                        camera_name, f"detected_{variant_name}_{file_name}", output
+                        camera_name,
+                        "",
+                        f"detected_{variant_name}_{file_name}_{datetime.datetime.now().strftime('%f')}.jpg",
+                        output,
                     )
 
                 return {
@@ -92,22 +95,25 @@ class ImageProcessor:
                     "variant": variant_name,
                     "camera_name": camera_name,
                 }
-            else:
-                if matches > best_fail.get("area", 0):
-                    best_fail = {
-                        "result": False,
-                        "area": matches,
-                        "variant": variant_name,
-                        "camera_name": camera_name,
-                    }
 
-                if snapshot.save_misses and snapshot.mode in [
-                    SnapshotModeEnum.ALL,
-                    SnapshotModeEnum.MASK,
-                ]:
-                    self.snapshot_processor.save_snapshot(
-                        camera_name, f"missed_{variant_name}_{file_name}", output
-                    )
+            if matches > best_fail.get("area", 0):
+                best_fail = {
+                    "result": False,
+                    "area": matches,
+                    "variant": variant_name,
+                    "camera_name": camera_name,
+                }
+
+            if snapshot.save_misses and snapshot.mode in [
+                SnapshotModeEnum.ALL,
+                SnapshotModeEnum.MASK,
+            ]:
+                self.snapshot_processor.save_snapshot(
+                    camera_name,
+                    "",
+                    f"missed_{variant_name}_{file_name}_{datetime.datetime.now().strftime('%f')}.jpg",
+                    output,
+                )
 
         return best_fail
 
@@ -121,7 +127,7 @@ class ImageProcessor:
             response[zone_name] = {}
             imgBytes = requests.get(image_url).content
 
-            if not imgBytes:
+            if imgBytes is None:
                 continue
 
             img = cv2.imdecode(np.asarray(bytearray(imgBytes), dtype=np.uint8), -1)
@@ -151,7 +157,10 @@ class ImageProcessor:
                     SnapshotModeEnum.CROP,
                 ]:
                     self.snapshot_processor.save_snapshot(
-                        camera_name, f"{zone_name}", crop
+                        camera_name,
+                        zone_name,
+                        f"{zone_name}_{datetime.datetime.now().strftime('%f')}.jpg",
+                        crop,
                     )
 
                 self.latest_results[object_name] = result

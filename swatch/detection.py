@@ -10,6 +10,7 @@ from typing import Any, Dict
 from swatch.config import CameraConfig
 from swatch.image import ImageProcessor
 from swatch.models import Detection
+from swatch.snapshot import SnapshotProcessor
 
 
 class AutoDetector(threading.Thread):
@@ -18,11 +19,13 @@ class AutoDetector(threading.Thread):
     def __init__(
         self,
         image_processor: ImageProcessor,
+        snap_processor: SnapshotProcessor,
         camera_config: CameraConfig,
         stop_event: multiprocessing.Event,
     ) -> None:
         threading.Thread.__init__(self)
         self.image_processor = image_processor
+        self.snap_processor = snap_processor
         self.config = camera_config
         self.stop_event = stop_event
         self.obj_data: Dict[str, Any] = {}
@@ -69,6 +72,12 @@ class AutoDetector(threading.Thread):
                 if not self.obj_data.get(non_unique_id):
                     self.obj_data[non_unique_id] = {}
 
+                unique_id = (
+                    f"{non_unique_id}.{''.join(random.choices(string.ascii_lowercase + string.digits, k=6))}"
+                    if not self.obj_data[non_unique_id].get("id")
+                    else self.obj_data[non_unique_id]["id"]
+                )
+
                 self.obj_data[non_unique_id]["object_name"] = object_name
                 self.obj_data[non_unique_id]["zone_name"] = zone_name
                 self.obj_data[non_unique_id]["variant"] = object_result["variant"]
@@ -78,8 +87,10 @@ class AutoDetector(threading.Thread):
                 ):
                     self.obj_data[non_unique_id]["top_area"] = object_result["area"]
 
+                    # save snapshot with best area
+                    self.snap_processor.save_snapshot(cam_name, zone_name, f"{unique_id}.jpg", None,)
+
                 if not self.obj_data[non_unique_id].get("id"):
-                    unique_id = f"{non_unique_id}.{''.join(random.choices(string.ascii_lowercase + string.digits, k=6))}"
                     self.obj_data[non_unique_id]["id"] = unique_id
                     self.__handle_db__("new", non_unique_id)
                 else:

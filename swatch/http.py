@@ -192,7 +192,11 @@ def get_detection(detection_id: str):
         return model_to_dict(Detection.get(Detection.id == detection_id))
     except DoesNotExist:
         return jsonify(
-            {"success": False, "message": f"Detection with id {detection_id} not found."}, 404
+            {
+                "success": False,
+                "message": f"Detection with id {detection_id} not found.",
+            },
+            404,
         )
 
 
@@ -347,6 +351,36 @@ def get_latest_zone_snapshot(camera_name: str, zone_name: str) -> Any:
     return response
 
 
+@bp.route("/detections/<detection_id>/snapshot.jpg", methods=["GET"])
+def get_detection_snapshot(detection_id: str):
+    """Get specific detection snapshot."""
+    try:
+        detection = Detection.get(Detection.id == detection_id)
+        jpg_bytes = current_app.snapshot_processor.get_detection_snapshot(detection)
+
+        if jpg_bytes:
+            response = make_response(jpg_bytes)
+            response.headers["Content-Type"] = "image/jpg"
+            return response
+
+        return jsonify(
+            {
+                "success": False,
+                "message": f"Error loading snapshot for {detection_id}.",
+            },
+            404,
+        )
+
+    except DoesNotExist:
+        return jsonify(
+            {
+                "success": False,
+                "message": f"Detection with id {detection_id} not found.",
+            },
+            404,
+        )
+
+
 @bp.route("/<camera_name>/detection.jpg", methods=["GET"])
 def get_latest_detection(camera_name: str) -> Any:
     """Get the latest detection for <camera_name>."""
@@ -362,7 +396,7 @@ def get_latest_detection(camera_name: str) -> Any:
             {"success": False, "message": f"{camera_name} is not a valid camera."}, 404
         )
 
-    jpg_bytes = current_app.snapshot_processor.get_latest_detection(camera_name)
+    jpg_bytes = current_app.snapshot_processor.get_latest_detection_snapshot(camera_name)
 
     response = make_response(jpg_bytes)
     response.headers["Content-Type"] = "image/jpg"

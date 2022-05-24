@@ -14,6 +14,7 @@ from numpy import ndarray
 
 from swatch.config import SwatchConfig, CameraConfig
 from swatch.const import CONST_MEDIA_DIR
+from swatch.models import Detection
 
 
 def delete_dir(date_dir: str, camera_name: str):
@@ -39,10 +40,11 @@ class SnapshotProcessor:
     def save_snapshot(
         self,
         camera_name: str,
+        zone_name: str,
         file_name: str,
         image: ndarray,
     ) -> bool:
-        """Saves the snapshot to the correct snapshot dir."""
+        """Saves the file snapshot to the correct snapshot dir."""
         time = datetime.datetime.now()
 
         file_dir = f"{CONST_MEDIA_DIR}/snapshots/{time.strftime('%m-%d')}/{camera_name}"
@@ -53,20 +55,62 @@ class SnapshotProcessor:
             print(f"after creating {os.listdir('/media/')}")
             return False
 
-        file = f"{file_dir}/{file_name}_{time.strftime('%f')}.jpg"
-        cv2.imwrite(file, image)
+        file = f"{file_dir}/{file_name}"
+
+        if image is not None:
+            cv2.imwrite(file, image)
+        else:
+            imgBytes = requests.get(
+                self.config.cameras[camera_name].snapshot_config.url
+            ).content
+
+            if imgBytes is None:
+                return False
+
+            img = cv2.imdecode(np.asarray(bytearray(imgBytes), dtype=np.uint8), -1)
+
+            coordinates = (
+                self.config.cameras[camera_name]
+                .zones[zone_name]
+                .coordinates.split(", ")
+            )
+
+            if img.size > 0:
+                crop = img[
+                    int(coordinates[1]) : int(coordinates[3]),
+                    int(coordinates[0]) : int(coordinates[2]),
+                ]
+            cv2.imwrite(file, crop)
+
         return True
+
+    def get_detection_snapshot(self, detection: Detection) -> Any:
+        """Get file snapshot for a specific detection."""
+        file_dir = f"{CONST_MEDIA_DIR}/snapshots/{detection.start_time.strftime('%m-%d')}/{detection.camera}"
+
+        if not os.path.exists(file_dir):
+            file_dir = f"{CONST_MEDIA_DIR}/snapshots/{detection.end_time.strftime('%m-%d')}/{detection.camera}"
+
+        if not os.path.exists(file_dir):
+            return None
+
+        file = f"{file_dir}/{detection.id}.jpg"
+
+        with open(file) as image_file:
+            jpg_bytes = image_file.read()
+
+        return jpg_bytes
 
     def get_latest_camera_snapshot(
         self,
         camera_name: str,
     ) -> Any:
-        """Get the latest snapshot for <camera_name> and <zone_name>."""
+        """Get the latest web snapshot for <camera_name> and <zone_name>."""
         imgBytes = requests.get(
             self.config.cameras[camera_name].snapshot_config.url
         ).content
 
-        if not imgBytes:
+        if imgBytes is None:
             return None
 
         img = cv2.imdecode(np.asarray(bytearray(imgBytes), dtype=np.uint8), -1)
@@ -78,7 +122,7 @@ class SnapshotProcessor:
         camera_name: str,
         zone_name: str,
     ) -> Any:
-        """Get the latest snapshot for <camera_name>."""
+        """Get the latest web snapshot for <camera_name>."""
         camera_config: CameraConfig = self.config.cameras[camera_name]
         imgBytes = requests.get(camera_config.snapshot_config.url).content
 
@@ -95,14 +139,12 @@ class SnapshotProcessor:
         ret, jpg = cv2.imencode(".jpg", crop, [int(cv2.IMWRITE_JPEG_QUALITY), 70])
         return jpg.tobytes()
 
-    def get_latest_detection(self, camera_name: str) -> Any:
-        """Get the latest detection for a <camera_name>."""
+    def get_latest_detection_snapshot(self, camera_name: str) -> Any:
+        """Get the latest file snapshot for a <camera_name> detection."""
         snaps_dir = f"{CONST_MEDIA_DIR}/snapshots"
-        print(f"snaps dir is {snaps_dir}")
         recent_folder = max(
             [os.path.join(snaps_dir, basename) for basename in os.listdir(snaps_dir)]
         )
-        print(f"")
 
         cam_snaps_dir = f"{recent_folder}/{camera_name}"
         recent_snap = max(
