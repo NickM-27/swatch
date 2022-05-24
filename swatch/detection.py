@@ -88,7 +88,12 @@ class AutoDetector(threading.Thread):
                     self.obj_data[non_unique_id]["top_area"] = object_result["area"]
 
                     # save snapshot with best area
-                    self.snap_processor.save_snapshot(cam_name, zone_name, f"{unique_id}.jpg", None,)
+                    self.snap_processor.save_snapshot(
+                        cam_name,
+                        zone_name,
+                        f"{unique_id}.jpg",
+                        None,
+                    )
 
                 if not self.obj_data[non_unique_id].get("id"):
                     self.obj_data[non_unique_id]["id"] = unique_id

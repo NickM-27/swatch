@@ -396,7 +396,9 @@ def get_latest_detection(camera_name: str) -> Any:
             {"success": False, "message": f"{camera_name} is not a valid camera."}, 404
         )
 
-    jpg_bytes = current_app.snapshot_processor.get_latest_detection_snapshot(camera_name)
+    jpg_bytes = current_app.snapshot_processor.get_latest_detection_snapshot(
+        camera_name
+    )
 
     response = make_response(jpg_bytes)
     response.headers["Content-Type"] = "image/jpg"
