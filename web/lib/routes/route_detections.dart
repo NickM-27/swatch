@@ -55,14 +55,27 @@ class DetectionListRouteState extends State<DetectionListRoute> {
   }
 }
 
-class _DetectionsView extends StatelessWidget {
+class _DetectionsView extends StatefulWidget {
+  @override
+  State<_DetectionsView> createState() => _DetectionsViewState();
+}
+
+class _DetectionsViewState extends State<_DetectionsView> {
   final SwatchApi _api = SwatchApi();
+
+  late Future<List<DetectionEvent>> _detections;
+
+  @override
+  void initState() {
+    super.initState();
+    _detections = _api.getDetections();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: FutureBuilder(
-        future: _api.getDetections(),
+        future: _detections,
         builder: (context, AsyncSnapshot<List<DetectionEvent>> detections) {
           if (detections.hasData && detections.data!.isNotEmpty) {
             return ListView(
@@ -86,6 +99,13 @@ class _DetectionsView extends StatelessWidget {
   }
 
   List<Widget> _getDetections(List<DetectionEvent> detections) {
-    return detections.map((e) => DetectionComponent(e)).toList();
+    return detections.map((e) => DetectionComponent(e, onDeleted)).toList();
+  }
+
+  onDeleted() {
+    final update = _api.getDetections();
+    setState(() {
+      _detections = update;
+    });
   }
 }

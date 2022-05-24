@@ -107,6 +107,21 @@ class SwatchApi {
     }
   }
 
+  // Detection Specific Funs
+
+  Future<bool> deleteDetection(final String detectionId) async {
+    final base = "/api/detections/$detectionId";
+    final response = await http.delete(Uri.http(_swatchHost, base)).timeout(
+      const Duration(seconds: 15),
+    );
+
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   /// General Utility Funs
 
   Future<Uint8List> getImageBytes(final String imageSource) async {

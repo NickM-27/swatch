@@ -200,6 +200,28 @@ def get_detection(detection_id: str):
         )
 
 
+@bp.route("/detections/<detection_id>", methods=["DELETE"])
+def delete_detection(detection_id: str):
+    """Get specific detection."""
+    try:
+        Detection.delete().where(Detection.id == detection_id).execute()
+        return jsonify(
+            {
+                "success": True,
+                "message": "Deleted successfully.",
+            },
+            200,
+        )
+    except DoesNotExist:
+        return jsonify(
+            {
+                "success": False,
+                "message": f"Detection with id {detection_id} not found.",
+            },
+            404,
+        )
+
+
 @bp.route("/<camera_name>/detect", methods=["POST"])
 def detect_camera_frame(camera_name: str) -> Any:
     """Use camera frame to detect known objects."""

@@ -5,9 +5,10 @@ import 'package:swatch/models/detection_event.dart';
 class DetectionComponent extends StatelessWidget {
   final SwatchApi _api = SwatchApi();
   final DetectionEvent event;
+  final Function refresh;
 
   DetectionComponent(
-    this.event, {
+    this.event, this.refresh, {
     Key? key,
   }) : super(key: key);
 
@@ -39,8 +40,9 @@ class DetectionComponent extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
+                  const SizedBox(height: 4.0),
                   Text(event.getTime()),
-                  const SizedBox(height: 32.0),
+                  const SizedBox(height: 28.0),
                   Row(
                     children: [
                       Wrap(
@@ -74,7 +76,18 @@ class DetectionComponent extends StatelessWidget {
             ),
             const Spacer(),
             Column(
-              children: [],
+              children: [
+                IconButton(
+                  icon: const Icon(
+                    Icons.delete_sweep_outlined,
+                    color: Colors.red,
+                  ),
+                  onPressed: () async {
+                    await _api.deleteDetection(event.id);
+                    refresh();
+                  },
+                )
+              ],
             ),
           ],
         ),
