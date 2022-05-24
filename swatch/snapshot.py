@@ -177,7 +177,9 @@ class SnapshotCleanup(threading.Thread):
 
     def cleanup_snapshots(self, camera_config: CameraConfig):
         """Cleanup expired snapshots."""
-        retain_days_ago = datetime.datetime.now() - datetime.timedelta(days=camera_config.snapshot_config.retain_days)
+        retain_days_ago = datetime.datetime.now() - datetime.timedelta(
+            days=camera_config.snapshot_config.retain_days
+        )
         valid_month, _, valid_day = retain_days_ago.strftime("%m-%d").partition("-")
 
         for snap_dir in os.listdir(f"{CONST_MEDIA_DIR}/snapshots/"):

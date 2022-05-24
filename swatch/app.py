@@ -99,6 +99,7 @@ class SwatchApp:
             sys.exit()
 
         signal.signal(signal.SIGTERM, receiveSignal)
+        signal.signal(signal.SIGINT, receiveSignal)
 
         try:
             self.http.run(host="127.0.0.1", port=4501, debug=False)
