@@ -7,7 +7,7 @@ import string
 import threading
 from typing import Any, Dict
 
-from swatch.config import CameraConfig
+from swatch.config import CameraConfig, SwatchConfig
 from swatch.image import ImageProcessor
 from swatch.models import Detection
 from swatch.snapshot import SnapshotProcessor
@@ -124,22 +124,24 @@ class AutoDetector(threading.Thread):
 class DetectionCleanup(threading.Thread):
     """Handles the auto cleanup of detections."""
 
-    def __init__(self, camera_config: CameraConfig, stop_event: multiprocessing.Event):
+    def __init__(self, config: SwatchConfig, stop_event: multiprocessing.Event):
         threading.Thread.__init__(self)
-        self.config = camera_config
-        self.stop_event = stop_event
+        self.config: SwatchConfig = config
+        self.stop_event: multiprocessing.Event = stop_event
 
     def __cleanup_db__(self):
         """Cleanup the old events in the db."""
-        expire_days = self.config.snapshot_config.retain_days
-        expire_after = (
-            datetime.datetime.now() - datetime.timedelta(days=expire_days)
-        ).timestamp()
 
-        Detection.delete().where(
-            Detection.camera == self.config.name,
-            Detection.start_time < expire_after,
-        )
+        for cam_name, cam_config in self.config.cameras.items():
+            expire_days = cam_config.snapshot_config.retain_days
+            expire_after = (
+                datetime.datetime.now() - datetime.timedelta(days=expire_days)
+            ).timestamp()
+
+            Detection.delete().where(
+                Detection.camera == cam_name,
+                Detection.start_time < expire_after,
+            )
 
     def run(self) -> None:
         print(f"Starting Detection Cleanup for {self.config.name}")

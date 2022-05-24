@@ -3,12 +3,9 @@ import os
 import multiprocessing
 from typing import Dict
 
-import traceback
-import yaml
 from peewee_migrate import Router
 from playhouse.sqlite_ext import SqliteExtDatabase
 from playhouse.sqliteq import SqliteQueueDatabase
-from pydantic import ValidationError
 
 from swatch.config import SwatchConfig
 from swatch.const import CONST_CONFIG_FILE, CONST_DB_FILE
@@ -89,15 +86,7 @@ class SwatchApp:
 
     def __init_detection_cleanup__(self) -> None:
         """Init the SwatchAp detections cleanup thread."""
-        self.detection_cleanup: Dict[str, DetectionCleanup] = {}
-
-        for name, config in self.config.cameras.items():
-            if config.snapshot_config.retain_days > 0:
-                self.detection_cleanup[name] = DetectionCleanup(
-                    config,
-                    self.stop_event,
-                )
-                self.detection_cleanup[name].start()
+        self.detection_cleanup = DetectionCleanup(self.config, self.stop_event)
 
     def __init_web_server__(self) -> None:
         """Init the SwatchApp web server."""
@@ -118,3 +107,10 @@ class SwatchApp:
         """Stop SwatchApp."""
         print("SwatchApp Stopping")
         self.stop_event.set()
+
+        # join other processes
+        self.detection_cleanup.join()
+
+        for cam in self.config.cameras.keys():
+            self.camera_processes[cam].join()
+            self.snapshot_cleanup[cam].join()
