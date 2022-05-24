@@ -40,6 +40,7 @@ class DetectionComponent extends StatelessWidget {
                     ),
                   ),
                   Text(event.getTime()),
+                  const SizedBox(height: 32.0),
                   Row(
                     children: [
                       Wrap(
@@ -47,7 +48,8 @@ class DetectionComponent extends StatelessWidget {
                         children: [
                           const Icon(Icons.video_camera_back_outlined),
                           Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 4.0),
                             child: Text(
                               event.getCamera(),
                               textAlign: TextAlign.center,
