@@ -61,7 +61,9 @@ class AutoDetector(threading.Thread):
             for object_name, object_result in objects.items():
                 non_unique_id = f"{cam_name}.{zone_name}.{object_name}"
 
-                if not self.obj_data.get(non_unique_id) and not object_result.get("result"):
+                if not self.obj_data.get(non_unique_id) and not object_result.get(
+                    "result"
+                ):
                     continue
 
                 if not self.obj_data.get(non_unique_id):
