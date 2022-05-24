@@ -8,7 +8,8 @@ class DetectionComponent extends StatelessWidget {
   final Function refresh;
 
   DetectionComponent(
-    this.event, this.refresh, {
+    this.event,
+    this.refresh, {
     Key? key,
   }) : super(key: key);
 
@@ -42,51 +43,68 @@ class DetectionComponent extends StatelessWidget {
                   ),
                   const SizedBox(height: 4.0),
                   Text(event.getTime()),
-                  const SizedBox(height: 28.0),
-                  Row(
+                ],
+              ),
+            ),
+            const Spacer(),
+            Container(
+              padding: const EdgeInsets.all(8.0),
+              height: 100.0,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Wrap(
+                    crossAxisAlignment: WrapCrossAlignment.center,
                     children: [
-                      Wrap(
-                        crossAxisAlignment: WrapCrossAlignment.center,
-                        children: [
-                          const Icon(Icons.video_camera_back_outlined),
-                          Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 4.0),
-                            child: Text(
-                              event.getCamera(),
-                              textAlign: TextAlign.center,
-                            ),
-                          )
-                        ],
+                      const Icon(
+                        Icons.video_camera_back_outlined,
+                        size: 18.0,
                       ),
-                      Wrap(
-                        crossAxisAlignment: WrapCrossAlignment.center,
-                        children: [
-                          const Icon(Icons.location_on_outlined),
-                          Padding(
-                            padding: const EdgeInsets.only(right: 4.0),
-                            child: Text(
-                              event.getZone(),
-                              textAlign: TextAlign.center,
-                            ),
-                          )
-                        ],
-                      ),
-                      Wrap(
-                        crossAxisAlignment: WrapCrossAlignment.center,
-                        children: [
-                          const Icon(Icons.color_lens_outlined),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                            child: Text(
-                              event.getColorVariant(),
-                              textAlign: TextAlign.center,
-                            ),
-                          )
-                        ],
+                      Padding(
+                        padding:
+                        const EdgeInsets.symmetric(horizontal: 4.0),
+                        child: Text(
+                          event.getCamera(),
+                          textAlign: TextAlign.center,
+                        ),
                       )
                     ],
                   ),
+                  Wrap(
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    children: [
+                      const Icon(
+                        Icons.location_on_outlined,
+                        size: 18.0,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 4.0),
+                        child: Text(
+                          event.getZone(),
+                          textAlign: TextAlign.center,
+                        ),
+                      )
+                    ],
+                  ),
+                  Wrap(
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    children: [
+                      const Icon(
+                        Icons.color_lens_outlined,
+                        size: 18.0,
+                      ),
+                      Padding(
+                        padding:
+                        const EdgeInsets.symmetric(horizontal: 4.0),
+                        child: Text(
+                          event.getColorVariant(),
+                          textAlign: TextAlign.center,
+                        ),
+                      )
+                    ],
+                  )
                 ],
               ),
             ),
