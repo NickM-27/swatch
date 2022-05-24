@@ -41,7 +41,9 @@ class SwatchApp:
 
     def __init_db__(self):
         """Init the Swatch database."""
-        swatch_db = SqliteExtDatabase(CONST_DB_FILE)
+        db_file = os.environ.get("DB_FILE", CONST_DB_FILE)
+
+        swatch_db = SqliteExtDatabase(db_file)
 
         router = Router(swatch_db)
         router.run()
