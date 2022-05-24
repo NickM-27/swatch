@@ -13,6 +13,7 @@ services:
       - .:/lab/swatch:cached
       - ./config/config.yaml:/config/config.yaml:ro
       - ./debug:/media/
+      - ./debug:/database/
     ports:
       - "4500:4500"
       - "4501:4501"
