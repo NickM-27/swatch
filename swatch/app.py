@@ -26,12 +26,6 @@ class SwatchApp:
         """Init SwatchApp."""
         print("Starting SwatchApp")
         self.stop_event = multiprocessing.Event()
-        self.__init_config__()
-        self.__init_db__()
-        self.__init_processing__()
-        self.__init_snapshot_cleanup__()
-        self.__init_detection_cleanup__()
-        self.__init_web_server__()
 
     def __init_config__(self) -> None:
         """Init SwatchApp with saved config file."""
@@ -94,12 +88,22 @@ class SwatchApp:
     def start(self) -> None:
         """Start SwatchApp."""
 
+        # startup nginx
+        os.system("/usr/local/nginx/sbin/nginx &")
+
+        # startup internal processes
+        self.__init_config__()
+        self.__init_db__()
+        self.__init_processing__()
+        self.__init_snapshot_cleanup__()
+        self.__init_detection_cleanup__()
+        self.__init_web_server__()
+
         def receiveSignal(signalNumber: int, frame: Optional[FrameType]) -> None:
             self.stop()
             sys.exit()
 
         signal.signal(signal.SIGTERM, receiveSignal)
-        signal.signal(signal.SIGINT, receiveSignal)
 
         try:
             self.http.run(host="127.0.0.1", port=4501, debug=False)
