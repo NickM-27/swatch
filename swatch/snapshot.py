@@ -143,7 +143,7 @@ class SnapshotProcessor:
 
     def get_latest_detection_snapshot(self, camera_name: str) -> Any:
         """Get the latest file snapshot for a <camera_name> detection."""
-        snaps_dir = f"{CONST_MEDIA_DIR}/snapshots"
+        snaps_dir = f"{self.media_dir}/snapshots"
         recent_folder = max(
             [os.path.join(snaps_dir, basename) for basename in os.listdir(snaps_dir)]
         )
@@ -174,6 +174,7 @@ class SnapshotCleanup(threading.Thread):
         threading.Thread.__init__(self)
         self.name = "snapshot_cleanup"
         self.config = config
+        self.media_dir = os.environ.get("MEDIA_DIR", CONST_MEDIA_DIR)
         self.stop_event = stop_event
 
     def cleanup_snapshots(self, camera_config: CameraConfig):
@@ -183,9 +184,9 @@ class SnapshotCleanup(threading.Thread):
         )
         valid_month, _, valid_day = retain_days_ago.strftime("%m-%d").partition("-")
 
-        for snap_dir in os.listdir(f"{CONST_MEDIA_DIR}/snapshots/"):
+        for snap_dir in os.listdir(f"{self.media_dir}/snapshots/"):
             if not os.path.isdir(
-                os.path.join(f"{CONST_MEDIA_DIR}/snapshots/", snap_dir)
+                os.path.join(f"{self.media_dir}/snapshots/", snap_dir)
             ):
                 continue
 
@@ -194,11 +195,11 @@ class SnapshotCleanup(threading.Thread):
 
             if month == valid_month and valid_day >= day:
                 delete_dir(
-                    f"{CONST_MEDIA_DIR}/snapshots/{month}-{day}", camera_config.name
+                    f"{self.media_dir}/snapshots/{month}-{day}", camera_config.name
                 )
             elif valid_month > month and (int(day) - int(valid_day)) <= 24:
                 delete_dir(
-                    f"{CONST_MEDIA_DIR}/snapshots/{month}-{day}", camera_config.name
+                    f"{self.media_dir}/snapshots/{month}-{day}", camera_config.name
                 )
 
     def run(self):
