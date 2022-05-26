@@ -67,7 +67,7 @@ cameras:
       # REQUIRED: Name of the zone.
       street:
         # REQUIRED: Coordinates to crop the zone by.
-        # NOTE: The order of the coordinates are: y, y+h, x, x+w starting in the top left corner as 0, 0.
+        # NOTE: The order of the coordinates are: x, y, x+w, y+h starting in the top left corner as 0, 0.
         coordinates: 225, 540, 350, 620
         # REQUIRED: List of objects that may be in this zone. These correspond to
         # the objects list defined previously and are matched by name.
