@@ -36,6 +36,7 @@ class SnapshotProcessor:
 
     def __init__(self, config: SwatchConfig) -> None:
         self.config = config
+        self.media_dir = os.environ.get("MEDIA_DIR", CONST_MEDIA_DIR)
 
     def save_snapshot(
         self,
@@ -47,7 +48,7 @@ class SnapshotProcessor:
         """Saves the file snapshot to the correct snapshot dir."""
         time = datetime.datetime.now()
 
-        file_dir = f"{CONST_MEDIA_DIR}/snapshots/{time.strftime('%m-%d')}/{camera_name}"
+        file_dir = f"{self.media_dir}/snapshots/{time.strftime('%m-%d')}/{camera_name}"
 
         if not os.path.exists(file_dir):
             print(f"{file_dir} doesn't exist, creating...")
@@ -87,10 +88,10 @@ class SnapshotProcessor:
 
     def get_detection_snapshot(self, detection: Detection) -> Any:
         """Get file snapshot for a specific detection."""
-        file_dir = f"{CONST_MEDIA_DIR}/snapshots/{datetime.datetime.fromtimestamp(detection.start_time).strftime('%m-%d')}/{detection.camera}"
+        file_dir = f"{self.media_dir}/snapshots/{datetime.datetime.fromtimestamp(detection.start_time).strftime('%m-%d')}/{detection.camera}"
 
         if not os.path.exists(file_dir):
-            file_dir = f"{CONST_MEDIA_DIR}/snapshots/{datetime.datetime.fromtimestamp(detection.end_time).strftime('%m-%d')}/{detection.camera}"
+            file_dir = f"{self.media_dir}/snapshots/{datetime.datetime.fromtimestamp(detection.end_time).strftime('%m-%d')}/{detection.camera}"
 
         if not os.path.exists(file_dir):
             return None
