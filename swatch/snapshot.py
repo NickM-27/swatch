@@ -1,6 +1,7 @@
 """Handles creation and deletion of snapshots."""
 
 import datetime
+import logging
 import multiprocessing
 import os
 import requests
@@ -22,13 +23,13 @@ def delete_dir(date_dir: str, camera_name: str):
     file_path = f"{date_dir}/{camera_name}"
 
     try:
-        print(f"Cleaning up {file_path}")
+        logging.debug(f"Cleaning up {file_path}")
         shutil.rmtree(file_path)
 
         if len(os.listdir(date_dir)) == 0:
             os.rmdir(date_dir)
     except OSError as _e:
-        print(f"Error: {file_path} : {_e.strerror}")
+        logging.error(f"Error: {file_path} : {_e.strerror}")
 
 
 class SnapshotProcessor:
@@ -51,9 +52,8 @@ class SnapshotProcessor:
         file_dir = f"{self.media_dir}/snapshots/{time.strftime('%m-%d')}/{camera_name}"
 
         if not os.path.exists(file_dir):
-            print(f"{file_dir} doesn't exist, creating...")
+            logging.debug(f"{file_dir} doesn't exist, creating...")
             os.makedirs(file_dir)
-            print(f"after creating {os.listdir('/media/')}")
             return False
 
         file = f"{file_dir}/{file_name}"
@@ -204,7 +204,7 @@ class SnapshotCleanup(threading.Thread):
 
     def run(self):
         """Run snapshot cleanup"""
-        print("Starting snapshot cleanup")
+        logging.info("Starting snapshot cleanup")
 
         # try to run once a day
         while not self.stop_event.wait(86400):
@@ -213,4 +213,4 @@ class SnapshotCleanup(threading.Thread):
                 if cam_config.snapshot_config.retain_days > 0:
                     self.cleanup_snapshots(cam_config)
 
-        print("Stopping Snapshot Cleanup")
+        logging.info("Stopping Snapshot Cleanup")
