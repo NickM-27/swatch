@@ -47,10 +47,11 @@ class CameraComponent extends StatelessWidget {
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(8.0, 24.0, 8.0, 8.0),
+          Container(
+            height: 136.0,
+            padding: const EdgeInsets.fromLTRB(8.0, 4.0, 8.0, 4.0),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
