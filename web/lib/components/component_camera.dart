@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:swatch/api/api.dart';
+import 'package:swatch/components/component_new_zone.dart';
 import 'package:swatch/components/component_zone.dart';
 import 'package:swatch/ext/extension_string.dart';
 import 'package:swatch/models/camera.dart';
 
 class CameraComponent extends StatelessWidget {
-
   final SwatchApi _api = SwatchApi();
   final Camera camera;
 
@@ -72,7 +72,15 @@ class CameraComponent extends StatelessWidget {
 
   List<Widget> _getZones(Camera config) {
     final keys = config.zones.keys.toList();
-    return List.generate(config.zones.length,
-        (index) => ZoneComponent(config, config.zones[keys[index]]!));
+    return List.generate(
+      config.zones.length + 1,
+      (index) {
+        if (index < config.zones.length) {
+          return ZoneComponent(config, config.zones[keys[index]]!);
+        } else {
+          return const CreateZoneComponent();
+        }
+      },
+    );
   }
 }
