@@ -67,7 +67,7 @@ class SwatchApp:
 
         swatch_db.close()
 
-        self.db = SqliteQueueDatabase(CONST_DB_FILE)
+        self.db = SqliteQueueDatabase(db_file)
         models = [Detection]
         self.db.bind(models)
 
