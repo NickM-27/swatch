@@ -1,6 +1,7 @@
 """For processing of images."""
 
 import datetime
+import logging
 import multiprocessing
 import random
 import string
@@ -106,7 +107,7 @@ class AutoDetector(threading.Thread):
                         del self.obj_data[non_unique_id]
 
     def run(self) -> None:
-        print(f"Starting Auto Detection for {self.config.name}")
+        logging.info(f"Starting Auto Detection for {self.config.name}")
 
         while not self.stop_event.wait(self.config.auto_detect):
             result: Dict[str, Any] = self.image_processor.detect(
@@ -118,7 +119,7 @@ class AutoDetector(threading.Thread):
         Detection.update(end_time=datetime.datetime.now().timestamp()).where(
             Detection.end_time is None
         ).execute()
-        print(f"Stopping Auto Detection for {self.config.name}")
+        logging.info(f"Stopping Auto Detection for {self.config.name}")
 
 
 class DetectionCleanup(threading.Thread):
@@ -144,9 +145,9 @@ class DetectionCleanup(threading.Thread):
             )
 
     def run(self) -> None:
-        print("Starting Detection Cleanup")
+        logging.info("Starting Detection Cleanup")
 
         while not self.stop_event.wait(3600):
             self.__cleanup_db__()
 
-        print("Stopping Detection Cleanup")
+        logging.info("Stopping Detection Cleanup")

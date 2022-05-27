@@ -1,4 +1,5 @@
 """Main SwatchApp responsible for running the app."""
+import logging
 import os
 import multiprocessing
 import signal
@@ -24,13 +25,19 @@ class SwatchApp:
 
     def __init__(self) -> None:
         """Init SwatchApp."""
-        print("Starting SwatchApp")
+        logging.info("Starting SwatchApp")
         self.stop_event = multiprocessing.Event()
         # startup nginx
         os.system("/usr/local/nginx/sbin/nginx &")
 
         # startup internal processes
-        self.__init_config__()
+        try:
+            self.__init_config__()
+        except e:
+            logging.error("Error parsing config file\n%s", e)
+            self.stop()
+            return
+
         self.__init_db__()
         self.__init_processing__()
         self.__init_snapshot_cleanup__()
@@ -39,12 +46,12 @@ class SwatchApp:
 
     def __init_config__(self) -> None:
         """Init SwatchApp with saved config file."""
-        print("Importing SwatchApp Config")
+        logging.info("Importing SwatchApp Config")
 
         config_file = os.environ.get("CONFIG_FILE", CONST_CONFIG_FILE)
 
         if os.path.isfile(config_file):
-            print("Verified SwatchApp Config")
+            logging.info("Verified SwatchApp Config")
 
         user_config = SwatchConfig.parse_file(config_file)
         self.config = user_config.runtime_config
@@ -115,7 +122,7 @@ class SwatchApp:
 
     def stop(self) -> None:
         """Stop SwatchApp."""
-        print("Stopping SwatchApp")
+        logging.info("Stopping SwatchApp")
         self.stop_event.set()
 
         # join other processes
