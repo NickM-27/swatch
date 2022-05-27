@@ -390,7 +390,7 @@ def get_detection_snapshot(detection_id: str):
                 "success": False,
                 "message": f"Error loading snapshot for {detection_id}.",
             },
-            404,
+            500,
         )
 
     except DoesNotExist:

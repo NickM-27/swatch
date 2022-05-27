@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:swatch/theme/theme_helper.dart';
 
 class CreateZoneComponent extends StatelessWidget {
   const CreateZoneComponent({Key? key}) : super(key: key);
@@ -16,8 +17,9 @@ class CreateZoneComponent extends StatelessWidget {
           ),
         ),
         child: IconButton(
-          icon: const Icon(
+          icon: Icon(
             Icons.add_location_alt_outlined,
+            color: SwatchColors.getPrimaryColor(),
             size: 48.0,
           ),
           onPressed: () {},

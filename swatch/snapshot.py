@@ -98,10 +98,13 @@ class SnapshotProcessor:
 
         file = f"{file_dir}/{detection.id}.jpg"
 
-        with open(file, "rb") as image_file:
-            jpg_bytes = image_file.read()
+        try:
+            with open(file, "rb") as image_file:
+                jpg_bytes = image_file.read()
 
-        return jpg_bytes
+            return jpg_bytes
+        except:
+            return None
 
     def get_latest_camera_snapshot(
         self,
