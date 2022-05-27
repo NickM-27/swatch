@@ -11,7 +11,9 @@
     "streetsidesoftware.code-spell-checker",
     "eamodio.gitlens",
     "esbenp.prettier-vscode",
-    "ms-python.vscode-pylance"
+    "ms-python.vscode-pylance",
+    "dart-code.dart-code", 
+    "dart-code.flutter"
   ],
   "settings": {
     "python.pythonPath": "/usr/bin/python3",
