@@ -26,6 +26,13 @@ class DetectionComponent extends StatelessWidget {
                 "${_api.getHost()}/api/detections/${event.id}/snapshot.jpg",
                 height: 100.0,
                 fit: BoxFit.fill,
+                errorBuilder: (context, obj, str) {
+                  return Container(
+                    width: 120.0,
+                    height: 100.0,
+                    color: Colors.black,
+                  );
+                },
               ),
             ),
             Padding(
@@ -63,8 +70,7 @@ class DetectionComponent extends StatelessWidget {
                         size: 18.0,
                       ),
                       Padding(
-                        padding:
-                        const EdgeInsets.symmetric(horizontal: 4.0),
+                        padding: const EdgeInsets.symmetric(horizontal: 4.0),
                         child: Text(
                           event.getCamera(),
                           textAlign: TextAlign.center,
@@ -96,8 +102,7 @@ class DetectionComponent extends StatelessWidget {
                         size: 18.0,
                       ),
                       Padding(
-                        padding:
-                        const EdgeInsets.symmetric(horizontal: 4.0),
+                        padding: const EdgeInsets.symmetric(horizontal: 4.0),
                         child: Text(
                           event.getColorVariant(),
                           textAlign: TextAlign.center,
