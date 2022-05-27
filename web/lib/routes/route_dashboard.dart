@@ -68,7 +68,7 @@ class _DashboardView extends StatelessWidget {
         builder: (context, AsyncSnapshot<Config> config) {
           if (config.hasData) {
             return GridView.extent(
-              maxCrossAxisExtent: 500,
+              maxCrossAxisExtent: 420.0,
               children: _getCameras(config.data!),
             );
           } else {
