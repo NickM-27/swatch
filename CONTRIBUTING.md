@@ -34,8 +34,14 @@ Upon opening, you should be prompted to open the project in a remote container. 
 
 ## 4. Run the app
 
+The backend runs in python and the frontend runs in flutter:
+
 ```python
 python3 -m swatch
+```
+
+```bash
+flutter run web
 ```
 
 ## 5. Teardown
