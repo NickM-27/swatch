@@ -17,37 +17,35 @@ class ZoneComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      child: Card(
-        color: Colors.grey[700],
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(
-            Radius.circular(8.0),
+    return Card(
+      color: Colors.grey[700],
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(
+          Radius.circular(8.0),
+        ),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ClipRRect(
+            borderRadius: const BorderRadius.all(Radius.circular(8.0)),
+            child: Image.network(
+              "${_api.getHost()}/api/${camera.name}/${zone.name}/snapshot.jpg",
+              fit: BoxFit.fill,
+            ),
           ),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.end,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ClipRRect(
-              borderRadius: const BorderRadius.all(Radius.circular(8.0)),
-              child: Image.network(
-                "${_api.getHost()}/api/${camera.name}/${zone.name}/snapshot.jpg",
-                fit: BoxFit.fill,
+          Padding(
+            padding: const EdgeInsets.fromLTRB(8.0, 4.0, 8.0, 4.0),
+            child: Text(
+              zone.name.replaceAll('_', ' ').title(),
+              style: const TextStyle(
+                fontSize: 14,
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(8.0, 4.0, 8.0, 4.0),
-              child: Text(
-                zone.name.replaceAll('_', ' ').title(),
-                style: const TextStyle(
-                  fontSize: 14,
-                ),
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

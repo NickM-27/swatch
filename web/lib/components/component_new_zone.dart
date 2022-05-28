@@ -6,21 +6,18 @@ class CreateZoneComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 112.0,
-      width: 112.0,
-      child: Card(
-        color: Colors.grey[700],
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(
-            Radius.circular(8.0),
-          ),
+    return Card(
+      color: Colors.grey[700],
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(
+          Radius.circular(8.0),
         ),
+      ),
+      child: Expanded(
         child: IconButton(
           icon: Icon(
             Icons.add_location_alt_outlined,
             color: SwatchColors.getPrimaryColor(),
-            size: 48.0,
           ),
           onPressed: () {},
         ),
