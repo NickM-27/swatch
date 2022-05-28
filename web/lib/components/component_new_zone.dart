@@ -13,7 +13,9 @@ class CreateZoneComponent extends StatelessWidget {
           Radius.circular(8.0),
         ),
       ),
-      child: Expanded(
+      child: SizedBox(
+        width: 98.0,
+        height: 104.0,
         child: IconButton(
           icon: Icon(
             Icons.add_location_alt_outlined,
