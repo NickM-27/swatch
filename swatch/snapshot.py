@@ -54,7 +54,6 @@ class SnapshotProcessor:
         if not os.path.exists(file_dir):
             logging.debug(f"{file_dir} doesn't exist, creating...")
             os.makedirs(file_dir)
-            return False
 
         file = f"{file_dir}/{file_name}"
 
