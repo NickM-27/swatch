@@ -61,7 +61,7 @@ class SwatchApp:
         db_file = os.environ.get("DB_FILE", CONST_DB_FILE)
 
         if not os.path.exists(db_file):
-            logging.debug(f"{db_file} doesn't exist, creating...")
+            logging.debug("%s doesn't exist, creating...", db_file)
             os.makedirs(db_file)
 
         swatch_db = SqliteExtDatabase(db_file)

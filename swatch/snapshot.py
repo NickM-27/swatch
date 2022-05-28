@@ -23,13 +23,13 @@ def delete_dir(date_dir: str, camera_name: str):
     file_path = f"{date_dir}/{camera_name}"
 
     try:
-        logging.debug(f"Cleaning up {file_path}")
+        logging.debug("Cleaning up %s", file_path)
         shutil.rmtree(file_path)
 
         if len(os.listdir(date_dir)) == 0:
             os.rmdir(date_dir)
     except OSError as _e:
-        logging.error(f"Error: {file_path} : {_e.strerror}")
+        logging.error("Error: %s : %s", file_path, _e.strerror)
 
 
 class SnapshotProcessor:
