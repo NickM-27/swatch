@@ -47,8 +47,7 @@ class CameraComponent extends StatelessWidget {
               ),
             ),
           ),
-          Container(
-            height: 136.0,
+          Padding(
             padding: const EdgeInsets.fromLTRB(8.0, 4.0, 8.0, 4.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,

@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:flutter_layout_grid/flutter_layout_grid.dart';
 import 'package:swatch/api/api.dart';
 import 'package:swatch/components/component_camera.dart';
 import 'package:swatch/const.dart';
@@ -67,8 +68,9 @@ class _DashboardView extends StatelessWidget {
         future: _api.getConfig(),
         builder: (context, AsyncSnapshot<Config> config) {
           if (config.hasData) {
-            return GridView.extent(
-              maxCrossAxisExtent: 420.0,
+            return LayoutGrid(
+              columnSizes: [1.fr, 1.fr, 1.fr],
+              rowSizes: const [auto, auto, auto],
               children: _getCameras(config.data!),
             );
           } else {

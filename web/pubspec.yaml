@@ -18,6 +18,7 @@ dependencies:
   # UI
   cupertino_icons: ^1.0.2
   collapsible_sidebar: ^2.0.1+2
+  flutter_layout_grid: ^1.0.3
 
   # IO
   http: ^0.13.4

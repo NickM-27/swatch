@@ -18,8 +18,6 @@ class ZoneComponent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 112.0,
-      width: 112.0,
       child: Card(
         color: Colors.grey[700],
         shape: const RoundedRectangleBorder(
@@ -36,8 +34,6 @@ class ZoneComponent extends StatelessWidget {
               borderRadius: const BorderRadius.all(Radius.circular(8.0)),
               child: Image.network(
                 "${_api.getHost()}/api/${camera.name}/${zone.name}/snapshot.jpg",
-                height: 80,
-                width: 112,
                 fit: BoxFit.fill,
               ),
             ),
