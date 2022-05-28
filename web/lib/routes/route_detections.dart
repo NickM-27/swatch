@@ -81,7 +81,7 @@ class _DetectionsViewState extends State<_DetectionsView> {
             return ListView(
               children: _getDetections(detections.data!),
             );
-          } else {
+          } else if (detections.hasData && detections.data!.isEmpty) {
             return Container(
               alignment: Alignment.center,
               child: const SizedBox(
@@ -90,6 +90,16 @@ class _DetectionsViewState extends State<_DetectionsView> {
                   "No detections found. Once an object is detected it will appear here.",
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 24.0),
+                ),
+              ),
+            );
+          } else {
+            return Container(
+              alignment: Alignment.center,
+              child: SizedBox(
+                width: 400.0,
+                child: RefreshProgressIndicator(
+                  color: SwatchColors.getPrimaryColor(),
                 ),
               ),
             );

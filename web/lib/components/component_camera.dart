@@ -77,7 +77,8 @@ class CameraComponent extends StatelessWidget {
         if (index < config.zones.length) {
           return ZoneComponent(config, config.zones[keys[index]]!);
         } else {
-          return const CreateZoneComponent();
+          return const SizedBox();
+          //return const CreateZoneComponent();
         }
       },
     );
