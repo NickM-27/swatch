@@ -1,8 +1,9 @@
-
 import 'package:flutter/material.dart';
+import 'package:flutter_layout_grid/flutter_layout_grid.dart';
 import 'package:swatch/api/api.dart';
 import 'package:swatch/components/component_camera.dart';
 import 'package:swatch/const.dart';
+import 'package:swatch/ext/extension_double.dart';
 import 'package:swatch/models/config.dart';
 
 import 'package:collapsible_sidebar/collapsible_sidebar.dart';
@@ -18,7 +19,6 @@ class DashboardRoute extends StatefulWidget {
 }
 
 class DashboardRouteState extends State<DashboardRoute> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,18 +57,26 @@ class DashboardRouteState extends State<DashboardRoute> {
   }
 }
 
-class _DashboardView extends StatelessWidget {
+class _DashboardView extends StatefulWidget {
+  @override
+  State<_DashboardView> createState() => _DashboardViewState();
+}
+
+class _DashboardViewState extends State<_DashboardView> {
   final SwatchApi _api = SwatchApi();
 
   @override
   Widget build(BuildContext context) {
+    final columnCount = MediaQuery.of(context).size.width.getColumnsForWidth();
+
     return Scaffold(
       body: FutureBuilder(
         future: _api.getConfig(),
         builder: (context, AsyncSnapshot<Config> config) {
           if (config.hasData) {
-            return GridView.extent(
-              maxCrossAxisExtent: 500,
+            return LayoutGrid(
+              columnSizes: List.generate(columnCount, (index) => 1.fr),
+              rowSizes: List.generate(columnCount, (index) => auto),
               children: _getCameras(config.data!),
             );
           } else {

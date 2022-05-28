@@ -5,7 +5,6 @@ import 'package:swatch/models/camera.dart';
 import 'package:swatch/models/zone.dart';
 
 class ZoneComponent extends StatelessWidget {
-
   final SwatchApi _api = SwatchApi();
   final Camera camera;
   final Zone zone;
@@ -26,20 +25,19 @@ class ZoneComponent extends StatelessWidget {
         ),
       ),
       child: Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           ClipRRect(
             borderRadius: const BorderRadius.all(Radius.circular(8.0)),
             child: Image.network(
               "${_api.getHost()}/api/${camera.name}/${zone.name}/snapshot.jpg",
-              height: 100,
               fit: BoxFit.fill,
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.fromLTRB(8.0, 4.0, 8.0, 4.0),
             child: Text(
               zone.name.replaceAll('_', ' ').title(),
               style: const TextStyle(

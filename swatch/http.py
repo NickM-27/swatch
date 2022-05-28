@@ -57,6 +57,18 @@ def get_config() -> Any:
     return make_response(jsonify(current_app.swatch_config.dict()), 200)
 
 
+@bp.route("/config/schema", methods=["GET"])
+def get_config_schema() -> Any:
+    """Get schema for the swatch config.
+    Which is useful for vscode or other code completion."""
+    return current_app.response_class(
+        current_app.swatch_config.schema_json(), mimetype="application/json"
+    )
+
+
+### Color Testing Routes
+
+
 @bp.route("/colortest/values", methods=["POST"])
 def test_colors() -> Any:
     """Test and get color values inside of test image."""
@@ -390,7 +402,7 @@ def get_detection_snapshot(detection_id: str):
                 "success": False,
                 "message": f"Error loading snapshot for {detection_id}.",
             },
-            404,
+            500,
         )
 
     except DoesNotExist:
