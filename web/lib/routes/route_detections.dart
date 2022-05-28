@@ -84,7 +84,8 @@ class _DetectionsViewState extends State<_DetectionsView> {
           } else {
             return Container(
               alignment: Alignment.center,
-              child: const SizedBox(width: 400.0,
+              child: const SizedBox(
+                width: 400.0,
                 child: Text(
                   "No detections found. Once an object is detected it will appear here.",
                   textAlign: TextAlign.center,
