@@ -85,9 +85,7 @@ class AutoDetector(threading.Thread):
 
                 top_area = max([d["area"] for d in object_result["objects"]])
 
-                if top_area > self.obj_data[non_unique_id].get(
-                    "top_area", 0
-                ):
+                if top_area > self.obj_data[non_unique_id].get("top_area", 0):
                     self.obj_data[non_unique_id]["top_area"] = top_area
 
                     # save snapshot with best area
