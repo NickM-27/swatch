@@ -1,7 +1,7 @@
 """ImageProcessor for getting detectable info from images."""
 
 import datetime
-from typing import Any, Dict, Optional, Tuple
+from typing import Any, Dict, Optional, Set, Tuple
 from colorthief import ColorThief
 import cv2
 import numpy as np
@@ -42,6 +42,30 @@ def __mask_image__(crop: Any, color_variant: ColorVariantConfig) -> Tuple[Any, i
     return (output, matches)
 
 
+def __detect_objects__(mask: Any, object: ObjectConfig) -> Set[Dict[str, Any]]:
+    """Detect objects and return list of bounding boxes."""
+    # get gray image
+    gray = cv2.cvtColor(mask, cv2.COLOR_BGR2GRAY)
+
+    # calculate contours
+    _, thresh = cv2.threshold(gray, 1, 255, 0)
+    contours, _ = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+
+    detected = []
+
+    for contour in contours:
+        x, y, w, h = cv2.boundingRect(contour)
+        area = w * h
+
+        if object.min_area < area < object.max_area:
+            detected.extend({
+                "box": [x, y, x + w, y + h],
+                "area": area,
+            })
+
+    return detected
+
+
 class ImageProcessor:
     """Processing images with swatch config data."""
 
@@ -76,8 +100,9 @@ class ImageProcessor:
                 continue
 
             output, matches = __mask_image__(crop, color_variant)
+            detected_objects = __detect_objects__(crop, detectable)
 
-            if detectable.min_area < matches < detectable.max_area:
+            if detected_objects:
                 if snapshot.save_detections and snapshot.mode in [
                     SnapshotModeEnum.ALL,
                     SnapshotModeEnum.MASK,
@@ -91,9 +116,9 @@ class ImageProcessor:
 
                 return {
                     "result": True,
-                    "area": matches,
                     "variant": variant_name,
                     "camera_name": camera_name,
+                    "objects": detected_objects,
                 }
 
             if matches > best_fail.get("area", 0):
