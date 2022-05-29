@@ -29,6 +29,10 @@ class SnapshotConfig(SwatchBaseModel):
 
     url: str = Field(title="Camera Snapshot Url.", default=None)
     mode: SnapshotModeEnum = Field(title="Snapshot mode.", default=SnapshotModeEnum.ALL)
+    bounding_box: bool = Field(
+        title="Write bounding boxes for detected objects on the snapshot.",
+        default=True,
+    )
     save_detections: bool = Field(
         title="Save snapshots of detections that are found.", default=True
     )

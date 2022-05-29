@@ -103,6 +103,13 @@ class ImageProcessor:
             detected_objects = __detect_objects__(crop, detectable)
 
             if detected_objects:
+
+                # draw bounding boxes on image if enabled
+                if snapshot.bounding_box:
+                    for obj in detected_objects:
+                        cv2.rectangle(output, (obj["box"][0], obj["box"][1]), (obj["box"][2], obj["box"][3]), (0, 255, 0), 4)
+
+                # save the snapshot if enabled
                 if snapshot.save_detections and snapshot.mode in [
                     SnapshotModeEnum.ALL,
                     SnapshotModeEnum.MASK,
