@@ -84,16 +84,17 @@ class AutoDetector(threading.Thread):
                 self.obj_data[non_unique_id]["variant"] = object_result["variant"]
 
                 top_area = max([d["area"] for d in object_result["objects"]])
+                best_box = next(d for d in object_result["objects"] if d["area"] == top_area)["box"]
 
                 if top_area > self.obj_data[non_unique_id].get("top_area", 0):
                     self.obj_data[non_unique_id]["top_area"] = top_area
 
                     # save snapshot with best area
-                    self.snap_processor.save_snapshot(
+                    self.snap_processor.save_detection_snapshot(
                         cam_name,
                         zone_name,
-                        f"{unique_id}.jpg",
-                        None,
+                        unique_id,
+                        best_box,
                     )
 
                 if not self.obj_data[non_unique_id].get("id"):
