@@ -35,7 +35,7 @@ class SwatchApp:
             self.__init_config__()
         except Exception as e:
             logging.error("Error parsing config file\n%s", e)
-            self.stop()
+            sys.exit(1)
             return
 
         self.__init_db__()
@@ -43,6 +43,7 @@ class SwatchApp:
         self.__init_snapshot_cleanup__()
         self.__init_detection_cleanup__()
         self.__init_web_server__()
+        self.processes_started = True
 
     def __init_config__(self) -> None:
         """Init SwatchApp with saved config file."""
@@ -129,13 +130,12 @@ class SwatchApp:
         logging.info("Stopping SwatchApp")
         self.stop_event.set()
 
-        if self.detection_cleanup:
-            # join other processes
-            self.detection_cleanup.join()
-            self.snapshot_cleanup.join()
+        # join other processes
+        self.detection_cleanup.join()
+        self.snapshot_cleanup.join()
 
-            for cam in self.config.cameras.keys():
-                self.camera_processes[cam].join()
+        for cam in self.config.cameras.keys():
+            self.camera_processes[cam].join()
 
-            # stop the db
-            self.db.stop()
+        # stop the db
+        self.db.stop()
