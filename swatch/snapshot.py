@@ -110,7 +110,7 @@ class SnapshotProcessor:
 
         img = cv2.imdecode(np.asarray(bytearray(imgBytes), dtype=np.uint8), -1)
 
-        coordinates = (
+        crop_cords = (
             self.config.cameras[camera_name]
             .zones[zone_name]
             .coordinates.split(", ")
@@ -118,11 +118,14 @@ class SnapshotProcessor:
 
         if img.size > 0:
             crop = img[
-                int(coordinates[1]) : int(coordinates[3]),
-                int(coordinates[0]) : int(coordinates[2]),
+                int(crop_cords[1]) : int(crop_cords[3]),
+                int(crop_cords[0]) : int(crop_cords[2]),
             ]
 
         snapshot_config = self.config.cameras[camera_name].snapshot_config
+
+        if snapshot_config.clean_snapshot:
+            cv2.imwrite(f"{file_dir}/{detection_id}-clean.png", crop)
 
         if snapshot_config.bounding_box:
             cv2.rectangle(
