@@ -90,7 +90,7 @@ class SnapshotProcessor:
         camera_name: str,
         zone_name: str,
         detection_id: str,
-        bounding_box: Set[int]
+        bounding_box: Set[int],
     ) -> bool:
         """Saves the file snapshot for a detection to the correct snapshot dir."""
         time = datetime.datetime.now()
@@ -111,9 +111,7 @@ class SnapshotProcessor:
         img = cv2.imdecode(np.asarray(bytearray(imgBytes), dtype=np.uint8), -1)
 
         crop_cords = (
-            self.config.cameras[camera_name]
-            .zones[zone_name]
-            .coordinates.split(", ")
+            self.config.cameras[camera_name].zones[zone_name].coordinates.split(", ")
         )
 
         if img.size > 0:
