@@ -33,7 +33,7 @@ class SwatchApp:
         # startup internal processes
         try:
             self.__init_config__()
-        except e:
+        except Exception as e:
             logging.error("Error parsing config file\n%s", e)
             self.stop()
             return
@@ -129,11 +129,13 @@ class SwatchApp:
         logging.info("Stopping SwatchApp")
         self.stop_event.set()
 
-        # join other processes
-        self.detection_cleanup.join()
-        self.snapshot_cleanup.join()
+        if self.detection_cleanup:
+            # join other processes
+            self.detection_cleanup.join()
+            self.snapshot_cleanup.join()
 
-        for cam in self.config.cameras.keys():
-            self.camera_processes[cam].join()
+            for cam in self.config.cameras.keys():
+                self.camera_processes[cam].join()
 
-        self.db.stop()
+            # stop the db
+            self.db.stop()
