@@ -141,7 +141,7 @@ class SnapshotProcessor:
         """Get file snapshot for a specific detection."""
         file_dir = f"{self.media_dir}/snapshots/{datetime.datetime.fromtimestamp(detection.start_time).strftime('%m-%d')}/{detection.camera}"
 
-        if not os.path.exists(file_dir):
+        if not os.path.exists(file_dir) and detection.end_time:
             file_dir = f"{self.media_dir}/snapshots/{datetime.datetime.fromtimestamp(detection.end_time).strftime('%m-%d')}/{detection.camera}"
 
         if not os.path.exists(file_dir):
