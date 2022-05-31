@@ -1,6 +1,7 @@
 """ImageProcessor for getting detectable info from images."""
 
 import datetime
+import logging
 from typing import Any, Dict, Optional, Set, Tuple
 from colorthief import ColorThief
 import cv2
@@ -42,7 +43,7 @@ def __mask_image__(crop: Any, color_variant: ColorVariantConfig) -> Tuple[Any, i
     return (output, matches)
 
 
-def __detect_objects__(mask: Any, object: ObjectConfig) -> Set[Dict[str, Any]]:
+def __detect_objects__(mask: Any, obj: ObjectConfig) -> Set[Dict[str, Any]]:
     """Detect objects and return list of bounding boxes."""
     # get gray image
     gray = cv2.cvtColor(mask, cv2.COLOR_BGR2GRAY)
@@ -57,7 +58,7 @@ def __detect_objects__(mask: Any, object: ObjectConfig) -> Set[Dict[str, Any]]:
         x, y, w, h = cv2.boundingRect(contour)
         area = w * h
 
-        if object.min_area < area < object.max_area:
+        if obj.min_area < area < obj.max_area:
             detected.append(
                 {
                     "box": [x, y, x + w, y + h],
@@ -101,8 +102,8 @@ class ImageProcessor:
             ):
                 continue
 
-            output, matches = __mask_image__(crop, color_variant)
-            detected_objects = __detect_objects__(crop, detectable)
+            mask, matches = __mask_image__(crop, color_variant)
+            detected_objects = __detect_objects__(mask, detectable)
 
             if detected_objects:
 
@@ -110,11 +111,18 @@ class ImageProcessor:
                 if snapshot.bounding_box:
                     for obj in detected_objects:
                         cv2.rectangle(
-                            output,
+                            crop,
                             (obj["box"][0], obj["box"][1]),
                             (obj["box"][2], obj["box"][3]),
                             (0, 255, 0),
-                            4,
+                            2,
+                        )
+                        cv2.rectangle(
+                            mask,
+                            (obj["box"][0], obj["box"][1]),
+                            (obj["box"][2], obj["box"][3]),
+                            (0, 255, 0),
+                            2,
                         )
 
                 # save the snapshot if enabled
@@ -126,7 +134,7 @@ class ImageProcessor:
                         camera_name,
                         "",
                         f"detected_{variant_name}_{file_name}_{datetime.datetime.now().strftime('%f')}.jpg",
-                        output,
+                        mask,
                     )
 
                 return {
@@ -152,7 +160,7 @@ class ImageProcessor:
                     camera_name,
                     "",
                     f"missed_{variant_name}_{file_name}_{datetime.datetime.now().strftime('%f')}.jpg",
-                    output,
+                    mask,
                 )
 
         return best_fail
