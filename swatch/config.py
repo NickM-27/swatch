@@ -22,6 +22,7 @@ class SnapshotModeEnum(str, Enum):
     ALL = "all"
     CROP = "crop"
     MASK = "mask"
+    NONE = "none"
 
 
 class SnapshotConfig(SwatchBaseModel):
@@ -29,6 +30,7 @@ class SnapshotConfig(SwatchBaseModel):
 
     url: str = Field(title="Camera Snapshot Url.", default=None)
     mode: SnapshotModeEnum = Field(title="Snapshot mode.", default=SnapshotModeEnum.ALL)
+    clean_snapshot: bool = Field(title="Save clean snapshot.", default=True)
     bounding_box: bool = Field(
         title="Write bounding boxes for detected objects on the snapshot.",
         default=True,

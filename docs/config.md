@@ -54,6 +54,8 @@ cameras:
         url: "http://ip.ad.dr.ess/jpg"
         # OPTIONAL: Whether or not to draw bounding boxes for confirmed objects in the snapshots (Default: shown below).
         bounding_box: true
+        # OPTIONAL: Whether or not to save a clean png of the snapshot along with the annotated jpg (Default: shown below).
+        clean_snapshot: true
         # OPTIONAL: Whether or not to save the snapshots of confirmed detections (Default: shown below).
         save_detections: true
         # OPTIONAL: Whether or not to save the snapshots of missed detections (Default: shown below).

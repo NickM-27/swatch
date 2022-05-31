@@ -7,7 +7,7 @@ import os
 import requests
 import shutil
 import threading
-from typing import Any
+from typing import Any, Set
 
 import cv2
 import numpy as np
@@ -52,7 +52,7 @@ class SnapshotProcessor:
         file_dir = f"{self.media_dir}/snapshots/{time.strftime('%m-%d')}/{camera_name}"
 
         if not os.path.exists(file_dir):
-            logging.debug(f"{file_dir} doesn't exist, creating...")
+            logging.debug("%s doesn't exist, creating...", file_dir)
             os.makedirs(file_dir)
 
         file = f"{file_dir}/{file_name}"
@@ -83,6 +83,58 @@ class SnapshotProcessor:
 
             cv2.imwrite(file, crop)
 
+        return True
+
+    def save_detection_snapshot(
+        self,
+        camera_name: str,
+        zone_name: str,
+        detection_id: str,
+        bounding_box: Set[int],
+    ) -> bool:
+        """Saves the file snapshot for a detection to the correct snapshot dir."""
+        time = datetime.datetime.now()
+
+        file_dir = f"{self.media_dir}/snapshots/{time.strftime('%m-%d')}/{camera_name}"
+
+        if not os.path.exists(file_dir):
+            logging.debug("%s doesn't exist, creating...", file_dir)
+            os.makedirs(file_dir)
+
+        imgBytes = requests.get(
+            self.config.cameras[camera_name].snapshot_config.url
+        ).content
+
+        if imgBytes is None:
+            return False
+
+        img = cv2.imdecode(np.asarray(bytearray(imgBytes), dtype=np.uint8), -1)
+
+        crop_cords = (
+            self.config.cameras[camera_name].zones[zone_name].coordinates.split(", ")
+        )
+
+        if img.size > 0:
+            crop = img[
+                int(crop_cords[1]) : int(crop_cords[3]),
+                int(crop_cords[0]) : int(crop_cords[2]),
+            ]
+
+        snapshot_config = self.config.cameras[camera_name].snapshot_config
+
+        if snapshot_config.clean_snapshot:
+            cv2.imwrite(f"{file_dir}/{detection_id}-clean.png", crop)
+
+        if snapshot_config.bounding_box:
+            cv2.rectangle(
+                crop,
+                (bounding_box[0], bounding_box[1]),
+                (bounding_box[2], bounding_box[3]),
+                (0, 255, 0),
+                2,
+            )
+
+        cv2.imwrite(f"{file_dir}/{detection_id}.jpg", crop)
         return True
 
     def get_detection_snapshot(self, detection: Detection) -> Any:
