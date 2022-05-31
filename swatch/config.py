@@ -22,6 +22,7 @@ class SnapshotModeEnum(str, Enum):
     ALL = "all"
     CROP = "crop"
     MASK = "mask"
+    NONE = "none"
 
 
 class SnapshotConfig(SwatchBaseModel):
