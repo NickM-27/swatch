@@ -12,7 +12,7 @@ from swatch.config import ColorVariantConfig, ObjectConfig
 def mask_image(crop: Any, color_variant: ColorVariantConfig) -> Tuple[Any, int]:
     """Mask an image with color values"""
     color_lower = (
-        "1, 1, 1"
+        [1, 1, 1]
         if color_variant.color_lower == "0, 0, 0"
         else color_variant.color_lower.split(", ")
     )

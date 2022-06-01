@@ -5,6 +5,7 @@ import logging
 from typing import Any, Dict
 
 import cv2
+import numpy as np
 
 from flask import (
     Blueprint,
@@ -128,12 +129,13 @@ def test_mask() -> Any:
     color_lower = request.form.get("color_lower")
     color_upper = request.form.get("color_upper")
 
+    img = cv2.imdecode(np.fromstring(image_str, np.uint8), -1)
     test_color_variant = ColorVariantConfig(
         color_lower=color_lower, color_upper=color_upper
     )
-    img, _ = mask_image(image_str, test_color_variant)
+    img, _ = mask_image(img, test_color_variant)
 
-    if not img:
+    if img is None:
         return make_response(
             jsonify(
                 {
