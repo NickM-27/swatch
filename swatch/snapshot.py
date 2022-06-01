@@ -114,7 +114,6 @@ class SnapshotProcessor:
         except ConnectionError:
             img_bytes = None
 
-
         if img_bytes is None:
             return False
 

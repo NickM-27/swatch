@@ -128,7 +128,9 @@ def test_mask() -> Any:
     color_lower = request.form.get("color_lower")
     color_upper = request.form.get("color_upper")
 
-    test_color_variant = ColorVariantConfig(color_lower=color_lower, color_upper=color_upper)
+    test_color_variant = ColorVariantConfig(
+        color_lower=color_lower, color_upper=color_upper
+    )
     img, _ = mask_image(image_str, test_color_variant)
 
     if not img:
