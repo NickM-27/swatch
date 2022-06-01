@@ -13,6 +13,7 @@ from swatch.config import ColorVariantConfig, ObjectConfig
 
 ### Image utils
 
+
 def mask_image(crop: Any, color_variant: ColorVariantConfig) -> Tuple[Any, int]:
     """Mask an image with color values"""
     color_lower = (
@@ -76,4 +77,4 @@ def parse_colors_from_image(test_image: Any) -> tuple[str, set[str]]:
 
 def get_random_suffix():
     """Returns 6 random character suffix string."""
-    return ''.join(random.choices(string.ascii_lowercase + string.digits, k=6))
+    return "".join(random.choices(string.ascii_lowercase + string.digits, k=6))
