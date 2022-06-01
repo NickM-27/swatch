@@ -14,6 +14,9 @@ from swatch.models import Detection
 from swatch.snapshot import SnapshotProcessor
 
 
+logger = logging.getLogger(__name__)
+
+
 class AutoDetector(threading.Thread):
     """Handles the auto running of detection on cameras."""
 
@@ -36,7 +39,7 @@ class AutoDetector(threading.Thread):
         now = datetime.datetime.now().timestamp()
 
         if db_type == "new":
-            Detection.insert(
+            Detection.replace(
                 id=self.obj_data[obj_id]["id"],
                 label=self.obj_data[obj_id]["object_name"],
                 camera=self.config.name,
@@ -110,7 +113,7 @@ class AutoDetector(threading.Thread):
                         del self.obj_data[non_unique_id]
 
     def run(self) -> None:
-        logging.info(f"Starting Auto Detection for {self.config.name}")
+        logger.info("Starting Auto Detection for %s", self.config.name)
 
         while not self.stop_event.wait(self.config.auto_detect):
             result: Dict[str, Any] = self.image_processor.detect(
@@ -122,7 +125,7 @@ class AutoDetector(threading.Thread):
         Detection.update(end_time=datetime.datetime.now().timestamp()).where(
             Detection.end_time is None
         ).execute()
-        logging.info(f"Stopping Auto Detection for {self.config.name}")
+        logger.info("Stopping Auto Detection for %s", self.config.name)
 
 
 class DetectionCleanup(threading.Thread):
@@ -148,9 +151,9 @@ class DetectionCleanup(threading.Thread):
             )
 
     def run(self) -> None:
-        logging.info("Starting Detection Cleanup")
+        logger.info("Starting Detection Cleanup")
 
         while not self.stop_event.wait(3600):
             self.__cleanup_db__()
 
-        logging.info("Stopping Detection Cleanup")
+        logger.info("Stopping Detection Cleanup")

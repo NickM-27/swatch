@@ -4,6 +4,9 @@ from functools import reduce
 import logging
 from typing import Any, Dict
 
+import cv2
+import numpy as np
+
 from flask import (
     Blueprint,
     Flask,
@@ -16,11 +19,15 @@ from flask import (
 from peewee import DoesNotExist, operator
 from playhouse.shortcuts import model_to_dict
 
-from swatch.config import CameraConfig, SwatchConfig, ZoneConfig
+from swatch.config import CameraConfig, ColorVariantConfig, SwatchConfig, ZoneConfig
 from swatch.image import ImageProcessor
 from swatch.models import Detection
 from swatch.snapshot import SnapshotProcessor
+from swatch.util import mask_image
 
+
+logger = logging.getLogger(__name__)
+flask_logger = logging.getLogger("werkzeug")
 bp = Blueprint("swatch", __name__)
 
 
@@ -122,11 +129,13 @@ def test_mask() -> Any:
     color_lower = request.form.get("color_lower")
     color_upper = request.form.get("color_upper")
 
-    masked_image = current_app.image_processor.mask_test_image(
-        image_str, color_lower, color_upper
+    img = cv2.imdecode(np.fromstring(image_str, np.uint8), -1)
+    test_color_variant = ColorVariantConfig(
+        color_lower=color_lower, color_upper=color_upper
     )
+    img, _ = mask_image(img, test_color_variant)
 
-    if not masked_image:
+    if img is None:
         return make_response(
             jsonify(
                 {
@@ -137,7 +146,9 @@ def test_mask() -> Any:
             500,
         )
 
-    response = make_response(masked_image)
+    _, jpg = cv2.imencode(".jpg", img, [int(cv2.IMWRITE_JPEG_QUALITY), 70])
+
+    response = make_response(jpg.tobytes())
     response.headers["Content-Type"] = "image/jpg"
     return response
 
@@ -444,5 +455,4 @@ def get_latest_detection(camera_name: str) -> Any:
 
 def disable_logs():
     """Disable flask logs"""
-    flask_logger = logging.getLogger("werkzeug")
     flask_logger.disabled = True

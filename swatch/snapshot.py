@@ -18,18 +18,21 @@ from swatch.const import CONST_MEDIA_DIR
 from swatch.models import Detection
 
 
+logger = logging.getLogger(__name__)
+
+
 def delete_dir(date_dir: str, camera_name: str):
     """Deletes a date and camera dir"""
     file_path = f"{date_dir}/{camera_name}"
 
     try:
-        logging.debug("Cleaning up %s", file_path)
+        logger.debug("Cleaning up %s", file_path)
         shutil.rmtree(file_path)
 
         if len(os.listdir(date_dir)) == 0:
             os.rmdir(date_dir)
     except OSError as _e:
-        logging.error("Error: %s : %s", file_path, _e.strerror)
+        logger.error("Error: %s : %s", file_path, _e.strerror)
 
 
 class SnapshotProcessor:
@@ -52,7 +55,7 @@ class SnapshotProcessor:
         file_dir = f"{self.media_dir}/snapshots/{time.strftime('%m-%d')}/{camera_name}"
 
         if not os.path.exists(file_dir):
-            logging.debug("%s doesn't exist, creating...", file_dir)
+            logger.debug("%s doesn't exist, creating...", file_dir)
             os.makedirs(file_dir)
 
         file = f"{file_dir}/{file_name}"
@@ -60,14 +63,17 @@ class SnapshotProcessor:
         if image is not None:
             cv2.imwrite(file, image)
         else:
-            imgBytes = requests.get(
-                self.config.cameras[camera_name].snapshot_config.url
-            ).content
+            try:
+                img_bytes = requests.get(
+                    self.config.cameras[camera_name].snapshot_config.url
+                ).content
+            except ConnectionError:
+                img_bytes = None
 
-            if imgBytes is None:
+            if img_bytes is None:
                 return False
 
-            img = cv2.imdecode(np.asarray(bytearray(imgBytes), dtype=np.uint8), -1)
+            img = cv2.imdecode(np.asarray(bytearray(img_bytes), dtype=np.uint8), -1)
 
             coordinates = (
                 self.config.cameras[camera_name]
@@ -98,17 +104,20 @@ class SnapshotProcessor:
         file_dir = f"{self.media_dir}/snapshots/{time.strftime('%m-%d')}/{camera_name}"
 
         if not os.path.exists(file_dir):
-            logging.debug("%s doesn't exist, creating...", file_dir)
+            logger.debug("%s doesn't exist, creating...", file_dir)
             os.makedirs(file_dir)
 
-        imgBytes = requests.get(
-            self.config.cameras[camera_name].snapshot_config.url
-        ).content
+        try:
+            img_bytes = requests.get(
+                self.config.cameras[camera_name].snapshot_config.url
+            ).content
+        except ConnectionError:
+            img_bytes = None
 
-        if imgBytes is None:
+        if img_bytes is None:
             return False
 
-        img = cv2.imdecode(np.asarray(bytearray(imgBytes), dtype=np.uint8), -1)
+        img = cv2.imdecode(np.asarray(bytearray(img_bytes), dtype=np.uint8), -1)
 
         crop_cords = (
             self.config.cameras[camera_name].zones[zone_name].coordinates.split(", ")
@@ -154,7 +163,7 @@ class SnapshotProcessor:
                 jpg_bytes = image_file.read()
 
             return jpg_bytes
-        except:
+        except OSError:
             return None
 
     def get_latest_camera_snapshot(
@@ -162,15 +171,18 @@ class SnapshotProcessor:
         camera_name: str,
     ) -> Any:
         """Get the latest web snapshot for <camera_name> and <zone_name>."""
-        imgBytes = requests.get(
-            self.config.cameras[camera_name].snapshot_config.url
-        ).content
+        try:
+            img_bytes = requests.get(
+                self.config.cameras[camera_name].snapshot_config.url
+            ).content
+        except ConnectionError:
+            img_bytes = None
 
-        if imgBytes is None:
+        if img_bytes is None:
             return None
 
-        img = cv2.imdecode(np.asarray(bytearray(imgBytes), dtype=np.uint8), -1)
-        ret, jpg = cv2.imencode(".jpg", img, [int(cv2.IMWRITE_JPEG_QUALITY), 70])
+        img = cv2.imdecode(np.asarray(bytearray(img_bytes), dtype=np.uint8), -1)
+        _, jpg = cv2.imencode(".jpg", img, [int(cv2.IMWRITE_JPEG_QUALITY), 70])
         return jpg.tobytes()
 
     def get_latest_zone_snapshot(
@@ -180,19 +192,23 @@ class SnapshotProcessor:
     ) -> Any:
         """Get the latest web snapshot for <camera_name>."""
         camera_config: CameraConfig = self.config.cameras[camera_name]
-        imgBytes = requests.get(camera_config.snapshot_config.url).content
 
-        if not imgBytes:
+        try:
+            img_bytes = requests.get(camera_config.snapshot_config.url).content
+        except ConnectionError:
+            img_bytes = None
+
+        if not img_bytes:
             return None
 
-        img = cv2.imdecode(np.asarray(bytearray(imgBytes), dtype=np.uint8), -1)
+        img = cv2.imdecode(np.asarray(bytearray(img_bytes), dtype=np.uint8), -1)
         coordinates = camera_config.zones[zone_name].coordinates.split(", ")
         crop = img[
             int(coordinates[1]) : int(coordinates[3]),
             int(coordinates[0]) : int(coordinates[2]),
         ]
 
-        ret, jpg = cv2.imencode(".jpg", crop, [int(cv2.IMWRITE_JPEG_QUALITY), 70])
+        _, jpg = cv2.imencode(".jpg", crop, [int(cv2.IMWRITE_JPEG_QUALITY), 70])
         return jpg.tobytes()
 
     def get_latest_detection_snapshot(self, camera_name: str) -> Any:
@@ -210,10 +226,12 @@ class SnapshotProcessor:
             ]
         )
 
-        with open(recent_snap) as image_file:
-            jpg_bytes = image_file.read()
-
-        return jpg_bytes
+        try:
+            with open(recent_snap, "rb") as image_file:
+                jpg_bytes = image_file.read()
+                return jpg_bytes
+        except OSError:
+            return None
 
 
 class SnapshotCleanup(threading.Thread):
@@ -258,7 +276,7 @@ class SnapshotCleanup(threading.Thread):
 
     def run(self):
         """Run snapshot cleanup"""
-        logging.info("Starting snapshot cleanup")
+        logger.info("Starting snapshot cleanup")
 
         # try to run once a day
         while not self.stop_event.wait(86400):
@@ -267,4 +285,4 @@ class SnapshotCleanup(threading.Thread):
                 if cam_config.snapshot_config.retain_days > 0:
                     self.cleanup_snapshots(cam_config)
 
-        logging.info("Stopping Snapshot Cleanup")
+        logger.info("Stopping Snapshot Cleanup")
