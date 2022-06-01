@@ -110,7 +110,7 @@ class AutoDetector(threading.Thread):
                         del self.obj_data[non_unique_id]
 
     def run(self) -> None:
-        logging.info(f"Starting Auto Detection for {self.config.name}")
+        logging.info("Starting Auto Detection for %s", self.config.name)
 
         while not self.stop_event.wait(self.config.auto_detect):
             result: Dict[str, Any] = self.image_processor.detect(
@@ -122,7 +122,7 @@ class AutoDetector(threading.Thread):
         Detection.update(end_time=datetime.datetime.now().timestamp()).where(
             Detection.end_time is None
         ).execute()
-        logging.info(f"Stopping Auto Detection for {self.config.name}")
+        logging.info("Stopping Auto Detection for %s", self.config.name)
 
 
 class DetectionCleanup(threading.Thread):
