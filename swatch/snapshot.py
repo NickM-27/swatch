@@ -164,7 +164,7 @@ class SnapshotProcessor:
                 jpg_bytes = image_file.read()
 
             return jpg_bytes
-        except Exception:
+        except EnvironmentError:
             return None
 
     def get_latest_camera_snapshot(
@@ -209,7 +209,7 @@ class SnapshotProcessor:
             int(coordinates[0]) : int(coordinates[2]),
         ]
 
-        ret, jpg = cv2.imencode(".jpg", crop, [int(cv2.IMWRITE_JPEG_QUALITY), 70])
+        _, jpg = cv2.imencode(".jpg", crop, [int(cv2.IMWRITE_JPEG_QUALITY), 70])
         return jpg.tobytes()
 
     def get_latest_detection_snapshot(self, camera_name: str) -> Any:
@@ -227,10 +227,12 @@ class SnapshotProcessor:
             ]
         )
 
-        with open(recent_snap) as image_file:
-            jpg_bytes = image_file.read()
-
-        return jpg_bytes
+        try:
+            with open(recent_snap, "rb") as image_file:
+                jpg_bytes = image_file.read()
+                return jpg_bytes
+        except EnvironmentError:
+            return None
 
 
 class SnapshotCleanup(threading.Thread):
