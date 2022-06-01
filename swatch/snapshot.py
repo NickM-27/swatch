@@ -60,9 +60,12 @@ class SnapshotProcessor:
         if image is not None:
             cv2.imwrite(file, image)
         else:
-            imgBytes = requests.get(
-                self.config.cameras[camera_name].snapshot_config.url
-            ).content
+            try:
+                imgBytes = requests.get(
+                    self.config.cameras[camera_name].snapshot_config.url
+                ).content
+            except ConnectionError:
+                imgBytes = None
 
             if imgBytes is None:
                 return False
@@ -101,9 +104,13 @@ class SnapshotProcessor:
             logging.debug("%s doesn't exist, creating...", file_dir)
             os.makedirs(file_dir)
 
-        imgBytes = requests.get(
-            self.config.cameras[camera_name].snapshot_config.url
-        ).content
+        try:
+            imgBytes = requests.get(
+                self.config.cameras[camera_name].snapshot_config.url
+            ).content
+        except ConnectionError:
+            imgBytes = None
+
 
         if imgBytes is None:
             return False
@@ -162,9 +169,12 @@ class SnapshotProcessor:
         camera_name: str,
     ) -> Any:
         """Get the latest web snapshot for <camera_name> and <zone_name>."""
-        imgBytes = requests.get(
-            self.config.cameras[camera_name].snapshot_config.url
-        ).content
+        try:
+            imgBytes = requests.get(
+                self.config.cameras[camera_name].snapshot_config.url
+            ).content
+        except ConnectionError:
+            imgBytes = None
 
         if imgBytes is None:
             return None
@@ -180,7 +190,11 @@ class SnapshotProcessor:
     ) -> Any:
         """Get the latest web snapshot for <camera_name>."""
         camera_config: CameraConfig = self.config.cameras[camera_name]
-        imgBytes = requests.get(camera_config.snapshot_config.url).content
+
+        try:
+            imgBytes = requests.get(camera_config.snapshot_config.url).content
+        except ConnectionError:
+            imgBytes = None
 
         if not imgBytes:
             return None
