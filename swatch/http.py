@@ -4,6 +4,8 @@ from functools import reduce
 import logging
 from typing import Any, Dict
 
+import cv2
+
 from flask import (
     Blueprint,
     Flask,
@@ -127,7 +129,7 @@ def test_mask() -> Any:
     color_upper = request.form.get("color_upper")
 
     test_color_variant = ColorVariantConfig(color_lower=color_lower, color_upper=color_upper)
-    img, _ = test_mask(image_str, test_color_variant)
+    img, _ = mask_image(image_str, test_color_variant)
 
     if not img:
         return make_response(
@@ -140,9 +142,9 @@ def test_mask() -> Any:
             500,
         )
 
-    img_bytes = 
+    _, jpg = cv2.imencode(".jpg", img, [int(cv2.IMWRITE_JPEG_QUALITY), 70])
 
-    response = make_response()
+    response = make_response(jpg.tobytes())
     response.headers["Content-Type"] = "image/jpg"
     return response
 
