@@ -20,12 +20,15 @@ from swatch.models import Detection
 from swatch.snapshot import SnapshotCleanup, SnapshotProcessor
 
 
+logger = logging.getLogger(__name__)
+
+
 class SwatchApp:
     """Main swatch process that handles the lifecycle of the app."""
 
     def __init__(self) -> None:
         """Init SwatchApp."""
-        logging.info("Starting SwatchApp")
+        logger.info("Starting SwatchApp")
         self.stop_event = multiprocessing.Event()
         # startup nginx
         os.system("/usr/local/nginx/sbin/nginx &")
@@ -33,9 +36,9 @@ class SwatchApp:
         # startup internal processes
         try:
             self.__init_config__()
-        except e:
-            logging.error("Error parsing config file\n%s", e)
-            self.stop()
+        except Exception as _e:
+            logger.error("Error parsing config file\n%s", _e)
+            sys.exit(1)
             return
 
         self.__init_db__()
@@ -43,15 +46,16 @@ class SwatchApp:
         self.__init_snapshot_cleanup__()
         self.__init_detection_cleanup__()
         self.__init_web_server__()
+        self.processes_started = True
 
     def __init_config__(self) -> None:
         """Init SwatchApp with saved config file."""
-        logging.info("Importing SwatchApp Config")
+        logger.info("Importing SwatchApp Config")
 
         config_file = os.environ.get("CONFIG_FILE", CONST_CONFIG_FILE)
 
         if os.path.isfile(config_file):
-            logging.info("Verified SwatchApp Config")
+            logger.info("Verified SwatchApp Config")
 
         user_config = SwatchConfig.parse_file(config_file)
         self.config = user_config.runtime_config
@@ -61,7 +65,7 @@ class SwatchApp:
         db_file = os.environ.get("DB_FILE", CONST_DB_FILE)
 
         if not os.path.exists(db_file):
-            logging.debug("%s doesn't exist, creating...", db_file)
+            logger.debug("%s doesn't exist, creating...", db_file)
             os.makedirs(db_file)
 
         swatch_db = SqliteExtDatabase(db_file)
@@ -126,7 +130,7 @@ class SwatchApp:
 
     def stop(self) -> None:
         """Stop SwatchApp."""
-        logging.info("Stopping SwatchApp")
+        logger.info("Stopping SwatchApp")
         self.stop_event.set()
 
         # join other processes
@@ -136,4 +140,5 @@ class SwatchApp:
         for cam in self.config.cameras.keys():
             self.camera_processes[cam].join()
 
+        # stop the db
         self.db.stop()

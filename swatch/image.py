@@ -1,45 +1,19 @@
 """ImageProcessor for getting detectable info from images."""
 
 import datetime
-from typing import Any, Dict, Optional, Tuple
-from colorthief import ColorThief
+import logging
+from typing import Any, Dict, Optional
 import cv2
 import numpy as np
 
 import requests
 
-from swatch.config import (
-    ColorVariantConfig,
-    ObjectConfig,
-    SnapshotConfig,
-    SnapshotModeEnum,
-    SwatchConfig,
-)
+from swatch.util import detect_objects, mask_image
+from swatch.config import ObjectConfig, SnapshotModeEnum, SwatchConfig
 from swatch.snapshot import SnapshotProcessor
 
 
-def __mask_image__(crop: Any, color_variant: ColorVariantConfig) -> Tuple[Any, int]:
-    """Mask an image with color values"""
-    color_lower = (
-        "1, 1, 1"
-        if color_variant.color_lower == "0, 0, 0"
-        else color_variant.color_lower.split(", ")
-    )
-    color_upper = color_variant.color_upper.split(", ")
-
-    lower: np.ndarray = np.array(
-        [int(color_lower[0]), int(color_lower[1]), int(color_lower[2])],
-        dtype="uint8",
-    )
-    upper: np.ndarray = np.array(
-        [int(color_upper[0]), int(color_upper[1]), int(color_upper[2])],
-        dtype="uint8",
-    )
-
-    mask = cv2.inRange(crop, lower, upper)
-    output = cv2.bitwise_and(crop, crop, mask=mask)
-    matches = np.count_nonzero(output)
-    return (output, matches)
+logger = logging.getLogger(__name__)
 
 
 class ImageProcessor:
@@ -60,13 +34,13 @@ class ImageProcessor:
         crop: Any,
         camera_name: str,
         file_name: str,
-        detectable: ObjectConfig,
-        snapshot: SnapshotConfig,
+        obj_config: ObjectConfig,
     ) -> Dict[str, Any]:
         """Check specific image for known color values."""
+        snapshot_config = self.config.cameras[camera_name].snapshot_config
         best_fail: Dict[str, Any] = {}
 
-        for variant_name, color_variant in detectable.color_variants.items():
+        for variant_name, color_variant in obj_config.color_variants.items():
             now_time = datetime.datetime.now().strftime("%H:%M")
 
             if (
@@ -75,10 +49,30 @@ class ImageProcessor:
             ):
                 continue
 
-            output, matches = __mask_image__(crop, color_variant)
+            mask, matches = mask_image(crop, color_variant)
+            detected_objects = detect_objects(mask, obj_config)
 
-            if detectable.min_area < matches < detectable.max_area:
-                if snapshot.save_detections and snapshot.mode in [
+            if detected_objects:
+                # draw bounding boxes on image if enabled
+                if snapshot_config.bounding_box:
+                    for obj in detected_objects:
+                        cv2.rectangle(
+                            crop,
+                            (obj["box"][0], obj["box"][1]),
+                            (obj["box"][2], obj["box"][3]),
+                            (0, 255, 0),
+                            2,
+                        )
+                        cv2.rectangle(
+                            mask,
+                            (obj["box"][0], obj["box"][1]),
+                            (obj["box"][2], obj["box"][3]),
+                            (0, 255, 0),
+                            2,
+                        )
+
+                # save the snapshot if enabled
+                if snapshot_config.save_detections and snapshot_config.mode in [
                     SnapshotModeEnum.ALL,
                     SnapshotModeEnum.MASK,
                 ]:
@@ -86,14 +80,14 @@ class ImageProcessor:
                         camera_name,
                         "",
                         f"detected_{variant_name}_{file_name}_{datetime.datetime.now().strftime('%f')}.jpg",
-                        output,
+                        mask,
                     )
 
                 return {
                     "result": True,
-                    "area": matches,
                     "variant": variant_name,
                     "camera_name": camera_name,
+                    "objects": detected_objects,
                 }
 
             if matches > best_fail.get("area", 0):
@@ -104,7 +98,7 @@ class ImageProcessor:
                     "camera_name": camera_name,
                 }
 
-            if snapshot.save_misses and snapshot.mode in [
+            if snapshot_config.save_misses and snapshot_config.mode in [
                 SnapshotModeEnum.ALL,
                 SnapshotModeEnum.MASK,
             ]:
@@ -112,7 +106,7 @@ class ImageProcessor:
                     camera_name,
                     "",
                     f"missed_{variant_name}_{file_name}_{datetime.datetime.now().strftime('%f')}.jpg",
-                    output,
+                    mask,
                 )
 
         return best_fail
@@ -125,12 +119,12 @@ class ImageProcessor:
 
         for zone_name, zone in camera_config.zones.items():
             response[zone_name] = {}
-            imgBytes = requests.get(image_url).content
+            img_bytes = requests.get(image_url).content
 
-            if imgBytes is None:
+            if img_bytes is None:
                 continue
 
-            img = cv2.imdecode(np.asarray(bytearray(imgBytes), dtype=np.uint8), -1)
+            img = cv2.imdecode(np.asarray(bytearray(img_bytes), dtype=np.uint8), -1)
 
             coordinates = zone.coordinates.split(", ")
 
@@ -149,7 +143,6 @@ class ImageProcessor:
                     camera_name,
                     f"{zone_name}_{object_name}",
                     self.config.objects[object_name],
-                    snapshot_config,
                 )
 
                 if snapshot_config.mode in [
@@ -179,34 +172,3 @@ class ImageProcessor:
             return latest_result
 
         return {"result": False, "area": -1}
-
-    def parse_colors_from_image(self, test_image: Any) -> tuple[str, set[str]]:
-        """Convenience fun to get colors from test image."""
-        color_thief = ColorThief(test_image)
-        main_color = color_thief.get_color(quality=1)
-        palette = color_thief.get_palette(color_count=3)
-        return (main_color, palette)
-
-    def mask_test_image(self, img_str: str, color_lower: str, color_upper: str) -> Any:
-        """Mask a test image with provided color range."""
-        img = cv2.imdecode(np.fromstring(img_str, np.uint8), -1)
-
-        if color_lower == "0, 0, 0":
-            color_lower = ["1", "1", "1"]
-        else:
-            color_lower = color_lower.split(", ")
-
-        color_upper = color_upper.split(", ")
-        lower: np.ndarray = np.array(
-            [int(color_lower[0]), int(color_lower[1]), int(color_lower[2])],
-            dtype="uint8",
-        )
-        upper: np.ndarray = np.array(
-            [int(color_upper[0]), int(color_upper[1]), int(color_upper[2])],
-            dtype="uint8",
-        )
-
-        mask = cv2.inRange(img, lower, upper)
-        output = cv2.bitwise_and(img, img, mask=mask)
-        ret, jpg = cv2.imencode(".jpg", output, [int(cv2.IMWRITE_JPEG_QUALITY), 70])
-        return jpg.tobytes()

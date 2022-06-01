@@ -21,8 +21,9 @@ There is great object and face detection software out there, but sometimes AI de
 
 In this example you can see a cropped section of the street with a trash can. Then, using expected color bounds, the parts of the image that don't match the expected color are masked away. If a significant enough amount of pixels are left that match the color then it can be considered a true positive.
 
-![crop](https://user-images.githubusercontent.com/14866235/160126079-14dd083c-7ca8-4077-882c-3f5eddeaf6a0.jpg)
-![crop-mask](https://user-images.githubusercontent.com/14866235/160126093-82cedb91-c04e-44a2-8f0f-154e084f2f8f.jpg)
+![street](https://user-images.githubusercontent.com/14866235/171231052-a7a4dbf0-569b-41f5-83c9-dd603ac3301e.png)
+![street-bounding](https://user-images.githubusercontent.com/14866235/171231110-0192438d-d2ae-4e9b-8382-466be5c9b9c9.jpg)
+![street-mask](https://user-images.githubusercontent.com/14866235/171231286-1c38ffbe-679d-40a0-8840-eff91f19eb59.jpg)
 
 ## Features
 

@@ -43,6 +43,7 @@ class DashboardRouteState extends State<DashboardRoute> {
                 selectedTextColor: SwatchColors.getPrimaryColor(),
                 iconSize: 24,
                 borderRadius: 12,
+                duration: const Duration(seconds: 0),
                 sidebarBoxShadow: const [],
                 title: "Swatch",
                 textStyle: const TextStyle(
