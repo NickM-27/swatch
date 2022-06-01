@@ -1,5 +1,7 @@
 """Utilities and convenience funs."""
 
+import random
+import string
 from typing import Any, Dict, Set, Tuple
 
 from colorthief import ColorThief
@@ -8,6 +10,8 @@ import numpy as np
 
 from swatch.config import ColorVariantConfig, ObjectConfig
 
+
+### Image utils
 
 def mask_image(crop: Any, color_variant: ColorVariantConfig) -> Tuple[Any, int]:
     """Mask an image with color values"""
@@ -65,3 +69,11 @@ def parse_colors_from_image(test_image: Any) -> tuple[str, set[str]]:
     main_color = color_thief.get_color(quality=1)
     palette = color_thief.get_palette(color_count=3)
     return (main_color, palette)
+
+
+### String utils
+
+
+def get_random_suffix():
+    """Returns 6 random character suffix string."""
+    return ''.join(random.choices(string.ascii_lowercase + string.digits, k=6))

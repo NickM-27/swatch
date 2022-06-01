@@ -3,8 +3,6 @@
 import datetime
 import logging
 import multiprocessing
-import random
-import string
 import threading
 from typing import Any, Dict
 
@@ -12,6 +10,7 @@ from swatch.config import CameraConfig, SwatchConfig
 from swatch.image import ImageProcessor
 from swatch.models import Detection
 from swatch.snapshot import SnapshotProcessor
+from swatch.util import get_random_suffix
 
 
 logger = logging.getLogger(__name__)
@@ -77,7 +76,7 @@ class AutoDetector(threading.Thread):
                     self.obj_data[non_unique_id] = {}
 
                 unique_id = (
-                    f"{non_unique_id}.{''.join(random.choices(string.ascii_lowercase + string.digits, k=6))}"
+                    f"{non_unique_id}.{get_random_suffix()}"
                     if not self.obj_data[non_unique_id].get("id")
                     else self.obj_data[non_unique_id]["id"]
                 )
@@ -114,6 +113,7 @@ class AutoDetector(threading.Thread):
                         del self.obj_data[non_unique_id]
 
     def run(self) -> None:
+        # pylint: disable=singleton-comparison
         logger.info("Starting Auto Detection for %s", self.config.name)
 
         while not self.stop_event.wait(self.config.auto_detect):
@@ -124,7 +124,7 @@ class AutoDetector(threading.Thread):
 
         # ensure db doesn't contain bad data after shutdown
         Detection.update(end_time=datetime.datetime.now().timestamp()).where(
-            Detection.end_time is None
+            Detection.end_time == None
         ).execute()
         logger.info("Stopping Auto Detection for %s", self.config.name)
 
