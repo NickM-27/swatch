@@ -1,4 +1,4 @@
-"""Color utilities."""
+"""Utilities and convenience funs."""
 
 from typing import Any, Dict, Set, Tuple
 

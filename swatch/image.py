@@ -8,7 +8,7 @@ import numpy as np
 
 import requests
 
-from swatch.color import detect_objects, mask_image
+from swatch.util import detect_objects, mask_image
 from swatch.config import ObjectConfig, SnapshotModeEnum, SwatchConfig
 from swatch.snapshot import SnapshotProcessor
 
@@ -172,27 +172,3 @@ class ImageProcessor:
             return latest_result
 
         return {"result": False, "area": -1}
-
-    def mask_test_image(self, img_str: str, color_lower: str, color_upper: str) -> Any:
-        """Mask a test image with provided color range."""
-        img = cv2.imdecode(np.fromstring(img_str, np.uint8), -1)
-
-        if color_lower == "0, 0, 0":
-            color_lower = ["1", "1", "1"]
-        else:
-            color_lower = color_lower.split(", ")
-
-        color_upper = color_upper.split(", ")
-        lower: np.ndarray = np.array(
-            [int(color_lower[0]), int(color_lower[1]), int(color_lower[2])],
-            dtype="uint8",
-        )
-        upper: np.ndarray = np.array(
-            [int(color_upper[0]), int(color_upper[1]), int(color_upper[2])],
-            dtype="uint8",
-        )
-
-        mask = cv2.inRange(img, lower, upper)
-        output = cv2.bitwise_and(img, img, mask=mask)
-        _, jpg = cv2.imencode(".jpg", output, [int(cv2.IMWRITE_JPEG_QUALITY), 70])
-        return jpg.tobytes()

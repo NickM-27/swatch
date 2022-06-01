@@ -16,10 +16,11 @@ from flask import (
 from peewee import DoesNotExist, operator
 from playhouse.shortcuts import model_to_dict
 
-from swatch.config import CameraConfig, SwatchConfig, ZoneConfig
+from swatch.config import CameraConfig, ColorVariantConfig, SwatchConfig, ZoneConfig
 from swatch.image import ImageProcessor
 from swatch.models import Detection
 from swatch.snapshot import SnapshotProcessor
+from swatch.util import mask_image
 
 
 logger = logging.getLogger(__name__)
@@ -125,11 +126,10 @@ def test_mask() -> Any:
     color_lower = request.form.get("color_lower")
     color_upper = request.form.get("color_upper")
 
-    masked_image = current_app.image_processor.mask_test_image(
-        image_str, color_lower, color_upper
-    )
+    test_color_variant = ColorVariantConfig(color_lower=color_lower, color_upper=color_upper)
+    img, _ = test_mask(image_str, test_color_variant)
 
-    if not masked_image:
+    if not img:
         return make_response(
             jsonify(
                 {
@@ -140,7 +140,9 @@ def test_mask() -> Any:
             500,
         )
 
-    response = make_response(masked_image)
+    img_bytes = 
+
+    response = make_response()
     response.headers["Content-Type"] = "image/jpg"
     return response
 
