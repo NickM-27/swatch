@@ -21,6 +21,9 @@ from swatch.image import ImageProcessor
 from swatch.models import Detection
 from swatch.snapshot import SnapshotProcessor
 
+
+logger = logging.getLogger(__name__)
+flask_logger = logging.getLogger("werkzeug")
 bp = Blueprint("swatch", __name__)
 
 
@@ -444,5 +447,4 @@ def get_latest_detection(camera_name: str) -> Any:
 
 def disable_logs():
     """Disable flask logs"""
-    flask_logger = logging.getLogger("werkzeug")
     flask_logger.disabled = True

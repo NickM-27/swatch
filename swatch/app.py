@@ -36,8 +36,8 @@ class SwatchApp:
         # startup internal processes
         try:
             self.__init_config__()
-        except Exception as e:
-            logger.error("Error parsing config file\n%s", e)
+        except Exception as _e:
+            logger.error("Error parsing config file\n%s", _e)
             sys.exit(1)
             return
 
