@@ -63,9 +63,9 @@ class SwatchApp:
     def __init_db__(self):
         """Init the Swatch database."""
         db_file: str = os.environ.get(ENV_DB, CONST_DB_FILE)
+        db_path = db_file[: db_file.rfind("/")]
 
-        if not os.path.exists(db_file):
-            db_path = db_file[: db_file.rfind("/")]
+        if not os.path.exists(db_path):
             logger.debug("%s doesn't exist, creating...", db_path)
             os.makedirs(db_path)
 
