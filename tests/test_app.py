@@ -22,4 +22,3 @@ class TestApp(unittest.TestCase):
         app.__init_db__()
         assert os.path.exists(self.db_path)
         assert os.path.isfile(self.db_file)
-
