@@ -65,7 +65,7 @@ class SwatchApp:
         db_file: str = os.environ.get(ENV_DB, CONST_DB_FILE)
 
         if not os.path.exists(db_file):
-            db_path = db_file[:db_file.rfind("/")]
+            db_path = db_file[: db_file.rfind("/")]
             logger.debug("%s doesn't exist, creating...", db_path)
             os.makedirs(db_path)
 
