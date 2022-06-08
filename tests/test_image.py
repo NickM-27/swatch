@@ -1,12 +1,11 @@
-"""Tests for SwatchConfig"""
+"""Tests for SwatchImage"""
 
-import datetime
 import unittest
 
 from swatch.config import SwatchConfig
 
 
-class TestConfig(unittest.TestCase):
+class TestImage(unittest.TestCase):
     """Testing the configuration is parsed correctly."""
 
     def setUp(self) -> None:
