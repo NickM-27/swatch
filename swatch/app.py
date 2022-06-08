@@ -52,7 +52,7 @@ class SwatchApp:
         """Init SwatchApp with saved config file."""
         logger.info("Importing SwatchApp Config")
 
-        config_file = os.environ.get("CONFIG_FILE", CONST_CONFIG_FILE)
+        config_file: str = os.environ.get("CONFIG_FILE", CONST_CONFIG_FILE)
 
         if os.path.isfile(config_file):
             logger.info("Verified SwatchApp Config")
@@ -62,11 +62,12 @@ class SwatchApp:
 
     def __init_db__(self):
         """Init the Swatch database."""
-        db_file = os.environ.get("DB_FILE", CONST_DB_FILE)
+        db_file: str = os.environ.get("DB_FILE", CONST_DB_FILE)
 
         if not os.path.exists(db_file):
-            logger.debug("%s doesn't exist, creating...", db_file)
-            os.makedirs(db_file)
+            db_path = db_file[:db_file.rfind("/")]
+            logger.debug("%s doesn't exist, creating...", db_path)
+            os.makedirs(db_path)
 
         swatch_db = SqliteExtDatabase(db_file)
 
