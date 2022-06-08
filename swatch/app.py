@@ -12,7 +12,7 @@ from playhouse.sqlite_ext import SqliteExtDatabase
 from playhouse.sqliteq import SqliteQueueDatabase
 
 from swatch.config import SwatchConfig
-from swatch.const import CONST_CONFIG_FILE, CONST_DB_FILE
+from swatch.const import CONST_CONFIG_FILE, CONST_DB_FILE, ENV_CONFIG, ENV_DB
 from swatch.http import create_app
 from swatch.image import ImageProcessor
 from swatch.detection import AutoDetector, DetectionCleanup
@@ -52,7 +52,7 @@ class SwatchApp:
         """Init SwatchApp with saved config file."""
         logger.info("Importing SwatchApp Config")
 
-        config_file: str = os.environ.get("CONFIG_FILE", CONST_CONFIG_FILE)
+        config_file: str = os.environ.get(ENV_CONFIG, CONST_CONFIG_FILE)
 
         if os.path.isfile(config_file):
             logger.info("Verified SwatchApp Config")
@@ -62,7 +62,7 @@ class SwatchApp:
 
     def __init_db__(self):
         """Init the Swatch database."""
-        db_file: str = os.environ.get("DB_FILE", CONST_DB_FILE)
+        db_file: str = os.environ.get(ENV_DB, CONST_DB_FILE)
 
         if not os.path.exists(db_file):
             db_path = db_file[:db_file.rfind("/")]
