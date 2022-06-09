@@ -83,7 +83,9 @@ class AutoDetector(threading.Thread):
 
                 self.obj_data[non_unique_id]["object_name"] = object_name
                 self.obj_data[non_unique_id]["zone_name"] = zone_name
-                self.obj_data[non_unique_id]["variant"] = object_result["variant"]
+                self.obj_data[non_unique_id]["variant"] = object_result.get(
+                    "variant", "default"
+                )
 
                 if object_result.get("objects"):
                     top_area = max([d["area"] for d in object_result["objects"]])
