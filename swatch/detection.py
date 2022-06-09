@@ -108,7 +108,7 @@ class AutoDetector(threading.Thread):
                     self.obj_data[non_unique_id]["id"] = unique_id
                     self.__handle_db__("new", non_unique_id)
                 else:
-                    if object_result["result"]:
+                    if object_result.get("result", False):
                         self.__handle_db__("update", non_unique_id)
                     else:
                         self.__handle_db__("end", non_unique_id)
