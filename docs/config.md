@@ -28,13 +28,17 @@ objects:
           after: "00:00"
           # OPTIONAL: Color variant is valid if current time is < this 24H time (Default: shown below).
           before: "24:00"
-    # OPTIONAL: the min number of pixels with R, G, B values within the bounds to be
-    # considered a true positive. This is recommended to be set as a super small amount
+    # OPTIONAL: the min area of the bounding box around groups of matching R, G, B pixels
+    # considered a true positive. This is not recommended to be set as a super small amount
     # could be a false positive. (Default: shown below)
     min_area: 1000
-    # OPTIONAL: the max number of pixels with R, G, B values within the bounds to be
-    # considered a true positive (Default: shown below).
+    # OPTIONAL: the max area of the bounding box around groups of pixels with R, G, B
+    # values within the bounds to be considered a true positive (Default: shown below).
     max_area: 100000
+    # OPTIONAL: the min ratio of width/height of bounding box for valid object detection (default: shown below).
+    min_ratio: 0
+     # OPTIONAL: the max ratio of width/height of bounding box for valid object detection (default: shown below).
+    max_ratio: 24000000
 ```
 
 ### `cameras`
