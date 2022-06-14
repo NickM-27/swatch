@@ -61,7 +61,7 @@ def detect_objects(mask: Any, obj: ObjectConfig) -> Set[Dict[str, Any]]:
                         "area": area,
                         "ratio": (w / h),
                     }
-            )
+                )
 
     return detected
 

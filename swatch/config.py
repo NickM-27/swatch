@@ -75,8 +75,12 @@ class ObjectConfig(SwatchBaseModel):
     )
     min_area: int = Field(title="Min Area", default=0)
     max_area: int = Field(title="Max Area", default=240000)
-    min_ratio: float = Field(title="Min ratio of width/height for valid detection.", default=0)
-    max_ratio: float = Field(title="Max ratio of width/height for valid detection.", default=24000000)
+    min_ratio: float = Field(
+        title="Min ratio of width/height for valid detection.", default=0
+    )
+    max_ratio: float = Field(
+        title="Max ratio of width/height for valid detection.", default=24000000
+    )
 
 
 class ZoneConfig(SwatchBaseModel):
