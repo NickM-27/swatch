@@ -54,12 +54,14 @@ def detect_objects(mask: Any, obj: ObjectConfig) -> Set[Dict[str, Any]]:
         area = w * h
 
         if obj.min_area < area < obj.max_area:
-            detected.append(
-                {
-                    "box": [x, y, x + w, y + h],
-                    "area": area,
-                }
-            )
+            if obj.min_ratio < (w / h) < obj.max_ratio:
+                detected.append(
+                    {
+                        "box": [x, y, x + w, y + h],
+                        "area": area,
+                        "ratio": (w / h),
+                    }
+                )
 
     return detected
 
