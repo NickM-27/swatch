@@ -10,9 +10,7 @@ local:
 push:
 	cd web; flutter build web;
 	docker buildx build --push --platform linux/arm64/v8,linux/amd64 --tag crzynik/swatch:latest --file docker/Dockerfile .
-	docker pull crzynik/swatch:latest
-	docker tag crzynik/swatch:latest crzynik/swatch:${VERSION}-${COMMIT_HASH}
-	docker push crzynik/swatch:${VERSION}-${COMMIT_HASH}
+	docker buildx build --push --platform linux/arm64/v8,linux/amd64 --tag crzynik/swatch:${VERSION}-${COMMIT_HASH} --file docker/Dockerfile .
 
 push_beta:
 	cd web; flutter build web;
