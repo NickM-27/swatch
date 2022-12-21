@@ -1,6 +1,6 @@
 FROM crzynik/swatch-nginx:latest as nginx
 
-FROM python:3
+FROM python:3.10
 
 # install dependencies
 COPY requirements.txt /requirements.txt
