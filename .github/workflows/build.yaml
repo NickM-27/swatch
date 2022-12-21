@@ -52,7 +52,7 @@ jobs:
       - name: Run tests
         run: docker run --rm --entrypoint=python3 swatch:latest -u -m unittest
       - name: Run mypy
-        run: docker run --rm --entrypoint=/bin/bash swatch:latest -c "pip3 install -r requirements_dev.txt; mypy --install-types; mypy --config-file swatch/mypy.ini swatch"
+        run: docker run --rm --entrypoint=/bin/bash swatch:latest -c "pip3 install -r /requirements_dev.txt; mypy --install-types; mypy --config-file swatch/mypy.ini swatch"
 
   web-checks:
     runs-on: ubuntu-latest
