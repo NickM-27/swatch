@@ -73,6 +73,7 @@ jobs:
       - name: Flutter env
         uses: subosito/flutter-action@v2
         with:
+            flutter-version: '2.5.1'
             channel: 'stable'
       - name: Run test
         working-directory: ./web
