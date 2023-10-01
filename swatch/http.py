@@ -23,7 +23,7 @@ from swatch.config import CameraConfig, ColorVariantConfig, SwatchConfig, ZoneCo
 from swatch.image import ImageProcessor
 from swatch.models import Detection
 from swatch.snapshot import SnapshotProcessor
-from swatch.util import mask_image
+from swatch.util import mask_image, parse_colors_from_image
 
 
 logger = logging.getLogger(__name__)
@@ -88,9 +88,7 @@ def test_colors() -> Any:
         )
 
     test_image = request.files.get("test_image")
-    main_color, palette = current_app.image_processor.parse_colors_from_image(
-        test_image
-    )
+    main_color, palette = parse_colors_from_image(test_image)
 
     return make_response(
         jsonify(
